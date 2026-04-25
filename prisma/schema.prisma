@@ -1,0 +1,49 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Booking {
+  // Kita ubah default(cuid()) menjadi manual string agar bisa input Short ID
+  id String @id 
+
+  roomId    String
+  roomSlug  String
+  roomName  String
+  roomPrice Float
+
+  basePrice   Float
+  serviceFee  Float
+  tourismTax  Float
+  totalPrice  Float
+
+  // --- PERBAIKAN: SESUAIKAN NAMA KOLOM DENGAN REQUEST ANDA ---
+  breakfast Int @default(0)
+  extraBed  Int @default(0)
+  // -----------------------------------------------------------
+
+  checkInDate  DateTime
+  checkOutDate DateTime
+  duration     Int
+  adults       Int
+  children     Int
+
+  customerName       String
+  customerEmail      String
+  customerPhone      String
+  customerAddress    String
+  customerCity       String
+  customerPostalCode String
+
+  status           String   @default("PENDING") 
+  xenditInvoiceId  String?
+  xenditInvoiceUrl String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
