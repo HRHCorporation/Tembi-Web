@@ -1,4 +1,16 @@
+networks:
+    localnet:
+        external: true
 services:
+  db:
+    image: mysql:8.4
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - localnet
   postgres:
     image: postgres:18
     restart: always
