@@ -1,3 +1,6 @@
+import "flatpickr/dist/flatpickr.min.css";
+import "jsvectormap/dist/jsvectormap.css";
+
 import type { Metadata } from "next";
 import type { PropsWithChildren } from "react";
 

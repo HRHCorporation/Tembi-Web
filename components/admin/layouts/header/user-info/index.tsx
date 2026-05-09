@@ -12,6 +12,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function UserInfo() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,15 +21,54 @@ export function UserInfo() {
   async function handleLogout() {
     setIsOpen(false);
 
-    toast.success("Logout clicked");
-  }
+    try {
+      setIsOpen(false);
 
+      const res = await fetch(
+        "/api/auth/logout",
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success("Berhasil logout");
+
+        router.push("/login");
+
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Gagal logout");
+    }
+  }
+  const router = useRouter();
   // Dummy user sementara
-  const user = {
-    name: "Admin",
-    email: "admin@example.com",
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
     img: "",
-  };
+  });
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const res = await fetch("/api/auth/me");
+
+        const data = await res.json();
+
+        if (data.success) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getUser();
+  }, []);
 
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>

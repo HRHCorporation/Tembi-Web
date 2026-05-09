@@ -1,33 +1,101 @@
-// app/api/auth/login/route.ts
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
-export async function POST(request: Request) {
+import dbLaravel from "@/lib/db-laravel";
+
+export async function POST(request: NextRequest) {
   try {
-    const { username, password } = await request.json();
+    const { email, password } = await request.json();
 
-    const validUser = process.env.ADMIN_USERNAME;
-    const validPass = process.env.ADMIN_PASSWORD;
+    // Ambil user berdasarkan email
+    const [rows]: any = await dbLaravel.query(
+      `
+      SELECT id, name, email, password, role_id
+      FROM users
+      WHERE email = ?
+      LIMIT 1
+      `,
+      [email]
+    );
 
-    // Cek credential sederhana
-    if (username === validUser && password === validPass) {
-      const response = NextResponse.json({ success: true });
-      
-      // Set Cookie (HttpOnly agar aman)
-      response.cookies.set({
-        name: process.env.COOKIE_NAME || 'admin_session_tembi',
-        value: 'true',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 60 * 60 * 24, // 1 hari
-      });
-
-      return response;
+    // User tidak ditemukan
+    if (!rows.length) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Email atau password anda salah",
+        },
+        { status: 401 }
+      );
     }
 
-    return NextResponse.json({ success: false, message: 'Username atau Password salah' }, { status: 401 });
+    const user = rows[0];
+
+    // Cek role admin
+    if (user.role_id !== 1) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Email atau password anda salah",
+        },
+        { status: 401 }
+      );
+    }
+
+    // Cek password hash Laravel
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isMatch) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Email atau password anda salah",
+        },
+        { status: 401 }
+      );
+    }
+
+    // Login sukses
+    const response = NextResponse.json({
+      success: true,
+      redirect: "/admin",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+
+    // Set session cookie
+    response.cookies.set({
+      name:
+        process.env.COOKIE_NAME ||
+        "admin_session_tembi",
+      value: JSON.stringify({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      }),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24, // 1 hari
+    });
+
+    return response;
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Error' }, { status: 500 });
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Terjadi kesalahan server",
+      },
+      { status: 500 }
+    );
   }
 }
