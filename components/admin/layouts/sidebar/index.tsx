@@ -16,12 +16,11 @@ export function Sidebar() {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   const toggleExpanded = (title: string) => {
-    setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
-
-    // Uncomment the following line to enable multiple expanded items
-    // setExpandedItems((prev) =>
-    //   prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
-    // );
+    setExpandedItems((prev) =>
+      prev.includes(title)
+        ? prev.filter((item) => item !== title)
+        : [...prev, title]
+    );
   };
 
   useEffect(() => {
@@ -116,7 +115,7 @@ export function Sidebar() {
                                 className={cn(
                                   "ml-auto rotate-180 transition-transform duration-200",
                                   expandedItems.includes(item.title) &&
-                                    "rotate-0",
+                                  "rotate-0",
                                 )}
                                 aria-hidden="true"
                               />
@@ -129,13 +128,50 @@ export function Sidebar() {
                               >
                                 {item.items.map((subItem) => (
                                   <li key={subItem.title} role="none">
-                                    <MenuItem
-                                      as="link"
-                                      href={subItem.url}
-                                      isActive={pathname === subItem.url}
-                                    >
-                                      <span>{subItem.title}</span>
-                                    </MenuItem>
+                                    {subItem.items?.length > 0 ? (
+                                      <>
+                                        <MenuItem
+                                          onClick={() => toggleExpanded(subItem.title)}
+                                          isActive={subItem.items.some(
+                                            ({ url }) => url === pathname,
+                                          )}
+                                        >
+                                          <span>{subItem.title}</span>
+
+                                          <ChevronUp
+                                            className={cn(
+                                              "ml-auto rotate-180 transition-transform duration-200",
+                                              expandedItems.includes(subItem.title) &&
+                                              "rotate-0",
+                                            )}
+                                          />
+                                        </MenuItem>
+
+                                        {expandedItems.includes(subItem.title) && (
+                                          <ul className="ml-4 mt-1 space-y-1">
+                                            {subItem.items.map((childItem) => (
+                                              <li key={childItem.title}>
+                                                <MenuItem
+                                                  as="link"
+                                                  href={childItem.url}
+                                                  isActive={pathname === childItem.url}
+                                                >
+                                                  <span>{childItem.title}</span>
+                                                </MenuItem>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        )}
+                                      </>
+                                    ) : (
+                                      <MenuItem
+                                        as="link"
+                                        href={subItem.url}
+                                        isActive={pathname === subItem.url}
+                                      >
+                                        <span>{subItem.title}</span>
+                                      </MenuItem>
+                                    )}
                                   </li>
                                 ))}
                               </ul>
@@ -147,7 +183,7 @@ export function Sidebar() {
                               "url" in item
                                 ? item.url + ""
                                 : "/" +
-                                  item.title.toLowerCase().split(" ").join("-");
+                                item.title.toLowerCase().split(" ").join("-");
 
                             return (
                               <MenuItem

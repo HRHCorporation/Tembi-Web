@@ -16,6 +16,21 @@ export const NAV_DATA = [
         icon: Icons.FourCircle,
         items: [],
       },
+      {
+        title: "Rooms",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Master",
+            items: [
+              {
+                title: "Tiers Room",
+                url: "/admin/rooms/master/tiers",
+              },
+            ],
+          },
+        ],
+      }
     ],
   },
 
