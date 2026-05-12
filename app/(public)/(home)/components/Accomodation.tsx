@@ -93,9 +93,9 @@ export default function Accomodation() {
       <div className="bg-stone-50 rounded-lg p-10 md:p-14">
         <div className="grid md:grid-cols-4 gap-12 items-center">
           <div>
-            <h3 className="text-5xl font-serif font-medium text-gray-900 leading-[0.75]">
-              {t.homepage.pavillion.title[0]} <br className="hidden md:block" />{" "}
-              {t.homepage.pavillion.title[1]}
+            <h3 className="text-4xl md:text-5xl font-serif font-medium text-gray-900 space-y-1 md:space-y-0 md:leading-tight">
+              <span className="block">{t.homepage.pavillion.title[0]}</span>
+              <span className="block">{t.homepage.pavillion.title[1]}</span>
             </h3>
           </div>
           <div className="md:col-span-2">
