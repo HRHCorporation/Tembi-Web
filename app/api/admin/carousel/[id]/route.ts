@@ -83,7 +83,7 @@ export async function PUT(
             const bytes = await image.arrayBuffer();
             const buffer = Buffer.from(bytes);
             const filename = `carousel-${Date.now()}.webp`;
-            const uploadDir = path.join(process.cwd(), "public/images/carousel");
+            const uploadDir = path.join(process.cwd(), "public/images/upload/carousel");
 
             if (!fs.existsSync(uploadDir)) {
                 fs.mkdirSync(uploadDir, { recursive: true });
@@ -101,7 +101,7 @@ export async function PUT(
                 fs.unlinkSync(oldImagePath);
             }
 
-            imagePath = `/images/carousel/${filename}`;
+            imagePath = `/images/upload/carousel/${filename}`;
         }
 
         await dbWeb.query(

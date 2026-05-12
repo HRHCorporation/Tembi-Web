@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
             .toString(36)
             .substring(2, 8)}.webp`;
 
-        const uploadDir = path.join(process.cwd(), "public/images/carousel");
+        const uploadDir = path.join(process.cwd(), "public/images/upload/carousel");
 
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
             INSERT INTO carousels (image, title_ind, title_eng, is_active, created_by, created_at)
             VALUES (?, ?, ?, ?, ?, NOW())
             `,
-            [`/images/carousel/${filename}`, titleInd, titleEng, isActive, createdBy]
+            [`/images/upload/carousel/${filename}`, titleInd, titleEng, isActive, createdBy]
         );
 
         return NextResponse.json({
