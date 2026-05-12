@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     // Login sukses
     const response = NextResponse.json({
       success: true,
-      redirect: "/admin",
+      redirect: "/admin/dashboard",
       user: {
         id: user.id,
         name: user.name,
