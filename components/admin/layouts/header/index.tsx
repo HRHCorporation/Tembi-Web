@@ -36,25 +36,15 @@ export function Header() {
 
       <div className="max-xl:hidden">
         <h1 className="text-heading-5 text-dark mb-0.5 font-bold dark:text-white">
-          Dashboard
+          Admin Dashboard
         </h1>
-        <p className="font-medium">Next.js Admin Dashboard Solution</p>
+        <p className="font-medium">Tembi CMS</p>
       </div>
 
       <div className="2xsm:gap-4 flex flex-1 items-center justify-end gap-2">
-        <div className="relative w-full max-w-75">
-          <input
-            type="search"
-            placeholder="Search"
-            className="bg-gray-2 focus-visible:border-primary dark:border-dark-3 dark:bg-dark-2 dark:hover:border-dark-4 dark:hover:bg-dark-3 dark:hover:text-dark-6 dark:focus-visible:border-primary flex w-full items-center gap-3.5 rounded-full border py-3 pr-5 pl-13.25 transition-colors outline-none"
-          />
-
-          <SearchIcon className="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 max-[1015px]:size-5" />
-        </div>
+      
 
         <ThemeToggleSwitch />
-
-        <Notification />
 
         <div className="shrink-0">
           <UserInfo />
