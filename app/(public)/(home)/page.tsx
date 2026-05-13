@@ -2,66 +2,16 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import HouseCard from "@/components/HouseCard";
+import HouseCard from "@/app/(public)/(home)/components/HouseCard";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLanguage } from "../context/LanguageContext";
 import HeroImage from "./components/HeroImage";
-
-const houses = [
-  {
-    name: "Ngadirojo",
-    desc: "Ngadirojo House is a traditional Javanese limasan built in 1946 and relocated from Bawak Village, Cawas, Klaten, Central Java, to Tembi in 2007. Combining Javanese architecture with natural tranquility, it is an ideal choice for guests seeking peace and culture.",
-    images: [
-      "/images/rooms/ngadirojo/ngadirojo.webp",
-      "/images/rooms/ngadirojo/ngadirojo1.webp",
-      "/images/rooms/ngadirojo/ngadirojo2.webp",
-      "/images/rooms/ngadirojo/ngadirojo3.webp",
-    ],
-    icons: ["/images/icons/bed-gray.png", "/images/icons/swim-gray.png"],
-    features: ["King Bed", "Pool View"],
-    path: "/rooms/ngadirojo-house",
-  },
-  {
-    name: "Polaman",
-    desc: "Polaman House is a traditional Javanese limasan built in 1948 and relocated from Bawak Village, Cawas, Klaten, to Tembi in 2007. It combines the warmth of Javanese architecture with natural landscapes, making it perfect for an authentic and peaceful stay.",
-    images: [
-      "/images/rooms/polaman/polaman.webp",
-      "/images/rooms/polaman/polaman1.webp",
-      "/images/rooms/polaman/polaman2.webp",
-      "/images/rooms/polaman/polaman3.webp",
-    ],
-    icons: ["/images/icons/bed-gray.png", "/images/icons/swim-gray.png"],
-    features: ["King Bed", "Pool View"],
-    path: "/rooms/polaman-house",
-  },
-  {
-    name: "Adikarto",
-    desc: "Adikarto House is a traditional Javanese limasan house that brings coolness and comfort in a natural atmosphere. Built in 1960 in Ngadirejo, Tepus, Gunung Kidul Regency, it was relocated to Tembi in 2007 as part of cultural preservation efforts.",
-    images: [
-      "/images/rooms/adikarto/adikarto.webp",
-      "/images/rooms/adikarto/adikarto1.webp",
-      "/images/rooms/adikarto/adikarto2.webp",
-      "/images/rooms/adikarto/adikarto3.webp",
-    ],
-    icons: ["/images/icons/bed-gray.png", "/images/icons/mount-gray.png"],
-    features: ["King Bed", "Garden View"],
-    path: "/rooms/adikarto-house",
-  },
-];
+import Introduction from "./components/Introduction";
+import Accomodation from "./components/Accomodation";
 
 export default function HomePage() {
   const { t } = useLanguage();
-  const icons = [
-    {
-      icon: "/images/icons/wifi-green.png",
-      text: t.homepage.pavillion.desc[0],
-    },
-    { icon: "/images/icons/cup-green.png", text: t.homepage.pavillion.desc[1] },
-    {
-      icon: "/images/icons/music-green.png",
-      text: t.homepage.pavillion.desc[2],
-    },
-  ];
+
   const heritageFeatures = [
     {
       title: t.homepage.living.title.item1,
@@ -153,119 +103,8 @@ export default function HomePage() {
     <div className="bg-white text-gray-800 overflow-x-hidden">
       <main>
         <HeroImage />
-        <section className="py-20 px-10 bg-stone-50">
-          <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-            <ScrollReveal animation="slideLeft" duration={800}>
-              <div className="text-center md:text-left">
-                <h3 className="text-6xl font-serif font-thin mb-10 drop-shadow-2xl">
-                  {t.homepage.intro.title}
-                </h3>
-                <p className="text-gray-600 mb-6">{t.homepage.intro.p1}</p>
-                <p className="text-gray-600 mb-10">{t.homepage.intro.p2}</p>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <h4 className="text-3xl font-bold text-tembi">2000</h4>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {t.homepage.intro.stats.founded}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-3xl font-bold text-tembi">500+</h4>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {t.homepage.intro.stats.artifacts}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-3xl font-bold text-tembi">9</h4>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {t.homepage.intro.stats.house}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal animation="slideRight" duration={800}>
-              <div>
-                <Image
-                  src="/images/homepage/content1.webp"
-                  alt="Living museum architecture"
-                  width={600}
-                  height={450}
-                  className="rounded-lg"
-                />
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-        <section className="py-24 bg-white">
-          <div className="container mx-auto px-6">
-            <ScrollReveal animation="fadeUp" duration={800}>
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <h4 className="text-xs font-bold tracking-[0.2em] text-tembi uppercase mb-3">
-                  {t.homepage.accommodation.label}
-                </h4>
-                <h2 className="text-5xl font-serif text-gray-900 mb-6">
-                  {t.homepage.accommodation.title}
-                </h2>
-                <p className="text-gray-600 leading-relaxed text-lg">
-                  {t.homepage.accommodation.desc}
-                </p>
-              </div>
-            </ScrollReveal>
-            <div className="grid md:grid-cols-3 gap-8 mb-20 mx-auto max-w-7xl px-4">
-              {houses.map((house, index) => (
-                <ScrollReveal
-                  key={index}
-                  animation="fadeUp"
-                  delay={index * 150}
-                  duration={700}
-                >
-                  <HouseCard house={house} />
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-          <div className="bg-stone-50 rounded-lg p-10 md:p-14">
-            <div className="grid md:grid-cols-4 gap-12 items-center">
-              <div>
-                <h3 className="text-5xl font-serif font-medium text-gray-900 leading-[0.75]">
-                  {t.homepage.pavillion.title[0]}{" "}
-                  <br className="hidden md:block" />{" "}
-                  {t.homepage.pavillion.title[1]}
-                </h3>
-              </div>
-              <div className="md:col-span-2">
-                <div className="grid grid-cols-3 gap-y-6">
-                  {icons.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center gap-2 text-gray-600 text-base text-center"
-                    >
-                      <div className="relative w-16 h-16 flex-shrink-0">
-                        <Image
-                          src={item.icon}
-                          alt={item.text}
-                          fill
-                          className="object-contain"
-                          sizes="64px"
-                        />
-                      </div>
-                      <span className="leading-tight">{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="text-center md:text-right md:border-l md:border-gray-200 md:pl-12 flex flex-col items-center md:items-end justify-center">
-                <Link
-                  href="/rooms"
-                  className="inline-block bg-tembi hover:bg-darktembi text-white py-3 px-8 rounded-sm text-sm font-medium transition-colors whitespace-nowrap"
-                >
-                  {t.homepage.pavillion.button}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Introduction />
+        <Accomodation />
         <section className="py-24 bg-white">
           <div className="container mx-auto px-6">
             <ScrollReveal animation="fadeUp" duration={800}>
@@ -321,7 +160,7 @@ export default function HomePage() {
                         duration={600}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="relative w-4 h-4 flex-shrink-0">
+                          <div className="relative w-4 h-4 shrink-0">
                             <Image
                               src={point.icon}
                               alt="icon"
@@ -407,17 +246,17 @@ export default function HomePage() {
                         className="object-cover hover:scale-105 transition-transform duration-700"
                       />
                     </div>
-                    <div className="p-8 md:p-10 flex flex-col flex-grow">
+                    <div className="p-8 md:p-10 flex flex-col grow">
                       <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">
                         {evt.title}
                       </h3>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
+                      <p className="text-gray-500 text-sm leading-relaxed mb-8 grow">
                         {evt.description}
                       </p>
                       <div className="space-y-4 mb-8">
                         {evt.features.map((feature, idx) => (
                           <div key={idx} className="flex items-center gap-3">
-                            <div className="relative w-4 h-4 flex-shrink-0 opacity-60">
+                            <div className="relative w-4 h-4 shrink-0 opacity-60">
                               <Image
                                 src={feature.icon}
                                 alt="icon"
@@ -468,7 +307,7 @@ export default function HomePage() {
                     duration={700}
                   >
                     <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
-                      <div className="relative w-full aspect-[4/3] bg-slate-50 p-6 flex items-center justify-center">
+                      <div className="relative w-full aspect-4/3 bg-slate-50 p-6 flex items-center justify-center">
                         <div className="relative w-full h-full">
                           <Image
                             src={item.image}
@@ -478,7 +317,7 @@ export default function HomePage() {
                           />
                         </div>
                       </div>
-                      <div className="p-5 flex-grow border-t border-gray-50">
+                      <div className="p-5 grow border-t border-gray-50">
                         <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">
                           {item.title}
                         </h3>
@@ -490,9 +329,9 @@ export default function HomePage() {
                   </ScrollReveal>
                 ))}
               </div>
-              <div className="flex flex-col gap-6 h-full min-h-[500px]">
+              <div className="flex flex-col gap-6 h-full min-h-125">
                 <ScrollReveal animation="slideRight" duration={800}>
-                  <div className="relative w-full h-3/5 min-h-[300px] rounded-xl overflow-hidden shadow-sm">
+                  <div className="relative w-full h-3/5 min-h-75 rounded-xl overflow-hidden shadow-sm">
                     <Image
                       src="/images/homepage/content4.webp"
                       alt="Main Hall"
@@ -501,7 +340,7 @@ export default function HomePage() {
                     />
                   </div>
                 </ScrollReveal>
-                <div className="grid grid-cols-2 gap-6 h-2/5 min-h-[200px]">
+                <div className="grid grid-cols-2 gap-6 h-2/5 min-h-50">
                   <ScrollReveal
                     animation="slideLeft"
                     duration={800}
@@ -560,7 +399,7 @@ export default function HomePage() {
                 <ScrollReveal animation="slideLeft" duration={800}>
                   <div className="bg-[#F9F9F0] p-8 rounded-2xl">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="relative w-6 h-6 flex-shrink-0">
+                      <div className="relative w-6 h-6 shrink-0">
                         <Image
                           src="/images/icons/gps-green.png"
                           alt="Address"
@@ -586,7 +425,7 @@ export default function HomePage() {
                   >
                     <div className="bg-[#F9F9F0] p-8 rounded-2xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="relative w-6 h-6 flex-shrink-0">
+                        <div className="relative w-6 h-6 shrink-0">
                           <Image
                             src="/images/icons/plane-green.png"
                             alt="Airport"
@@ -610,7 +449,7 @@ export default function HomePage() {
                   >
                     <div className="bg-[#F9F9F0] p-8 rounded-2xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="relative w-6 h-6 flex-shrink-0">
+                        <div className="relative w-6 h-6 shrink-0">
                           <Image
                             src="/images/icons/city-green.png"
                             alt="City"
@@ -631,7 +470,7 @@ export default function HomePage() {
                 <ScrollReveal animation="slideLeft" duration={800} delay={200}>
                   <div className="bg-[#F9F9F0] p-8 rounded-2xl">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="relative w-6 h-6 flex-shrink-0">
+                      <div className="relative w-6 h-6 shrink-0">
                         <Image
                           src="/images/icons/car-green.png"
                           alt="Transport"
@@ -645,7 +484,7 @@ export default function HomePage() {
                     </div>
                     <ul className="space-y-4">
                       <li className="flex items-start gap-3">
-                        <div className="relative w-5 h-5 flex-shrink-0 mt-0.5">
+                        <div className="relative w-5 h-5 shrink-0 mt-0.5">
                           <Image
                             src="/images/icons/taxi-green.png"
                             alt="Taxi"
@@ -658,7 +497,7 @@ export default function HomePage() {
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="relative w-5 h-5 flex-shrink-0 mt-0.5">
+                        <div className="relative w-5 h-5 shrink-0 mt-0.5">
                           <Image
                             src="/images/icons/bus-green.png"
                             alt="Bus"
@@ -671,7 +510,7 @@ export default function HomePage() {
                         </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <div className="relative w-5 h-5 flex-shrink-0 mt-0.5">
+                        <div className="relative w-5 h-5 shrink-0 mt-0.5">
                           <Image
                             src="/images/icons/parking-green.png"
                             alt="Parking"
@@ -688,7 +527,7 @@ export default function HomePage() {
                 </ScrollReveal>
               </div>
               <ScrollReveal animation="slideRight" duration={800}>
-                <div className="relative h-[500px] lg:h-full min-h-[500px] rounded-2xl overflow-hidden shadow-lg bg-gray-100">
+                <div className="relative h-125 lg:h-full min-h-125 rounded-2xl overflow-hidden shadow-lg bg-gray-100">
                   <iframe
                     title="Location Map"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2385536997226!2d110.35363067455535!3d-7.870087878251126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a560cf1551d0b%3A0x1db36094db031949!2sTembi%20-%20Historical%20Home!5e0!3m2!1sid!2sid!4v1764903906866!5m2!1sid!2sid"
