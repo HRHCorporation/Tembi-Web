@@ -9,8 +9,7 @@ export default function BlogDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  // Data Lengkap Artikel (Disinkronkan dengan data BlogPage)
-  const postDetails: any = {
+  const postDetails: Record<string, { title: string; date: string; category: string; imageUrl: string; content: string[] }> = {
     "tips-memilih-venue-pernikahan": {
       title: "Tips Memilih Venue Pernikahan yang Sempurna",
       date: "01 Mei 2026",
@@ -47,7 +46,6 @@ export default function BlogDetailPage() {
 
   const post = postDetails[slug];
 
-  // Logic untuk menampilkan artikel lain di bagian bawah
   const otherPosts = Object.keys(postDetails)
     .filter(key => key !== slug)
     .map(key => ({ slug: key, ...postDetails[key] }));
@@ -87,7 +85,7 @@ export default function BlogDetailPage() {
         </div>
       </div>
 
-      {/* Featured Image - Ukuran diperkecil dan proporsional */}
+      {/* Featured Image */}
       <div className="container mx-auto px-6 mb-16">
         <div className="max-w-5xl mx-auto w-full h-[35vh] md:h-[50vh] rounded-2xl overflow-hidden shadow-2xl shadow-gray-200/50">
           <img 
@@ -112,9 +110,9 @@ export default function BlogDetailPage() {
             </button>
           </div>
 
-          {/* Konten Artikel - Optimasi Keterbacaan */}
+          {/* Konten Artikel */}
           <article className="prose prose-stone max-w-none mb-24">
-            {post.content.map((paragraph: string, index: number) => (
+            {post.content.map((paragraph, index) => (
               <p 
                 key={index} 
                 className="text-[#4a4a4a] leading-[2] text-lg font-normal mb-8 tracking-wide text-justify md:text-left"
@@ -124,7 +122,7 @@ export default function BlogDetailPage() {
             ))}
           </article>
 
-          {/* Section Artikel Lainnya */}
+          {/* Artikel Lainnya */}
           <div className="pt-16 border-t border-gray-200">
             <h2 className="text-2xl font-serif font-bold mb-10 text-[#2d3436]">Baca Artikel Lainnya</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import CollectionCard from '@/components/CollectionCard';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import ScrollReveal from '@/components/ScrollReveal';
 
 export default function CollectionsPage() {

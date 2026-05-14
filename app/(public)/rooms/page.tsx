@@ -2,7 +2,7 @@
 
 import FeaturedRoomCard from "@/components/FeaturedRoomCard";
 import StandardRoomCard from "@/components/StandardRoomCard";
-import { useLanguage } from "@/app/context/LanguageContext";
+import { useLanguage } from "@/app/(public)/context/LanguageContext";
 import Image from 'next/image';
 import { AmenitiesSection } from "@/components/AmenitiesSection";
 import ScrollReveal from "@/components/ScrollReveal";

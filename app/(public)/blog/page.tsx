@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import { BlogCard } from '@/components/BlogCard';
 
 export default function BlogPage() {
@@ -38,11 +38,10 @@ export default function BlogPage() {
   ];
 
   return (
-    /* Background Krem ala Venue Rental */
     <div className="min-h-screen bg-[#fdfcf7] pt-32 pb-20">
       <div className="container mx-auto px-6">
         
-        {/* Header Section dengan Gaya Heritage */}
+        {/* Header Section */}
         <header className="mb-20 text-center relative">
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="h-[1px] w-12 bg-[#8da077]/40"></div>

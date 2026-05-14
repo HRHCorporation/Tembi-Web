@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import SpacesSection from '@/components/SpacesSection';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import ScrollReveal from '@/components/ScrollReveal';
 
 export default function SejarahPage() {

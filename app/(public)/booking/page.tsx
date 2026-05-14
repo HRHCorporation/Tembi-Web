@@ -6,7 +6,7 @@ import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 // import { roomData } from '@/data/roomData';
-import { useLanguage } from "@/app/context/LanguageContext";
+import { useLanguage } from "@/app/(public)/context/LanguageContext";
 
 import { differenceInCalendarDays, parseISO } from "date-fns";
 import {

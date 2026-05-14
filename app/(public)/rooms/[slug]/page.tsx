@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { useLanguage } from "@/app/context/LanguageContext";
+import { useLanguage } from "@/app/(public)/context/LanguageContext";
 
 // 2. Helper Function Format Rupiah
 const formatRupiah = (price: number) => {

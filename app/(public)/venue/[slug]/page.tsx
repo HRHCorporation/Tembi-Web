@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Info } from 'lucide-react';
 import Link from 'next/link';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function VenueDetailPage({ params }: { params: Promise<{ slug: string }> }) {

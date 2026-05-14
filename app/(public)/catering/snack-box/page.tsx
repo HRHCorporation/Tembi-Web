@@ -6,7 +6,7 @@ import MenuCard from '@/components/MenuCard';
 import BuffetPricing, { PackageItem } from '@/components/BuffetPricing';
 import BuffetFeatures from '@/components/BuffetFeatures';
 import BuffetBooking from '@/components/BuffetBooking';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 
 
 

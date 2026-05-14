@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import MenuItemCard from '@/components/MenuItemCard';
 import PackageCard from '@/components/PackageCard';
 import ScrollReveal from '@/components/ScrollReveal';

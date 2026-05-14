@@ -6,7 +6,7 @@ import VenueCard from '@/components//VenueCard';
 import VenueGallery from '@/components/VenueGallery';
 import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 
 
 const VenuePage = () => {

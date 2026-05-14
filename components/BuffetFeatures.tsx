@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { useLanguage } from '@/app/context/LanguageContext';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 
 const BuffetFeatures = () => {
   const { t } = useLanguage();
