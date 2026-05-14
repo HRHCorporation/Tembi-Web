@@ -1,21 +1,27 @@
-'use client';
-import React, { ReactNode } from 'react';
-import { useInView } from '@/hooks/useInView';
+"use client";
+import React, { ReactNode } from "react";
+import { useInView } from "@/hooks/useInView";
 
 interface ScrollRevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
   duration?: number;
-  animation?: 'fadeUp' | 'fadeIn' | 'slideLeft' | 'slideRight' | 'scaleUp' | 'zoomIn';
+  animation?:
+    | "fadeUp"
+    | "fadeIn"
+    | "slideLeft"
+    | "slideRight"
+    | "scaleUp"
+    | "zoomIn";
 }
 
 export default function ScrollReveal({
   children,
-  className = '',
+  className = "",
   delay = 0,
   duration = 700,
-  animation = 'fadeUp',
+  animation = "fadeUp",
 }: ScrollRevealProps) {
   const { ref, isInView } = useInView();
 
@@ -25,33 +31,37 @@ export default function ScrollReveal({
 
   const getInitialTransform = () => {
     const transforms: { [key: string]: string } = {
-      fadeUp: 'translateY(32px)',
-      fadeIn: 'none',
-      slideLeft: 'translateX(-32px)',
-      slideRight: 'translateX(32px)',
-      scaleUp: 'scale(0.95)',
-      zoomIn: 'scale(0.75)',
+      fadeUp: "translateY(32px)",
+      fadeIn: "none",
+      slideLeft: "translateX(-32px)",
+      slideRight: "translateX(32px)",
+      scaleUp: "scale(0.95)",
+      zoomIn: "scale(0.75)",
     };
-    return transforms[animation] || 'none';
+    return transforms[animation] || "none";
   };
 
   const dynamicStyle: React.CSSProperties = isInView
     ? {
         ...baseStyle,
-        transform: 'translate(0, 0) scale(1)',
+        transform: "translate(0, 0) scale(1)",
         opacity: 1,
       }
     : {
         ...baseStyle,
         transform: getInitialTransform(),
-        opacity: animation === 'fadeIn' ? 0 : (animation === 'fadeUp' || animation === 'slideLeft' || animation === 'slideRight' ? 0 : 1),
+        opacity:
+          animation === "fadeIn"
+            ? 0
+            : animation === "fadeUp" ||
+                animation === "slideLeft" ||
+                animation === "slideRight"
+              ? 0
+              : 1,
       };
 
   return (
-    <div
-      ref={ref}
-      style={dynamicStyle}
-    >
+    <div ref={ref} style={dynamicStyle}>
       {children}
     </div>
   );

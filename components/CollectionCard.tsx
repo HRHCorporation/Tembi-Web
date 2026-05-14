@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
-// Tipe data untuk props card
 export interface CollectionItem {
   id: string | number;
   imageUrl: string;
@@ -19,10 +18,9 @@ interface CollectionCardProps {
 const CollectionCard: React.FC<CollectionCardProps> = ({ item }) => {
   return (
     <div className="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-      
-      <div className="relative aspect-[4/3] w-full bg-gray-50 flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-4/3 w-full bg-gray-50 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-        
+
         <Image
           src={item.imageUrl}
           alt={item.title}

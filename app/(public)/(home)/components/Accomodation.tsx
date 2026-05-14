@@ -1,5 +1,5 @@
 import ScrollReveal from "@/components/ScrollReveal";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 import HouseCard from "./HouseCard";
 import Image from "next/image";
 import Link from "next/link";
