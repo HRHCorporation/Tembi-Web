@@ -9,7 +9,7 @@ export function useTiersRoomList() {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [sortBy, setSortBy] = useState("id");
-    const [sortOrder, setSortOrder] = useState("DESC");
+    const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("DESC"); // ← fix
     const [pagination, setPagination] = useState({
         total: 0,
         totalPages: 1,

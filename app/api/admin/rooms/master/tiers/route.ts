@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbWeb from "@/lib/db-web";
-import path from "path";
-import fs from "fs";
-import sharp from "sharp";
 import { cookies } from "next/headers";
 import { RowDataPacket } from "mysql2";
 
@@ -23,7 +20,7 @@ interface SessionUser {
 }
 
 /* ======================================================
-   GET DATA
+    GET DATA
 ====================================================== */
 export async function GET(request: NextRequest) {
     try {
