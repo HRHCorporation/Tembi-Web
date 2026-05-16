@@ -22,17 +22,13 @@ export const BlogCard = ({ post, readMoreText }: BlogCardProps) => {
       {/* Container: Background terang, border halus, shadow lembut */}
       <article className="h-full bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col shadow-sm hover:-translate-y-2">
         
-        {/* Container Gambar dengan Label Kategori Floating */}
+        {/* Container Gambar */}
         <div className="w-full h-56 overflow-hidden relative">
           <img
             src={post.imageUrl}
             alt={post.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          {/* Badge Kategori ala Venue Gallery */}
-          <div className="absolute top-4 left-4 bg-[#8da077] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
-            {post.category}
-          </div>
         </div>
 
         {/* Konten Teks */}

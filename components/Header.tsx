@@ -20,6 +20,7 @@ export default function Header() {
     { name: t.nav.house, href: "/rooms" },
     { name: t.nav.foods, href: "/catering" },
     { name: t.nav.venue, href: "/venue" },
+    { name: "Event", href: "/event" },
     { name: t.nav.history, href: "/sejarah" },
     { name: t.nav.collections, href: "/collections" },
     { name: t.nav.blog || "Blog", href: "/blog" },

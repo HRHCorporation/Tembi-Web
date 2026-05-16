@@ -40,7 +40,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-[#fdfcf7] pt-32 pb-20">
       <div className="container mx-auto px-6">
-        
+
         {/* Header Section */}
         <header className="mb-20 text-center relative">
           <div className="flex items-center justify-center gap-4 mb-4">
@@ -52,7 +52,7 @@ export default function BlogPage() {
           <h1 className="text-5xl md:text-7xl font-bold font-serif text-[#2d3436] mb-8 tracking-tight">
             Blog Tembi
           </h1>
-          
+
           <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed text-lg font-light italic">
             Temukan inspirasi seputar budaya Jawa, keindahan arsitektur, dan tips spesial untuk momen berharga Anda.
           </p>
