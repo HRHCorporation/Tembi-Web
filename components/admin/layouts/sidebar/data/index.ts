@@ -7,89 +7,123 @@ export const NAV_DATA = [
       {
         title: "Dashboard",
         icon: Icons.HomeIcon,
-        items: [
-          {
-            title: "eCommerce",
-            url: "/",
-          },
-        ],
-      },
-      {
-        title: "Calendar",
-        url: "/calendar",
-        icon: Icons.Calendar,
+        url: "/admin/dashboard",
         items: [],
       },
       {
-        title: "Profile",
-        url: "/profile",
-        icon: Icons.User,
+        title: "Carousel",
+        url: "/admin/carousel",
+        icon: Icons.FourCircle,
         items: [],
       },
       {
-        title: "Forms",
-        icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Form Elements",
-            url: "/forms/form-elements",
-          },
-          {
-            title: "Form Layout",
-            url: "/forms/form-layout",
-          },
-        ],
-      },
-      {
-        title: "Tables",
-        url: "/tables",
-        icon: Icons.Table,
-        items: [
-          {
-            title: "Tables",
-            url: "/tables",
-          },
-        ],
-      },
-      {
-        title: "Pages",
-        icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Settings",
-            url: "/pages/settings",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: "OTHERS",
-    items: [
-      {
-        title: "Charts",
-        icon: Icons.PieChart,
-        items: [
-          {
-            title: "Basic Chart",
-            url: "/charts/basic-chart",
-          },
-        ],
-      },
-      {
-        title: "UI Elements",
+        title: "Rooms",
         icon: Icons.FourCircle,
         items: [
           {
-            title: "Alerts",
-            url: "/ui-elements/alerts",
+            title: "Master",
+            items: [
+              {
+                title: "Tiers Room",
+                url: "/admin/rooms/master/tiers",
+              },
+              {
+                title: "Mattress Room",
+                url: "/admin/rooms/master/mattress",
+              },
+              {
+                title: "Fasilities",
+                url: "/admin/rooms/master/fasilities",
+              },
+              {
+                title: "Home Rules",
+                url: "/admin/rooms/master/homerules",
+              },
+              {
+                title: "Policies",
+                url: "/admin/rooms/master/policies",
+              },
+            ],
           },
           {
-            title: "Buttons",
-            url: "/ui-elements/buttons",
+            title: "Main",
+            url: "/admin/rooms/main",
+          },
+          {
+            title: "Amenties",
+            url: "/admin/rooms/amenties",
           },
         ],
       },
+      {
+        title: "Food Catering",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Catering",
+            url: "/admin/food/catering",
+          },
+          {
+            title: "Our Menu",
+            url: "/admin/food/menu",
+          },
+          {
+            title: "Our Package",
+            url: "/admin/food/package",
+          },
+          {
+            title: "Menu Highlight",
+            url: "/admin/food/highlight",
+          },
+        ],
+      },
+      {
+        title: "Celebrate",
+        url: "/admin/celebrate",
+        icon: Icons.FourCircle,
+        items: [],
+      },
+      {
+        title: "Vanue",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Master Fasilities",
+            url: "/admin/vanue/facilities",
+          },
+          {
+            title: "Main Vanue",
+            url: "/admin/vanue/main",
+          }
+        ],
+      },
+      {
+        title: "Collections",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Master Collections",
+            url: "/admin/collections/master",
+          },
+          {
+            title: "Main Collections",
+            url: "/admin/collections/main",
+          }
+        ],
+      },
+      {
+        title: "Blog",
+        url: "/admin/blogs",
+        icon: Icons.FourCircle,
+        items: [],
+      },
+      {
+        title: "Banner Setting",
+        url: "/admin/banner",
+        icon: Icons.FourCircle,
+        items: [],
+      },
     ],
   },
+
 ];
