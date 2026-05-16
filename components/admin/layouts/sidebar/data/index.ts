@@ -54,7 +54,69 @@ export const NAV_DATA = [
             url: "/admin/rooms/amenties",
           },
         ],
-      }
+      },
+      {
+        title: "Food Catering",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Catering",
+            url: "/admin/food/catering",
+          },
+          {
+            title: "Our Menu",
+            url: "/admin/food/menu",
+          },
+          {
+            title: "Our Package",
+            url: "/admin/food/package",
+          },
+          {
+            title: "Menu Highlight",
+            url: "/admin/food/highlight",
+          },
+        ],
+      },
+      {
+        title: "Celebrate",
+        url: "/admin/celebrate",
+        icon: Icons.FourCircle,
+        items: [],
+      },
+      {
+        title: "Vanue",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Master Fasilities",
+            url: "/admin/vanue/facilities",
+          },
+          {
+            title: "Main Vanue",
+            url: "/admin/vanue/main",
+          }
+        ],
+      },
+      {
+        title: "Collections",
+        icon: Icons.FourCircle,
+        items: [
+          {
+            title: "Master Collections",
+            url: "/admin/collections/master",
+          },
+          {
+            title: "Main Collections",
+            url: "/admin/collections/main",
+          }
+        ],
+      },
+      {
+        title: "Blog",
+        url: "/admin/blogs",
+        icon: Icons.FourCircle,
+        items: [],
+      },
     ],
   },
 

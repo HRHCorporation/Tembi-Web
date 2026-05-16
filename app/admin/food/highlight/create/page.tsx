@@ -1,0 +1,185 @@
+"use client";
+
+import { FormPage } from "@/components/admin/global/FormPage";
+import { FormActions } from "@/components/admin/global/FormActions";
+import { useCreateHighlight } from "../_hooks/use-create-highlight-food";
+import { useHighlightOptionList } from "../_hooks/use-option-list-highlight";
+import { ImageCropper } from "@/app/admin/carousel/_components/image-cropper";
+
+export default function CreateHighlightPage() {
+    const {
+        food_package_id,
+        our_menu_food_id,
+        imageFile,
+        imagePreview,
+        croppedBlob,
+        description_ind,
+        description_eng,
+        loading,
+        errors,
+        setFoodPackageId,
+        setOurMenuFoodId,
+        setImageFile,
+        setImagePreview,
+        setCroppedBlob,
+        setDescriptionInd,
+        setDescriptionEng,
+        handleSubmit,
+    } = useCreateHighlight();
+
+    const {
+        foodPackages,
+        menuFoods,
+        loadingPackages,
+        loadingFoods,
+        fetchMenuFoodsByPackage,
+    } = useHighlightOptionList();
+
+    // ✅ Handle food package change
+    const handleFoodPackageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const packageId = e.target.value;
+        setFoodPackageId(packageId);
+        setOurMenuFoodId(""); // Reset menu food
+        fetchMenuFoodsByPackage(packageId);
+    };
+
+    // ✅ Handle image file selection
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setImagePreview(event.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    return (
+        <FormPage
+            title="Tambah Highlight"
+            description="Tambahkan data Highlight baru"
+        >
+            <form
+                className="space-y-5"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+            >
+                {/* Food Package Dropdown */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Food Package
+                    </label>
+                    <select
+                        value={food_package_id}
+                        onChange={handleFoodPackageChange}
+                        disabled={loadingPackages}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    >
+                        <option value="">Pilih food package...</option>
+                        {foodPackages.map((fp) => (
+                            <option key={fp.value} value={fp.value}>
+                                {fp.label}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.food_package_id && (
+                        <p className="mt-1 text-sm text-red-600">{errors.food_package_id}</p>
+                    )}
+                </div>
+
+                {/* Menu Food Dropdown (Cascading) */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Menu Food
+                    </label>
+                    <select
+                        value={our_menu_food_id}
+                        onChange={(e) => setOurMenuFoodId(e.target.value)}
+                        disabled={!food_package_id || loadingFoods}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    >
+                        <option value="">Pilih menu food...</option>
+                        {menuFoods.map((mf) => (
+                            <option key={mf.value} value={mf.value}>
+                                {mf.label}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.our_menu_food_id && (
+                        <p className="mt-1 text-sm text-red-600">{errors.our_menu_food_id}</p>
+                    )}
+                </div>
+
+                {/* Image Upload */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Upload Image
+                    </label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+
+                {/* Image Cropper */}
+                {imagePreview && (
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Crop Image (Square Format)
+                        </label>
+                        <ImageCropper
+                            image={imagePreview}
+                            setCroppedBlob={setCroppedBlob}
+                        />
+                        {errors.image && (
+                            <p className="mt-1 text-sm text-red-600">{errors.image}</p>
+                        )}
+                    </div>
+                )}
+
+                {/* Description Indonesia */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Deskripsi (Indonesia)
+                    </label>
+                    <textarea
+                        value={description_ind}
+                        onChange={(e) => setDescriptionInd(e.target.value)}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Masukkan deskripsi highlight"
+                        rows={4}
+                    />
+                    {errors.description_ind && (
+                        <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
+                    )}
+                </div>
+
+                {/* Description English */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Deskripsi (English)
+                    </label>
+                    <textarea
+                        value={description_eng}
+                        onChange={(e) => setDescriptionEng(e.target.value)}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter highlight description"
+                        rows={4}
+                    />
+                    {errors.description_eng && (
+                        <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
+                    )}
+                </div>
+
+                {/* ACTIONS */}
+                <FormActions loading={loading} />
+            </form>
+        </FormPage>
+    );
+}
