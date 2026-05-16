@@ -117,6 +117,12 @@ export const NAV_DATA = [
         icon: Icons.FourCircle,
         items: [],
       },
+      {
+        title: "Banner Setting",
+        url: "/admin/banner",
+        icon: Icons.FourCircle,
+        items: [],
+      },
     ],
   },
 
