@@ -1,14 +1,39 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
+import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import PageHero from '@/components/PageHero';
 import EventInfo from '@/components/EventInfo';
 import EventGallery from '@/components/EventGallery';
 import EventBookingCTA from '@/components/EventBookingCTA';
 
-// Sample event data - in real app this would come from database/API
-const eventsData = [
+interface EventDetail {
+  id: number;
+  name_ind: string;
+  name_eng: string;
+  tagline_ind: string;
+  tagline_eng: string;
+  shortDesc_ind: string;
+  shortDesc_eng: string;
+  description_ind: string[];
+  description_eng: string[];
+  imageUrl: string;
+  slug: string;
+  date: string;
+  time: string;
+  location: string;
+  capacity: number;
+  price: number;
+  included_ind: string[];
+  included_eng: string[];
+  requirements_ind: string[];
+  requirements_eng: string[];
+  galleryImages: string[];
+}
+
+// Fallback static data for development
+const fallbackEventsData = [
   {
     slug: 'javanese-wedding-ceremony',
     name: 'Javanese Wedding Ceremony',
@@ -241,19 +266,115 @@ const eventsData = [
 
 export default function EventDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const event = eventsData.find((e) => e.slug === slug);
+  const { language } = useLanguage();
+  const [event, setEvent] = useState<EventDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!event) {
+  useEffect(() => {
+    async function fetchEventDetail() {
+      try {
+        const response = await fetch(`/api/public/events/${slug}`);
+        const result = await response.json();
+
+        if (result.success) {
+          setEvent(result.data);
+        } else {
+          // Try fallback to static data
+          const fallbackEvent = fallbackEventsData.find((e) => e.slug === slug);
+          if (fallbackEvent) {
+            // Convert fallback format to API format
+            setEvent({
+              id: 0,
+              name_ind: fallbackEvent.name,
+              name_eng: fallbackEvent.name,
+              tagline_ind: fallbackEvent.tagline,
+              tagline_eng: fallbackEvent.tagline,
+              shortDesc_ind: '',
+              shortDesc_eng: '',
+              description_ind: fallbackEvent.description,
+              description_eng: fallbackEvent.description,
+              imageUrl: fallbackEvent.imageUrl,
+              slug: fallbackEvent.slug,
+              date: fallbackEvent.date,
+              time: fallbackEvent.time,
+              location: fallbackEvent.location,
+              capacity: fallbackEvent.capacity,
+              price: fallbackEvent.price,
+              included_ind: fallbackEvent.included,
+              included_eng: fallbackEvent.included,
+              requirements_ind: fallbackEvent.requirements,
+              requirements_eng: fallbackEvent.requirements,
+              galleryImages: fallbackEvent.galleryImages
+            });
+          } else {
+            setError(result.message || 'Event not found');
+          }
+        }
+      } catch (err) {
+        // Try fallback to static data on error
+        const fallbackEvent = fallbackEventsData.find((e) => e.slug === slug);
+        if (fallbackEvent) {
+          setEvent({
+            id: 0,
+            name_ind: fallbackEvent.name,
+            name_eng: fallbackEvent.name,
+            tagline_ind: fallbackEvent.tagline,
+            tagline_eng: fallbackEvent.tagline,
+            shortDesc_ind: '',
+            shortDesc_eng: '',
+            description_ind: fallbackEvent.description,
+            description_eng: fallbackEvent.description,
+            imageUrl: fallbackEvent.imageUrl,
+            slug: fallbackEvent.slug,
+            date: fallbackEvent.date,
+            time: fallbackEvent.time,
+            location: fallbackEvent.location,
+            capacity: fallbackEvent.capacity,
+            price: fallbackEvent.price,
+            included_ind: fallbackEvent.included,
+            included_eng: fallbackEvent.included,
+            requirements_ind: fallbackEvent.requirements,
+            requirements_eng: fallbackEvent.requirements,
+            galleryImages: fallbackEvent.galleryImages
+          });
+        } else {
+          setError('Failed to load event');
+        }
+        console.error('Error fetching event detail:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEventDetail();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <main className="bg-[#F8F9FA] min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B9D68]"></div>
+      </main>
+    );
+  }
+
+  if (error || !event) {
     return notFound();
   }
+
+  const eventName = language === 'id' ? event.name_ind : event.name_eng;
+  const eventTagline = language === 'id' ? event.tagline_ind : event.tagline_eng;
+  const eventDescription = language === 'id' ? event.description_ind : event.description_eng;
+  const eventIncluded = language === 'id' ? event.included_ind : event.included_eng;
+  const eventRequirements = language === 'id' ? event.requirements_ind : event.requirements_eng;
 
   return (
     <main className="bg-[#F8F9FA] min-h-screen pb-20">
       {/* Hero Section */}
       <PageHero
         backgroundImage={event.imageUrl}
-        title={event.name}
-        description={event.tagline}
+        title={eventName}
+        description={eventTagline}
         height="md"
         overlay="gradient-dark"
         backButton={{
@@ -267,29 +388,29 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       <div className="container mx-auto px-4 md:px-10 py-12 space-y-8">
         {/* Event Info */}
         <EventInfo
-          name={event.name}
+          name={eventName}
           date={event.date}
           time={event.time}
           location={event.location}
           capacity={event.capacity}
           price={event.price}
-          category={event.category}
-          description={event.description}
-          included={event.included}
-          requirements={event.requirements}
+          category={''}
+          description={eventDescription}
+          included={eventIncluded}
+          requirements={eventRequirements}
         />
 
         {/* Gallery */}
         {event.galleryImages && event.galleryImages.length > 0 && (
           <EventGallery
-            eventName={event.name}
+            eventName={eventName}
             galleryImages={event.galleryImages}
           />
         )}
 
         {/* Booking CTA */}
         <EventBookingCTA
-          eventName={event.name}
+          eventName={eventName}
           price={event.price}
           date={event.date}
         />
