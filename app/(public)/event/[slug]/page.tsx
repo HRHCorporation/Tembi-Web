@@ -268,6 +268,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   const { slug } = use(params);
   const { language } = useLanguage();
   const [event, setEvent] = useState<EventDetail | null>(null);
+  const [relatedEvents, setRelatedEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -347,7 +348,33 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       }
     }
 
+    async function fetchRelatedEvents() {
+      try {
+        const response = await fetch('/api/public/events');
+        const result = await response.json();
+
+        if (result.success) {
+          // Filter out current event and get only upcoming events
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const filtered = result.data
+            .filter((e: any) => {
+              const eventDate = new Date(e.date);
+              eventDate.setHours(0, 0, 0, 0);
+              return e.slug !== slug && eventDate >= today;
+            })
+            .slice(0, 4); // Max 4 events
+
+          setRelatedEvents(filtered);
+        }
+      } catch (err) {
+        console.error('Error fetching related events:', err);
+      }
+    }
+
     fetchEventDetail();
+    fetchRelatedEvents();
   }, [slug]);
 
   if (loading) {
@@ -414,6 +441,51 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
           price={event.price}
           date={event.date}
         />
+
+        {/* Related Events */}
+        {relatedEvents.length > 0 && (
+          <section className="mt-16">
+            <h3 className="text-2xl font-serif font-bold text-gray-800 mb-6">
+              Upcoming Events
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {relatedEvents.map((relatedEvent) => (
+                <a
+                  key={relatedEvent.id}
+                  href={`/event/${relatedEvent.slug}`}
+                  className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={relatedEvent.imageUrl}
+                      alt={language === 'id' ? relatedEvent.title_ind : relatedEvent.title_eng}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  </div>
+                  <div className="p-5">
+                    <h4 className="text-lg font-serif font-bold text-gray-800 mb-2 group-hover:text-[#8B9D68] transition-colors line-clamp-2">
+                      {language === 'id' ? relatedEvent.title_ind : relatedEvent.title_eng}
+                    </h4>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {language === 'id' ? relatedEvent.shortDesc_ind : relatedEvent.shortDesc_eng}
+                    </p>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <svg className="w-4 h-4 mr-2 text-[#8B9D68]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {new Date(relatedEvent.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   );

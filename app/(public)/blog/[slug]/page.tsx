@@ -75,8 +75,6 @@ export default function BlogDetailPage() {
 
         <div className="max-w-4xl text-left">
           <div className="flex items-center gap-3 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-            <span className="text-[#8da077]">{post.category}</span>
-            <span className="w-1 h-1 rounded-full bg-gray-300"></span>
             <span>{post.date}</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold font-serif leading-tight mb-8 tracking-tight text-[#2d3436]">
@@ -130,16 +128,13 @@ export default function BlogDetailPage() {
                 <Link key={other.slug} href={`/blog/${other.slug}`} className="group">
                   <div className="flex flex-col gap-5">
                     <div className="aspect-[16/10] rounded-xl overflow-hidden shadow-md">
-                      <img 
-                        src={other.imageUrl} 
-                        alt={other.title} 
+                      <img
+                        src={other.imageUrl}
+                        alt={other.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     </div>
                     <div>
-                      <span className="text-[#8da077] text-[10px] font-bold uppercase tracking-[0.2em] block mb-2">
-                        {other.category}
-                      </span>
                       <h4 className="font-serif font-bold text-xl group-hover:text-[#8da077] transition-colors leading-snug text-[#2d3436]">
                         {other.title}
                       </h4>
