@@ -1,15 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import CollectionCard from '@/components/CollectionCard';
 import { useLanguage } from '@/app/(public)/context/LanguageContext';
 import ScrollReveal from '@/components/ScrollReveal';
 
 export default function CollectionsPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [collectionsData, setCollectionsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const statsData = t.collection.stats.item;
-  const collectionsData = t.collection.items;
+
+  useEffect(() => {
+    async function fetchCollections() {
+      try {
+        const response = await fetch('/api/public/collection');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          setCollectionsData(result.data);
+        } else {
+          // Fallback ke data translation jika API gagal
+          setCollectionsData(t.collection.items);
+        }
+      } catch (err) {
+        console.error('Error fetching collections:', err);
+        // Fallback ke data translation
+        setCollectionsData(t.collection.items);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCollections();
+  }, [t.collection.items]);
   return (
     <main className="w-full">
       
@@ -117,8 +142,13 @@ export default function CollectionsPage() {
 
       <div className="w-full bg-[#FAFAFA] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
-          
-          {collectionsData.map((category, index) => (
+
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8F9F6A]"></div>
+            </div>
+          ) : (
+            collectionsData.map((category, index) => (
             <div key={index} className="mb-20 last:mb-0">
               
               <ScrollReveal animation="fadeUp" duration={800}>
@@ -138,7 +168,8 @@ export default function CollectionsPage() {
               </div>
 
             </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </main>

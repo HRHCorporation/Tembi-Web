@@ -20,6 +20,142 @@ interface Event {
   price: number;
 }
 
+// Fallback dummy data
+const fallbackEventsData: Event[] = [
+  // Upcoming Events (after May 17, 2026)
+  {
+    id: 1,
+    title_ind: 'Upacara Pernikahan Jawa',
+    title_eng: 'Javanese Wedding Ceremony',
+    shortDesc_ind: 'Upacara pernikahan tradisional Jawa di pendopo yang indah',
+    shortDesc_eng: 'Traditional Javanese wedding ceremony in our beautiful pendopo',
+    imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop',
+    slug: 'javanese-wedding-ceremony',
+    date: '2026-07-15',
+    location: 'Main Pendopo',
+    capacity: 150,
+    price: 25000000
+  },
+  {
+    id: 2,
+    title_ind: 'Workshop Musik Gamelan',
+    title_eng: 'Gamelan Music Workshop',
+    shortDesc_ind: 'Belajar musik gamelan tradisional Jawa dari musisi profesional',
+    shortDesc_eng: 'Learn traditional Javanese gamelan from master musicians',
+    imageUrl: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2000&auto=format&fit=crop',
+    slug: 'gamelan-music-workshop',
+    date: '2026-06-20',
+    location: 'Cultural Hall',
+    capacity: 30,
+    price: 250000
+  },
+  {
+    id: 3,
+    title_ind: 'Kelas Membatik',
+    title_eng: 'Batik Making Class',
+    shortDesc_ind: 'Ciptakan karya batik Anda sendiri dengan teknik tradisional',
+    shortDesc_eng: 'Create your own batik masterpiece with traditional techniques',
+    imageUrl: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2000&auto=format&fit=crop',
+    slug: 'batik-making-class',
+    date: '2026-06-25',
+    location: 'Art Studio',
+    capacity: 20,
+    price: 350000
+  },
+  {
+    id: 4,
+    title_ind: 'Malam Kuliner Jawa',
+    title_eng: 'Javanese Culinary Night',
+    shortDesc_ind: 'Nikmati hidangan autentik Jawa dalam suasana tradisional',
+    shortDesc_eng: 'Experience authentic Javanese cuisine in a traditional setting',
+    imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=2000&auto=format&fit=crop',
+    slug: 'javanese-culinary-night',
+    date: '2026-07-01',
+    location: 'Garden Pavilion',
+    capacity: 80,
+    price: 450000
+  },
+  {
+    id: 5,
+    title_ind: 'Retreat Yoga & Meditasi',
+    title_eng: 'Yoga & Meditation Retreat',
+    shortDesc_ind: 'Temukan kedamaian batin dengan yoga dan meditasi di alam',
+    shortDesc_eng: 'Find inner peace with yoga and meditation in nature',
+    imageUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
+    slug: 'yoga-meditation-retreat',
+    date: '2026-07-10',
+    location: 'Garden Area',
+    capacity: 25,
+    price: 300000
+  },
+  {
+    id: 6,
+    title_ind: 'Tur Fotografi Warisan Budaya',
+    title_eng: 'Heritage Photography Tour',
+    shortDesc_ind: 'Abadikan keindahan arsitektur tradisional Jawa',
+    shortDesc_eng: 'Capture the beauty of traditional Javanese architecture',
+    imageUrl: 'https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?q=80&w=2000&auto=format&fit=crop',
+    slug: 'heritage-photography-tour',
+    date: '2026-06-30',
+    location: 'All Venues',
+    capacity: 15,
+    price: 400000
+  },
+  // Past Events (before May 17, 2026)
+  {
+    id: 7,
+    title_ind: 'Festival Wayang Kulit',
+    title_eng: 'Shadow Puppet Festival',
+    shortDesc_ind: 'Festival seni wayang kulit dengan dalang profesional',
+    shortDesc_eng: 'Traditional shadow puppet performance by master puppeteers',
+    imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2000&auto=format&fit=crop',
+    slug: 'shadow-puppet-festival',
+    date: '2026-04-15',
+    location: 'Main Pendopo',
+    capacity: 100,
+    price: 150000
+  },
+  {
+    id: 8,
+    title_ind: 'Workshop Tari Tradisional',
+    title_eng: 'Traditional Dance Workshop',
+    shortDesc_ind: 'Belajar tarian tradisional Jawa dari penari profesional',
+    shortDesc_eng: 'Learn authentic Javanese dance from professional dancers',
+    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2000&auto=format&fit=crop',
+    slug: 'traditional-dance-workshop',
+    date: '2026-03-20',
+    location: 'Cultural Hall',
+    capacity: 25,
+    price: 200000
+  },
+  {
+    id: 9,
+    title_ind: 'Perayaan Tahun Baru Jawa',
+    title_eng: 'Javanese New Year Celebration',
+    shortDesc_ind: 'Perayaan tradisional menyambut Tahun Baru Jawa (Satu Suro)',
+    shortDesc_eng: 'Traditional celebration welcoming Javanese New Year (Satu Suro)',
+    imageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000&auto=format&fit=crop',
+    slug: 'javanese-new-year',
+    date: '2026-02-28',
+    location: 'Garden Pavilion',
+    capacity: 200,
+    price: 500000
+  },
+  {
+    id: 10,
+    title_ind: 'Kelas Memasak Tradisional',
+    title_eng: 'Traditional Cooking Class',
+    shortDesc_ind: 'Pelajari cara memasak hidangan Jawa autentik',
+    shortDesc_eng: 'Learn to cook authentic Javanese dishes from expert chefs',
+    imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2000&auto=format&fit=crop',
+    slug: 'traditional-cooking-class',
+    date: '2026-01-25',
+    location: 'Kitchen Area',
+    capacity: 15,
+    price: 300000
+  }
+];
+
 export default function EventPage() {
   const { t, language } = useLanguage();
   const [events, setEvents] = useState<Event[]>([]);
@@ -36,10 +172,12 @@ export default function EventPage() {
         if (result.success) {
           setEvents(result.data);
         } else {
-          setError(result.message || 'Failed to fetch events');
+          // Use fallback dummy data
+          setEvents(fallbackEventsData);
         }
       } catch (err) {
-        setError('Failed to load events');
+        // Use fallback dummy data on error
+        setEvents(fallbackEventsData);
         console.error('Error fetching events:', err);
       } finally {
         setLoading(false);

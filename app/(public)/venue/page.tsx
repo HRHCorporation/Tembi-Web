@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import VenueCard from '@/components//VenueCard';
 import VenueGallery from '@/components/VenueGallery';
@@ -10,7 +10,33 @@ import { useLanguage } from '@/app/(public)/context/LanguageContext';
 
 
 const VenuePage = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [venues, setVenues] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchVenues() {
+      try {
+        const response = await fetch('/api/public/vanue/list-vanue');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          setVenues(result.data);
+        } else {
+          // Fallback ke data translation
+          setVenues(t.venue.items);
+        }
+      } catch (err) {
+        console.error('Error fetching venues:', err);
+        // Fallback ke data translation
+        setVenues(t.venue.items);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchVenues();
+  }, [t.venue.items]);
   const featureIcons = [
     "/images/icons/build-white.png",
     "/images/icons/group-white.png",
@@ -130,22 +156,28 @@ const VenuePage = () => {
             </div>
           </ScrollReveal>
 
-          {/* Loop Data Venue dari Context (t.venue.items) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-            {t.venue.items.map((venue, idx) => (
-              <ScrollReveal key={venue.slug} animation="fadeUp" delay={idx * 150} duration={800}>
-                <Link href={`/venue/${venue.slug}`} className="group block h-full">
-                  <VenueCard 
-                    imageSrc={venue.heroImage}
-                    title={venue.title}
-                    description={venue.shortDescription}
-                    capacity={venue.capacity}
-                    facilities={venue.facilities}
-                  />
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
+          {/* Loop Data Venue dari API */}
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8F9F6A]"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+              {venues.map((venue, idx) => (
+                <ScrollReveal key={venue.slug} animation="fadeUp" delay={idx * 150} duration={800}>
+                  <Link href={`/venue/${venue.slug}`} className="group block h-full">
+                    <VenueCard
+                      imageSrc={venue.heroImage || venue.imageUrl}
+                      title={language === 'id' ? (venue.title_ind || venue.title) : (venue.title_eng || venue.title)}
+                      description={language === 'id' ? (venue.shortDescription_ind || venue.shortDescription) : (venue.shortDescription_eng || venue.shortDescription)}
+                      capacity={venue.capacity}
+                      facilities={venue.facilities}
+                    />
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
 
         </div>
       </section>

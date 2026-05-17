@@ -86,7 +86,7 @@ export default function BlogPage() {
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/blog/cover.webp"
+            src="https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=2000&auto=format&fit=crop"
             alt="Blog Background"
             fill
             className="object-cover"

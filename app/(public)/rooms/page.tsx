@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from "react";
 import FeaturedRoomCard from "@/components/FeaturedRoomCard";
 import StandardRoomCard from "@/components/StandardRoomCard";
 import { useLanguage } from "@/app/(public)/context/LanguageContext";
@@ -24,9 +25,50 @@ interface RoomItem {
 }
 
 export default function Catalog() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [rooms, setRooms] = useState<RoomItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const rooms = t.house.item as unknown as RoomItem[];
+  useEffect(() => {
+    async function fetchRooms() {
+      try {
+        const response = await fetch('/api/public/room/list-room');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          // Transform API data to match RoomItem interface
+          const transformedRooms = result.data.map((room: any) => ({
+            id: room.id,
+            badge: room.badge || '',
+            slug: room.slug,
+            name: language === 'id' ? room.name_ind : room.name_eng,
+            description: language === 'id' ? room.description_ind : room.description_eng,
+            imageUrl: room.imageUrl || room.thumbnail,
+            details: {
+              guests: room.capacity || 2,
+              size: room.size || '30m²',
+              view: room.view || 'Garden View'
+            },
+            detailsIcons: room.detailsIcons || '',
+            layoutType: room.layoutType || 'standard'
+          }));
+          setRooms(transformedRooms);
+        } else {
+          // Fallback ke data translation
+          setRooms(t.house.item as unknown as RoomItem[]);
+        }
+      } catch (err) {
+        console.error('Error fetching rooms:', err);
+        // Fallback ke data translation
+        setRooms(t.house.item as unknown as RoomItem[]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRooms();
+  }, [language, t.house.item]);
+
   const featuredRooms = rooms.filter((room) => room.layoutType === 'featured');
   const standardRooms = rooms.filter((room) => room.layoutType === 'standard');
 
@@ -111,9 +153,15 @@ export default function Catalog() {
             </div>
           </ScrollReveal>
 
-          {/* Featured Rooms */}
-          <div className="space-y-12 mb-20">
-            {featuredRooms.map((room, idx) => (
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B9D68]"></div>
+            </div>
+          ) : (
+            <>
+              {/* Featured Rooms */}
+              <div className="space-y-12 mb-20">
+                {featuredRooms.map((room, idx) => (
                 <ScrollReveal key={room.id} animation="fadeUp" delay={idx * 150} duration={800}>
                   <FeaturedRoomCard 
                     slug={room.slug}
@@ -130,24 +178,26 @@ export default function Catalog() {
             ))}
           </div>
           
-          {/* Standard Rooms */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {standardRooms.map((room, idx) => (
-                <ScrollReveal key={room.id} animation="fadeUp" delay={idx * 150} duration={800}>
-                  <StandardRoomCard 
-                    slug={room.slug}
-                    imageUrl={room.imageUrl}
-                    badge={room.badge}
-                    name={room.name}
-                    description={room.description}
-                    size={room.details.size}
-                    guests={room.details.guests}
-                    view={room.details.view}
-                    detailsIcon={room.detailsIcons}
-                  />
-                </ScrollReveal>
-            ))}
-          </div>
+              {/* Standard Rooms */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {standardRooms.map((room, idx) => (
+                    <ScrollReveal key={room.id} animation="fadeUp" delay={idx * 150} duration={800}>
+                      <StandardRoomCard
+                        slug={room.slug}
+                        imageUrl={room.imageUrl}
+                        badge={room.badge}
+                        name={room.name}
+                        description={room.description}
+                        size={room.details.size}
+                        guests={room.details.guests}
+                        view={room.details.view}
+                        detailsIcon={room.detailsIcons}
+                      />
+                    </ScrollReveal>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
       <AmenitiesSection />

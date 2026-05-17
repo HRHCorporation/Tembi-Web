@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/app/(public)/context/LanguageContext';
@@ -9,10 +9,58 @@ import ScrollReveal from '@/components/ScrollReveal';
 
 
 export default function FoodPage() {
-  const { t } = useLanguage();
-  const buffetMenu = t.foods.menus.buffet.item;
-  const snackMenu = t.foods.menus.snack.item;
-  const riceBoxMenu = t.foods.menus.rice.item;
+  const { t, language } = useLanguage();
+  const [buffetMenu, setBuffetMenu] = useState<any[]>([]);
+  const [snackMenu, setSnackMenu] = useState<any[]>([]);
+  const [riceBoxMenu, setRiceBoxMenu] = useState<any[]>([]);
+  const [packages, setPackages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCateringData() {
+      try {
+        const response = await fetch('/api/public/food/catering');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          // Organize menu by type
+          const buffet = result.data.filter((item: any) => item.type === 'buffet' || item.category === 'buffet');
+          const snack = result.data.filter((item: any) => item.type === 'snack' || item.category === 'snack');
+          const riceBox = result.data.filter((item: any) => item.type === 'rice-box' || item.category === 'rice');
+
+          setBuffetMenu(buffet.length > 0 ? buffet : t.foods.menus.buffet.item);
+          setSnackMenu(snack.length > 0 ? snack : t.foods.menus.snack.item);
+          setRiceBoxMenu(riceBox.length > 0 ? riceBox : t.foods.menus.rice.item);
+        } else {
+          // Fallback ke data translation
+          setBuffetMenu(t.foods.menus.buffet.item);
+          setSnackMenu(t.foods.menus.snack.item);
+          setRiceBoxMenu(t.foods.menus.rice.item);
+        }
+
+        // Fetch packages
+        const packagesRes = await fetch('/api/public/food/celebrate');
+        const packagesResult = await packagesRes.json();
+
+        if (packagesResult.success && packagesResult.data) {
+          setPackages(packagesResult.data);
+        } else {
+          setPackages(t.foods.packages || []);
+        }
+      } catch (err) {
+        console.error('Error fetching catering data:', err);
+        // Fallback ke data translation
+        setBuffetMenu(t.foods.menus.buffet.item);
+        setSnackMenu(t.foods.menus.snack.item);
+        setRiceBoxMenu(t.foods.menus.rice.item);
+        setPackages(t.foods.packages || []);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCateringData();
+  }, [language, t.foods]);
   return (
     <main className="w-full min-h-screen bg-white">
       
@@ -250,47 +298,55 @@ export default function FoodPage() {
             </p>
           </div>
 
-          {/*BUFFET*/}
-          <div className="mb-20">
-            <div className="text-center mb-10">
-              <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t.foods.menus.buffet.title}</h3>
-              <p className="text-gray-500 text-sm">{t.foods.menus.buffet.desc}</p>
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8F9E75]"></div>
             </div>
+          ) : (
+            <>
+              {/*BUFFET*/}
+              <div className="mb-20">
+                <div className="text-center mb-10">
+                  <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t.foods.menus.buffet.title}</h3>
+                  <p className="text-gray-500 text-sm">{t.foods.menus.buffet.desc}</p>
+                </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {buffetMenu.map((item, idx) => (
-                <MenuItemCard key={idx} {...item} />
-              ))}
-            </div>
-          </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                  {buffetMenu.map((item, idx) => (
+                    <MenuItemCard key={idx} {...item} />
+                  ))}
+                </div>
+              </div>
 
-          {/*SNACK BOX*/}
-          <div className="mb-20">
-            <div className="text-center mb-10">
-              <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t.foods.menus.snack.title}</h3>
-              <p className="text-gray-500 text-sm">{t.foods.menus.snack.desc}</p>
-            </div>
+              {/*SNACK BOX*/}
+              <div className="mb-20">
+                <div className="text-center mb-10">
+                  <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t.foods.menus.snack.title}</h3>
+                  <p className="text-gray-500 text-sm">{t.foods.menus.snack.desc}</p>
+                </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {snackMenu.map((item, idx) => (
-                <MenuItemCard key={idx} {...item} />
-              ))}
-            </div>
-          </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {snackMenu.map((item, idx) => (
+                    <MenuItemCard key={idx} {...item} />
+                  ))}
+                </div>
+              </div>
 
-          {/*RICE BOX*/}
-          <div>
-            <div className="text-center mb-10">
-              <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t.foods.menus.rice.title}</h3>
-              <p className="text-gray-500 text-sm">{t.foods.menus.rice.desc}</p>
-            </div>
+              {/*RICE BOX*/}
+              <div>
+                <div className="text-center mb-10">
+                  <h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">{t.foods.menus.rice.title}</h3>
+                  <p className="text-gray-500 text-sm">{t.foods.menus.rice.desc}</p>
+                </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {riceBoxMenu.map((item, idx) => (
-                <MenuItemCard key={idx} {...item} />
-              ))}
-            </div>
-          </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                  {riceBoxMenu.map((item, idx) => (
+                    <MenuItemCard key={idx} {...item} />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
