@@ -3,7 +3,7 @@
 import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Calendar, MapPin, Users, Clock, Check, AlertCircle, ArrowLeft } from 'lucide-react';
-import { useLanguage } from '@/app/(public)/context/LanguageContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 
 interface EventDetail {
   id: number;

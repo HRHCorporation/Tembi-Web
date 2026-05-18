@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '@/app/(public)/context/LanguageContext';
+import { useLanguage } from '@/app/context/LanguageContext';
 import { BlogCard } from '@/components/BlogCard';
 import Image from 'next/image';
 import ScrollReveal from "@/components/ScrollReveal";

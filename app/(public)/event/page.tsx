@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useLanguage } from "@/app/(public)/context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 import EventCard from "@/components/EventCard";
 import ScrollReveal from "@/components/ScrollReveal";
 
