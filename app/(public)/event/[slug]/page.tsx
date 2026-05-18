@@ -2,7 +2,7 @@
 
 import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Calendar, MapPin, Users, Clock, Check, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, Calendar, MapPin, Users, Clock, Share2, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/app/context/LanguageContext';
 
 interface EventDetail {
@@ -278,10 +278,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
         if (result.success) {
           setEvent(result.data);
         } else {
-          // Try fallback to static data
           const fallbackEvent = fallbackEventsData.find((e) => e.slug === slug);
           if (fallbackEvent) {
-            // Convert fallback format to API format
             setEvent({
               id: 0,
               name_ind: fallbackEvent.name,
@@ -310,7 +308,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
           }
         }
       } catch (err) {
-        // Try fallback to static data on error
         const fallbackEvent = fallbackEventsData.find((e) => e.slug === slug);
         if (fallbackEvent) {
           setEvent({
@@ -351,7 +348,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
         const result = await response.json();
 
         if (result.success) {
-          // Filter out current event and get only upcoming events
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 
@@ -361,7 +357,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               eventDate.setHours(0, 0, 0, 0);
               return e.slug !== slug && eventDate >= today;
             })
-            .slice(0, 4); // Max 4 events
+            .slice(0, 3);
 
           setRelatedEvents(filtered);
         }
@@ -376,19 +372,19 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fdfcf7] flex flex-col items-center justify-center p-6 text-[#2d3436]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8da077]"></div>
+      <div className="min-h-screen bg-gradient-to-br from-[#1a3d2e] to-[#2d5a45] flex flex-col items-center justify-center p-6">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
     );
   }
 
   if (error || !event) {
     return (
-      <div className="min-h-screen bg-[#fdfcf7] flex flex-col items-center justify-center p-6 text-[#2d3436]">
-        <h1 className="text-xl font-serif mb-4 text-[#8da077]">
+      <div className="min-h-screen bg-gradient-to-br from-[#1a3d2e] to-[#2d5a45] flex flex-col items-center justify-center p-6 text-white">
+        <h1 className="text-xl font-serif mb-4">
           {language === 'id' ? 'Event Tidak Ditemukan' : 'Event Not Found'}
         </h1>
-        <Link href="/event" className="font-bold flex items-center gap-2 text-[#8da077] hover:opacity-70 transition-opacity">
+        <Link href="/event" className="font-bold flex items-center gap-2 hover:opacity-70 transition-opacity">
           <ArrowLeft size={18} /> {language === 'id' ? 'Kembali ke Event' : 'Back to Events'}
         </Link>
       </div>
@@ -401,17 +397,16 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   const eventIncluded = language === 'id' ? event.included_ind : event.included_eng;
   const eventRequirements = language === 'id' ? event.requirements_ind : event.requirements_eng;
 
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+      weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric'
     });
   };
 
-  // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -421,217 +416,276 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfcf7] text-[#2d3436] pb-20 font-sans">
-
-      {/* Navigation Header */}
-      <div className="container mx-auto px-6 pt-32 mb-10">
-        <Link href="/event" className="inline-flex items-center gap-2 text-[#8da077] hover:opacity-70 transition-opacity mb-6">
-          <div className="w-7 h-7 rounded-full border border-[#8da077] flex items-center justify-center">
-            <ChevronLeft size={14} />
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
-            {language === 'id' ? 'Event' : 'Events'}
-          </span>
+    <div className="min-h-screen bg-gradient-to-br from-[#1a3d2e] to-[#2d5a45] text-white">
+      {/* Back Button */}
+      <div className="container mx-auto px-6 pt-24 pb-6">
+        <Link
+          href="/event"
+          className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+        >
+          <ChevronLeft size={20} />
+          <span className="text-sm font-medium">{language === 'id' ? 'Kembali ke Event' : 'Back to Events'}</span>
         </Link>
-
-        <div className="max-w-4xl text-left">
-          <div className="flex items-center gap-3 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-            <span>{formatDate(event.date)}</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-bold font-serif leading-tight mb-4 tracking-tight text-[#2d3436]">
-            {eventName}
-          </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            {eventTagline}
-          </p>
-        </div>
       </div>
 
-      {/* Featured Image */}
-      <div className="container mx-auto px-6 mb-16">
-        <div className="max-w-5xl mx-auto w-full h-[35vh] md:h-[50vh] rounded-2xl overflow-hidden shadow-2xl shadow-gray-200/50">
-          <img
-            src={event.imageUrl}
-            alt={eventName}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
+      {/* Main Content */}
+      <div className="container mx-auto px-6 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-      <div className="container mx-auto px-6">
-        <div className="max-w-3xl mx-auto">
-
-          {/* Event Details Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-100 mb-10">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-[#8da077]">
-                <Calendar size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                  {language === 'id' ? 'Tanggal' : 'Date'}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-[#2d3436]">{formatDate(event.date)}</span>
+          {/* LEFT SIDEBAR */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Event Banner */}
+            <div className="bg-[#8da077] rounded-2xl overflow-hidden aspect-square">
+              <img
+                src={event.imageUrl}
+                alt={eventName}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-[#8da077]">
-                <Clock size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                  {language === 'id' ? 'Waktu' : 'Time'}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-[#2d3436]">{event.time}</span>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-[#8da077]">
-                <MapPin size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                  {language === 'id' ? 'Lokasi' : 'Location'}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-[#2d3436]">{event.location}</span>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-[#8da077]">
-                <Users size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                  {language === 'id' ? 'Kapasitas' : 'Capacity'}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-[#2d3436]">{event.capacity} {language === 'id' ? 'orang' : 'people'}</span>
-            </div>
-          </div>
-
-          {/* Description */}
-          <article className="prose prose-stone max-w-none mb-16">
-            <h2 className="text-2xl font-serif font-bold mb-6 text-[#2d3436]">
-              {language === 'id' ? 'Tentang Event' : 'About This Event'}
-            </h2>
-            {eventDescription.map((paragraph, index) => (
-              <p
-                key={index}
-                className="text-[#4a4a4a] leading-loose text-lg font-normal mb-8 tracking-wide text-justify md:text-left"
-              >
-                {paragraph}
+            {/* Organizer Card */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <p className="text-xs text-white/60 mb-3 uppercase tracking-wider">
+                {language === 'id' ? 'Diselenggarakan oleh' : 'Presented by'}
               </p>
-            ))}
-          </article>
-
-          {/* What's Included */}
-          {eventIncluded && eventIncluded.length > 0 && (
-            <div className="mb-16 bg-white rounded-2xl p-8 border border-gray-100">
-              <h3 className="text-xl font-serif font-bold mb-6 text-[#2d3436] flex items-center gap-2">
-                <Check size={20} className="text-[#8da077]" />
-                {language === 'id' ? 'Yang Termasuk' : "What's Included"}
-              </h3>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {eventIncluded.map((item, index) => (
-                  <li key={index} className="flex items-start gap-3 text-[#4a4a4a]">
-                    <Check size={16} className="text-[#8da077] mt-1 shrink-0" />
-                    <span className="text-base leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  T
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Tembi Cultural House</h3>
+                  <p className="text-sm text-white/70">{language === 'id' ? 'Rumah Budaya' : 'Cultural House'}</p>
+                </div>
+              </div>
+              <p className="text-sm text-white/80 leading-relaxed mb-4">
+                {language === 'id'
+                  ? 'Melestarikan warisan budaya Jawa melalui pengalaman autentik dan pembelajaran tradisional.'
+                  : 'Preserving Javanese cultural heritage through authentic experiences and traditional learning.'}
+              </p>
+              <div className="flex gap-3">
+                <button className="text-white/70 hover:text-white transition-colors">
+                  <Share2 size={18} />
+                </button>
+              </div>
             </div>
-          )}
 
-          {/* Requirements */}
-          {eventRequirements && eventRequirements.length > 0 && (
-            <div className="mb-16 bg-amber-50 rounded-2xl p-8 border border-amber-100">
-              <h3 className="text-xl font-serif font-bold mb-6 text-[#2d3436] flex items-center gap-2">
-                <AlertCircle size={20} className="text-amber-600" />
-                {language === 'id' ? 'Persyaratan & Informasi' : 'Requirements & Information'}
-              </h3>
-              <ul className="space-y-3">
-                {eventRequirements.map((item, index) => (
-                  <li key={index} className="flex items-start gap-3 text-[#4a4a4a]">
-                    <AlertCircle size={16} className="text-amber-600 mt-1 shrink-0" />
-                    <span className="text-base leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Gallery */}
-          {event.galleryImages && event.galleryImages.length > 0 && (
-            <div className="mb-16">
-              <h3 className="text-2xl font-serif font-bold mb-6 text-[#2d3436]">
-                {language === 'id' ? 'Galeri' : 'Gallery'}
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {event.galleryImages.map((image, index) => (
-                  <div key={index} className="aspect-square rounded-xl overflow-hidden shadow-md">
-                    <img
-                      src={image}
-                      alt={`${eventName} - ${index + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                    />
+            {/* Hosted By */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <p className="text-xs text-white/60 mb-3 uppercase tracking-wider">
+                {language === 'id' ? 'Dipandu oleh' : 'Hosted By'}
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold">
+                    TC
                   </div>
+                  <div>
+                    <p className="font-medium text-white">Tembi Cultural Team</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT CONTENT */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Header */}
+            <div>
+              <div className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-medium mb-4">
+                ✨ {language === 'id' ? 'Unggulan di' : 'Featured in'} Tembi
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                {eventName}
+              </h1>
+              <p className="text-xl text-white/80 mb-6">
+                {eventTagline}
+              </p>
+
+              {/* Event Info Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-[#8da077] rounded-lg flex items-center justify-center">
+                      <Calendar size={24} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/60 uppercase tracking-wider mb-1">
+                        {language === 'id' ? 'Tanggal' : 'Date'}
+                      </p>
+                      <p className="font-semibold">{formatDate(event.date)}</p>
+                      <p className="text-sm text-white/70">{event.time}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-[#8da077] rounded-lg flex items-center justify-center">
+                      <MapPin size={24} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/60 uppercase tracking-wider mb-1">
+                        {language === 'id' ? 'Lokasi' : 'Location'}
+                      </p>
+                      <p className="font-semibold">{event.location}</p>
+                      <p className="text-sm text-white/70">Tembi Cultural House</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Registration Section */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <h3 className="text-lg font-bold mb-3">
+                {language === 'id' ? 'Pendaftaran' : 'Registration'}
+              </h3>
+              <p className="text-white/80 mb-4">
+                {language === 'id'
+                  ? 'Selamat datang! Untuk bergabung dengan acara ini, silakan daftar di bawah ini.'
+                  : 'Welcome! To join the event, please register below.'}
+              </p>
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-white/20">
+                <span className="text-white/70">{language === 'id' ? 'Harga per orang' : 'Price per person'}</span>
+                <span className="text-2xl font-bold">{formatPrice(event.price)}</span>
+              </div>
+              <Link
+                href={`/booking?event=${event.slug}&date=${event.date}`}
+                className="block w-full bg-white text-[#1a3d2e] py-4 rounded-xl font-bold text-center hover:bg-white/90 transition-colors"
+              >
+                {language === 'id' ? 'Daftar Sekarang' : 'Register Now'}
+              </Link>
+            </div>
+
+            {/* About Event */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <h2 className="text-2xl font-bold mb-6">
+                {language === 'id' ? 'Tentang Acara' : 'About Event'}
+              </h2>
+              <div className="space-y-4">
+                {eventDescription.map((paragraph, index) => (
+                  <p key={index} className="text-white/80 leading-relaxed">
+                    {paragraph}
+                  </p>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* Booking CTA */}
-          <div className="mb-16 bg-[#8da077] text-white rounded-2xl p-8 text-center">
-            <div className="mb-4">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-90">
-                {language === 'id' ? 'Harga Per Orang' : 'Price Per Person'}
+            {/* What's in store */}
+            {eventIncluded && eventIncluded.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  🎁 {language === 'id' ? "Yang Termasuk" : "What's in store"}
+                </h3>
+                <ul className="space-y-3">
+                  {eventIncluded.map((item, index) => (
+                    <li key={index} className="flex items-start gap-3 text-white/80">
+                      <span className="text-[#8da077] mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Requirements */}
+            {eventRequirements && eventRequirements.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h3 className="text-xl font-bold mb-4">
+                  ℹ️ {language === 'id' ? 'Informasi Penting' : 'Important Information'}
+                </h3>
+                <ul className="space-y-3">
+                  {eventRequirements.map((item, index) => (
+                    <li key={index} className="flex items-start gap-3 text-white/80">
+                      <span className="text-[#8da077] mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Location */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+              <h3 className="text-xl font-bold mb-4">
+                📍 {language === 'id' ? 'Lokasi' : 'Location'}
+              </h3>
+              <p className="font-semibold mb-2">{event.location}</p>
+              <p className="text-sm text-white/70 mb-4">
+                Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
               </p>
-              <p className="text-4xl font-bold font-serif">{formatPrice(event.price)}</p>
+              <div className="aspect-video bg-white/5 rounded-xl overflow-hidden">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.2662665975843!2d110.36586431477636!3d-7.851851894331494!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5761d07c8e15%3A0xb3b8c8c8c8c8c8c8!2sTembi%20Rumah%20Budaya!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="rounded-xl"
+                ></iframe>
+              </div>
             </div>
-            <Link
-              href={`/booking?event=${event.slug}&date=${event.date}`}
-              className="inline-block bg-white text-[#8da077] px-8 py-4 rounded-full font-bold text-sm uppercase tracking-[0.2em] hover:bg-gray-100 transition-colors"
-            >
-              {language === 'id' ? 'Pesan Sekarang' : 'Book Now'}
-            </Link>
-            <p className="mt-4 text-sm opacity-90">
-              {language === 'id'
-                ? 'Booking diperlukan untuk mengikuti event ini'
-                : 'Booking required to attend this event'}
-            </p>
-          </div>
 
-          {/* Related Events */}
-          {relatedEvents.length > 0 && (
-            <div className="pt-16 border-t border-gray-200">
-              <h2 className="text-2xl font-serif font-bold mb-10 text-[#2d3436]">
-                {language === 'id' ? 'Event Lainnya' : 'Other Events'}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {relatedEvents.map((relatedEvent) => (
-                  <Link key={relatedEvent.id} href={`/event/${relatedEvent.slug}`} className="group">
-                    <div className="flex flex-col gap-5">
-                      <div className="aspect-[16/10] rounded-xl overflow-hidden shadow-md">
+            {/* Gallery */}
+            {event.galleryImages && event.galleryImages.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h3 className="text-xl font-bold mb-4">
+                  📸 {language === 'id' ? 'Galeri' : 'Gallery'}
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {event.galleryImages.map((image, index) => (
+                    <div key={index} className="aspect-square rounded-lg overflow-hidden">
+                      <img
+                        src={image}
+                        alt={`${eventName} - ${index + 1}`}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Related Events */}
+            {relatedEvents.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h3 className="text-xl font-bold mb-4">
+                  🎪 {language === 'id' ? 'Event Lainnya' : 'Other Events'}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {relatedEvents.map((relatedEvent) => (
+                    <Link
+                      key={relatedEvent.id}
+                      href={`/event/${relatedEvent.slug}`}
+                      className="group bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition-colors"
+                    >
+                      <div className="aspect-video overflow-hidden">
                         <img
                           src={relatedEvent.imageUrl}
                           alt={language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                          <Calendar size={12} className="text-[#8da077]" />
-                          <span>{formatDate(relatedEvent.date)}</span>
-                        </div>
-                        <h4 className="font-serif font-bold text-xl group-hover:text-[#8da077] transition-colors leading-snug text-[#2d3436]">
+                      <div className="p-4">
+                        <p className="text-xs text-white/60 mb-2 flex items-center gap-1">
+                          <Calendar size={12} />
+                          {new Date(relatedEvent.date).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </p>
+                        <h4 className="font-bold group-hover:text-[#8da077] transition-colors line-clamp-2">
                           {language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
                         </h4>
-                        <p className="text-gray-600 text-sm mt-2 line-clamp-2">
-                          {language === 'id' ? relatedEvent.tagline_ind : relatedEvent.tagline_eng}
-                        </p>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-
+            )}
+          </div>
         </div>
       </div>
     </div>
