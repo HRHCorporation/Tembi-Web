@@ -14,32 +14,45 @@ interface GalleryRow extends RowDataPacket {
 export async function GET(request: NextRequest) {
     try {
         const query = `
-            SELECT 
+            SELECT
                 id,
                 vanue_id,
                 image
-            FROM (
-                SELECT 
+            FROM
+                (
+                SELECT
                     vg.id,
                     vg.vanue_id,
                     vg.image,
                     vg.created_at,
-                    ROW_NUMBER() OVER (PARTITION BY vg.vanue_id ORDER BY vg.created_at DESC) as rn,
+                    @rn := IF(@prev_vanue = vg.vanue_id, @rn + 1, 1) as rn,
+                    @prev_vanue := vg.vanue_id,
                     vc.total_venues
-                FROM vanue_gallery vg
+                FROM
+                    vanue_gallery vg
                 CROSS JOIN (
-                    SELECT COUNT(DISTINCT vanue_id) as total_venues
-                    FROM vanue_gallery
+                    SELECT
+                        COUNT(DISTINCT vanue_id) as total_venues
+                    FROM
+                        vanue_gallery
                 ) as vc
+                CROSS JOIN (
+                    SELECT
+                        @rn := 0,
+                        @prev_vanue := NULL) as vars
+                ORDER BY
+                    vg.vanue_id,
+                    vg.created_at DESC
             ) as ranked
-            WHERE 
-                rn = 1  -- Ambil 1 per venue dulu
+            WHERE
+                rn = 1
                 OR (
-                    -- Jika total venue < 6, ambil lebih dari 1 per venue
-                    total_venues < 6 
+                    total_venues < 6
                     AND rn <= CEIL(6.0 / total_venues)
                 )
-            ORDER BY vanue_id, created_at DESC
+            ORDER BY
+                vanue_id,
+                created_at DESC
             LIMIT 6
         `;
 

@@ -28,7 +28,7 @@ interface RoomRow extends RowDataPacket {
 export async function GET(request: NextRequest) {
     try {
         const query = `
-            SELECT 
+            SELECT
                 room.id,
                 room.title_ind,
                 room.title_eng,
@@ -38,29 +38,45 @@ export async function GET(request: NextRequest) {
                 room.spacious_room,
                 room.slug,
                 room_gallery.image as imagebanner,
-                (
-                    SELECT JSON_ARRAYAGG(
-                        JSON_OBJECT(
-                            'id', mf.id,
-                            'name_ind', mf.name_ind,
-                            'name_eng', mf.name_eng,
-                            'icon', mf.icon
-                        )
-                    )
-                    FROM (
-                        SELECT mstr_fasilities.id, mstr_fasilities.name_ind, mstr_fasilities.name_eng, mstr_fasilities.icon
-                        FROM room_facilities
-                        JOIN mstr_fasilities ON mstr_fasilities.id = room_facilities.facilities_id
-                        WHERE room_facilities.room_id = room.id
-                        LIMIT 2
-                    ) as mf
-                ) as facilities
-            FROM room
+                CONCAT('[',
+                    COALESCE(
+                        GROUP_CONCAT(
+                            DISTINCT
+                            JSON_OBJECT(
+                                'id', mstr_fasilities.id,
+                                'name_ind', mstr_fasilities.name_ind,
+                                'name_eng', mstr_fasilities.name_eng,
+                                'icon', mstr_fasilities.icon
+                            )
+                            ORDER BY mstr_fasilities.id
+                            SEPARATOR ','
+                        ),
+                        ''
+                    ),
+                ']') as facilities
+            FROM
+                room
             LEFT JOIN room_gallery 
-                ON room_gallery.room_id = room.id 
+                ON room_gallery.room_id = room.id
                 AND room_gallery.is_banner = 1
-            WHERE room.is_recomendation = 1
-            ORDER BY room.created_at DESC
+            LEFT JOIN room_facilities
+                ON room_facilities.room_id = room.id
+            LEFT JOIN mstr_fasilities
+                ON mstr_fasilities.id = room_facilities.facilities_id
+            WHERE
+                room.is_recomendation = 1
+            GROUP BY
+                room.id,
+                room.title_ind,
+                room.title_eng,
+                room.description_ind,
+                room.description_eng,
+                room.number_guest,
+                room.spacious_room,
+                room.slug,
+                room_gallery.image
+            ORDER BY
+                room.created_at DESC;
         `;
 
         const params: (number | string)[] = [];
