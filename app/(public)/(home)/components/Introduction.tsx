@@ -1,6 +1,6 @@
 import ScrollReveal from "@/components/ScrollReveal";
 import Image from "next/image";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 export default function Introduction() {
   const { t } = useLanguage();

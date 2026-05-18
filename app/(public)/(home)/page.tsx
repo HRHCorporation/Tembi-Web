@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import HouseCard from "@/app/(public)/(home)/components/HouseCard";
 import ScrollReveal from "@/components/ScrollReveal";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext";
 import HeroImage from "./components/HeroImage";
 import Introduction from "./components/Introduction";
 import Accomodation from "./components/Accomodation";
@@ -150,7 +150,6 @@ export default function HomePage() {
                   <p className="text-gray-600 mb-8 leading-relaxed pr-16 text-lg">
                     {t.homepage.food.desc}
                   </p>
-
                   <div className="space-y-7 mb-10">
                     {foodPoints.map((point, idx) => (
                       <ScrollReveal
@@ -539,7 +538,7 @@ export default function HomePage() {
                     referrerPolicy="no-referrer-when-downgrade"
                     className="absolute inset-0 w-full h-full"
                   />
-                  <div className="absolute top-0 left-0 w-full h-12 pointer-events-none bg-gradient-to-b from-black/10 to-transparent" />
+                  <div className="absolute top-0 left-0 w-full h-12 pointer-events-none bg-linear-to-b from-black/10 to-transparent" />
                 </div>
               </ScrollReveal>
             </div>
