@@ -1,12 +1,9 @@
 'use client';
 
 import { use, useState, useEffect } from 'react';
-import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { ChevronLeft, Calendar, MapPin, Users, Clock, Check, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/app/(public)/context/LanguageContext';
-import PageHero from '@/components/PageHero';
-import EventInfo from '@/components/EventInfo';
-import EventGallery from '@/components/EventGallery';
-import EventBookingCTA from '@/components/EventBookingCTA';
 
 interface EventDetail {
   id: number;
@@ -379,14 +376,23 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
 
   if (loading) {
     return (
-      <main className="bg-[#F8F9FA] min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B9D68]"></div>
-      </main>
+      <div className="min-h-screen bg-[#fdfcf7] flex flex-col items-center justify-center p-6 text-[#2d3436]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8da077]"></div>
+      </div>
     );
   }
 
   if (error || !event) {
-    return notFound();
+    return (
+      <div className="min-h-screen bg-[#fdfcf7] flex flex-col items-center justify-center p-6 text-[#2d3436]">
+        <h1 className="text-xl font-serif mb-4 text-[#8da077]">
+          {language === 'id' ? 'Event Tidak Ditemukan' : 'Event Not Found'}
+        </h1>
+        <Link href="/event" className="font-bold flex items-center gap-2 text-[#8da077] hover:opacity-70 transition-opacity">
+          <ArrowLeft size={18} /> {language === 'id' ? 'Kembali ke Event' : 'Back to Events'}
+        </Link>
+      </div>
+    );
   }
 
   const eventName = language === 'id' ? event.name_ind : event.name_eng;
@@ -395,98 +401,239 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   const eventIncluded = language === 'id' ? event.included_ind : event.included_eng;
   const eventRequirements = language === 'id' ? event.requirements_ind : event.requirements_eng;
 
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
+  // Format price
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
   return (
-    <main className="bg-[#F8F9FA] min-h-screen pb-20">
-      {/* Hero Section */}
-      <PageHero
-        backgroundImage={event.imageUrl}
-        title={eventName}
-        description={eventTagline}
-        height="md"
-        overlay="gradient-dark"
-        backButton={{
-          show: true,
-          href: '/event',
-          text: 'Back to Events',
-        }}
-      />
+    <div className="min-h-screen bg-[#fdfcf7] text-[#2d3436] pb-20 font-sans">
 
-      {/* Content Container */}
-      <div className="container mx-auto px-4 md:px-10 py-12 space-y-8">
-        {/* Event Info */}
-        <EventInfo
-          name={eventName}
-          date={event.date}
-          time={event.time}
-          location={event.location}
-          capacity={event.capacity}
-          price={event.price}
-          category={''}
-          description={eventDescription}
-          included={eventIncluded}
-          requirements={eventRequirements}
-        />
+      {/* Navigation Header */}
+      <div className="container mx-auto px-6 pt-32 mb-10">
+        <Link href="/event" className="inline-flex items-center gap-2 text-[#8da077] hover:opacity-70 transition-opacity mb-6">
+          <div className="w-7 h-7 rounded-full border border-[#8da077] flex items-center justify-center">
+            <ChevronLeft size={14} />
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+            {language === 'id' ? 'Event' : 'Events'}
+          </span>
+        </Link>
 
-        {/* Gallery */}
-        {event.galleryImages && event.galleryImages.length > 0 && (
-          <EventGallery
-            eventName={eventName}
-            galleryImages={event.galleryImages}
-          />
-        )}
-
-        {/* Booking CTA */}
-        <EventBookingCTA
-          eventName={eventName}
-          price={event.price}
-          date={event.date}
-        />
-
-        {/* Related Events */}
-        {relatedEvents.length > 0 && (
-          <section className="mt-16">
-            <h3 className="text-2xl font-serif font-bold text-gray-800 mb-6">
-              Upcoming Events
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {relatedEvents.map((relatedEvent) => (
-                <a
-                  key={relatedEvent.id}
-                  href={`/event/${relatedEvent.slug}`}
-                  className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={relatedEvent.imageUrl}
-                      alt={language === 'id' ? relatedEvent.title_ind : relatedEvent.title_eng}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  </div>
-                  <div className="p-5">
-                    <h4 className="text-lg font-serif font-bold text-gray-800 mb-2 group-hover:text-[#8B9D68] transition-colors line-clamp-2">
-                      {language === 'id' ? relatedEvent.title_ind : relatedEvent.title_eng}
-                    </h4>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                      {language === 'id' ? relatedEvent.shortDesc_ind : relatedEvent.shortDesc_eng}
-                    </p>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <svg className="w-4 h-4 mr-2 text-[#8B9D68]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      {new Date(relatedEvent.date).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
+        <div className="max-w-4xl text-left">
+          <div className="flex items-center gap-3 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <span>{formatDate(event.date)}</span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold font-serif leading-tight mb-4 tracking-tight text-[#2d3436]">
+            {eventName}
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            {eventTagline}
+          </p>
+        </div>
       </div>
-    </main>
+
+      {/* Featured Image */}
+      <div className="container mx-auto px-6 mb-16">
+        <div className="max-w-5xl mx-auto w-full h-[35vh] md:h-[50vh] rounded-2xl overflow-hidden shadow-2xl shadow-gray-200/50">
+          <img
+            src={event.imageUrl}
+            alt={eventName}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-6">
+        <div className="max-w-3xl mx-auto">
+
+          {/* Event Details Bar */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-100 mb-10">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-[#8da077]">
+                <Calendar size={16} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                  {language === 'id' ? 'Tanggal' : 'Date'}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-[#2d3436]">{formatDate(event.date)}</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-[#8da077]">
+                <Clock size={16} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                  {language === 'id' ? 'Waktu' : 'Time'}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-[#2d3436]">{event.time}</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-[#8da077]">
+                <MapPin size={16} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                  {language === 'id' ? 'Lokasi' : 'Location'}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-[#2d3436]">{event.location}</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-[#8da077]">
+                <Users size={16} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                  {language === 'id' ? 'Kapasitas' : 'Capacity'}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-[#2d3436]">{event.capacity} {language === 'id' ? 'orang' : 'people'}</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <article className="prose prose-stone max-w-none mb-16">
+            <h2 className="text-2xl font-serif font-bold mb-6 text-[#2d3436]">
+              {language === 'id' ? 'Tentang Event' : 'About This Event'}
+            </h2>
+            {eventDescription.map((paragraph, index) => (
+              <p
+                key={index}
+                className="text-[#4a4a4a] leading-loose text-lg font-normal mb-8 tracking-wide text-justify md:text-left"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </article>
+
+          {/* What's Included */}
+          {eventIncluded && eventIncluded.length > 0 && (
+            <div className="mb-16 bg-white rounded-2xl p-8 border border-gray-100">
+              <h3 className="text-xl font-serif font-bold mb-6 text-[#2d3436] flex items-center gap-2">
+                <Check size={20} className="text-[#8da077]" />
+                {language === 'id' ? 'Yang Termasuk' : "What's Included"}
+              </h3>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {eventIncluded.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3 text-[#4a4a4a]">
+                    <Check size={16} className="text-[#8da077] mt-1 shrink-0" />
+                    <span className="text-base leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Requirements */}
+          {eventRequirements && eventRequirements.length > 0 && (
+            <div className="mb-16 bg-amber-50 rounded-2xl p-8 border border-amber-100">
+              <h3 className="text-xl font-serif font-bold mb-6 text-[#2d3436] flex items-center gap-2">
+                <AlertCircle size={20} className="text-amber-600" />
+                {language === 'id' ? 'Persyaratan & Informasi' : 'Requirements & Information'}
+              </h3>
+              <ul className="space-y-3">
+                {eventRequirements.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3 text-[#4a4a4a]">
+                    <AlertCircle size={16} className="text-amber-600 mt-1 shrink-0" />
+                    <span className="text-base leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Gallery */}
+          {event.galleryImages && event.galleryImages.length > 0 && (
+            <div className="mb-16">
+              <h3 className="text-2xl font-serif font-bold mb-6 text-[#2d3436]">
+                {language === 'id' ? 'Galeri' : 'Gallery'}
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {event.galleryImages.map((image, index) => (
+                  <div key={index} className="aspect-square rounded-xl overflow-hidden shadow-md">
+                    <img
+                      src={image}
+                      alt={`${eventName} - ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Booking CTA */}
+          <div className="mb-16 bg-[#8da077] text-white rounded-2xl p-8 text-center">
+            <div className="mb-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-90">
+                {language === 'id' ? 'Harga Per Orang' : 'Price Per Person'}
+              </p>
+              <p className="text-4xl font-bold font-serif">{formatPrice(event.price)}</p>
+            </div>
+            <Link
+              href={`/booking?event=${event.slug}&date=${event.date}`}
+              className="inline-block bg-white text-[#8da077] px-8 py-4 rounded-full font-bold text-sm uppercase tracking-[0.2em] hover:bg-gray-100 transition-colors"
+            >
+              {language === 'id' ? 'Pesan Sekarang' : 'Book Now'}
+            </Link>
+            <p className="mt-4 text-sm opacity-90">
+              {language === 'id'
+                ? 'Booking diperlukan untuk mengikuti event ini'
+                : 'Booking required to attend this event'}
+            </p>
+          </div>
+
+          {/* Related Events */}
+          {relatedEvents.length > 0 && (
+            <div className="pt-16 border-t border-gray-200">
+              <h2 className="text-2xl font-serif font-bold mb-10 text-[#2d3436]">
+                {language === 'id' ? 'Event Lainnya' : 'Other Events'}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                {relatedEvents.map((relatedEvent) => (
+                  <Link key={relatedEvent.id} href={`/event/${relatedEvent.slug}`} className="group">
+                    <div className="flex flex-col gap-5">
+                      <div className="aspect-[16/10] rounded-xl overflow-hidden shadow-md">
+                        <img
+                          src={relatedEvent.imageUrl}
+                          alt={language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                          <Calendar size={12} className="text-[#8da077]" />
+                          <span>{formatDate(relatedEvent.date)}</span>
+                        </div>
+                        <h4 className="font-serif font-bold text-xl group-hover:text-[#8da077] transition-colors leading-snug text-[#2d3436]">
+                          {language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
+                        </h4>
+                        <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                          {language === 'id' ? relatedEvent.tagline_ind : relatedEvent.tagline_eng}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
   );
 }
