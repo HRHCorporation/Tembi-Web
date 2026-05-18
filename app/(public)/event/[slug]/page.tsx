@@ -549,26 +549,19 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
-            {/* Location */}
+            {/* Hosted By */}
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
               <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
-                📍 {language === 'id' ? 'Lokasi' : 'Location'}
+                {language === 'id' ? 'Diselenggarakan oleh' : 'Hosted By'}
               </h3>
-              <p className="font-semibold text-[#2d3436] mb-2">{event.location}</p>
-              <p className="text-sm text-gray-600 mb-4">
-                Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
-              </p>
-              <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.2662665975843!2d110.36586431477636!3d-7.851851894331494!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a5761d07c8e15%3A0xb3b8c8c8c8c8c8c8!2sTembi%20Rumah%20Budaya!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="rounded-xl"
-                ></iframe>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-2xl shrink-0">
+                  T
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg text-[#2d3436]">Tembi Cultural House</h4>
+                  <p className="text-sm text-gray-600">{language === 'id' ? 'Rumah Budaya Tembi' : 'Tembi Cultural House'}</p>
+                </div>
               </div>
             </div>
 
@@ -613,6 +606,30 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Maps Section - Full Width at Bottom */}
+      <div className="container mx-auto px-6 pb-20">
+        <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+          <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
+            📍 {language === 'id' ? 'Lokasi Tembi Cultural House' : 'Tembi Cultural House Location'}
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
+          </p>
+          <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden">
+            <iframe
+              src="https://www.google.com/travel/hotels/s/AJT4YKzKxtuV81H3A"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="rounded-xl"
+            ></iframe>
           </div>
         </div>
       </div>
