@@ -21,6 +21,8 @@ export default function Header() {
     { name: t.nav.venue, href: "/venue" },
     { name: t.nav.history, href: "/sejarah" },
     { name: t.nav.collections, href: "/collections" },
+    { name: t.nav.event, href: "/event" },
+    { name: t.nav.blog, href: "/blog" },
     { name: t.nav.checkBooking, href: "/check-booking" },
   ];
 
