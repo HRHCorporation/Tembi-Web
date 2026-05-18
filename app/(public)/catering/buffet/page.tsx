@@ -1,14 +1,12 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import MenuCard from '@/components/MenuCard';
-import BuffetPricing, { PackageItem } from '@/components/BuffetPricing';
-import BuffetFeatures from '@/components/BuffetFeatures';
-import BuffetBooking from '@/components/BuffetBooking';
-import { useLanguage } from '@/app/(public)/context/LanguageContext';
-
-
+import React from "react";
+import Image from "next/image";
+import MenuCard from "@/components/MenuCard";
+import BuffetPricing, { PackageItem } from "@/components/BuffetPricing";
+import BuffetFeatures from "@/components/BuffetFeatures";
+import BuffetBooking from "@/components/BuffetBooking";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 export default function BuffetPage() {
   const { t } = useLanguage();
@@ -16,19 +14,19 @@ export default function BuffetPage() {
   const packages: PackageItem[] = [
     {
       ...t.catering.buffet.card1,
-      theme: 'standard',
+      theme: "standard",
       isPopular: false,
     },
     {
       ...t.catering.buffet.card2,
-      theme: 'premium',
+      theme: "premium",
       isPopular: true,
     },
     {
       ...t.catering.buffet.card3,
-      theme: 'exclusive',
+      theme: "exclusive",
       isPopular: false,
-    }
+    },
   ];
 
   const menuList = [
@@ -43,7 +41,6 @@ export default function BuffetPage() {
   ];
   return (
     <main className="min-h-screen w-full bg-white">
-      
       {/*HERO SECTION*/}
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0">
@@ -62,11 +59,11 @@ export default function BuffetPage() {
           <div className="max-w-3xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-tembi px-4 py-1.5 text-sm font-medium text-white shadow-sm">
               <div className="relative h-4 w-4">
-                <Image 
-                  src="/images/icons/food-white.png" 
+                <Image
+                  src="/images/icons/food-white.png"
                   alt="Service Icon"
                   fill
-                  className="object-contain brightness-0 invert" 
+                  className="object-contain brightness-0 invert"
                 />
               </div>
               <span>{t.catering.hero.label}</span>
@@ -83,14 +80,24 @@ export default function BuffetPage() {
             <div className="mb-10 flex flex-wrap gap-4">
               <div className="flex items-center gap-3 rounded-full bg-white/20 px-5 py-2.5 text-white backdrop-blur-md border border-white/10 transition hover:bg-white/30">
                 <div className="relative h-5 w-5">
-                  <Image src="/images/icons/group-green.png" alt="Pax Icon" fill className="object-contain" />
+                  <Image
+                    src="/images/icons/group-green.png"
+                    alt="Pax Icon"
+                    fill
+                    className="object-contain"
+                  />
                 </div>
                 <span className="font-medium">{t.catering.hero.pax}</span>
               </div>
 
               <div className="flex items-center gap-3 rounded-full bg-white/20 px-5 py-2.5 text-white backdrop-blur-md border border-white/10 transition hover:bg-white/30">
                 <div className="relative h-5 w-5">
-                  <Image src="/images/icons/clock-green.png" alt="Time Icon" fill className="object-contain" />
+                  <Image
+                    src="/images/icons/clock-green.png"
+                    alt="Time Icon"
+                    fill
+                    className="object-contain"
+                  />
                 </div>
                 <span className="font-medium">{t.catering.hero.hour}</span>
               </div>
@@ -99,28 +106,38 @@ export default function BuffetPage() {
             <button className="group flex items-center gap-3 rounded-full bg-tembi px-8 py-4 text-base font-semibold text-white transition-all hover:bg-[#849260] hover:shadow-lg hover:-translate-y-0.5">
               {t.catering.hero.buttonText}
               <div className="relative h-4 w-4 transition-transform group-hover:translate-y-1">
-                <Image src="/images/icons/down-arrow-white.png" alt="Arrow" fill className="object-contain brightness-0 invert" />
+                <Image
+                  src="/images/icons/down-arrow-white.png"
+                  alt="Arrow"
+                  fill
+                  className="object-contain brightness-0 invert"
+                />
               </div>
             </button>
           </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-          <a href="#our-story" className="animate-bounce cursor-pointer p-2 block">
-             <Image
-                src="/images/icons/arrow-down-white.png"
-                alt="Scroll Down"
-                width={16}
-                height={16}
-                className="brightness-0 invert drop-shadow-md"
-             />
+          <a
+            href="#our-story"
+            className="animate-bounce cursor-pointer p-2 block"
+          >
+            <Image
+              src="/images/icons/arrow-down-white.png"
+              alt="Scroll Down"
+              width={16}
+              height={16}
+              className="brightness-0 invert drop-shadow-md"
+            />
           </a>
         </div>
       </section>
       {/*HERITAGE SECTION*/}
-      <section id="our-story" className="mx-auto max-w-7xl px-6 py-20 lg:px-12 lg:py-28">
+      <section
+        id="our-story"
+        className="mx-auto max-w-7xl px-6 py-20 lg:px-12 lg:py-28"
+      >
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-center">
-          
           <div>
             <span className="mb-4 block text-sm font-bold uppercase tracking-widest text-tembi">
               {t.catering.intro.label}
@@ -134,12 +151,20 @@ export default function BuffetPage() {
 
             <div className="flex gap-16">
               <div>
-                <h3 className="font-serif text-4xl font-bold text-tembi">{t.catering.intro.stats1.num}</h3>
-                <p className="mt-1 text-sm font-medium text-gray-500">{t.catering.intro.stats1.desc}</p>
+                <h3 className="font-serif text-4xl font-bold text-tembi">
+                  {t.catering.intro.stats1.num}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-gray-500">
+                  {t.catering.intro.stats1.desc}
+                </p>
               </div>
               <div>
-                <h3 className="font-serif text-4xl font-bold text-tembi">{t.catering.intro.stats2.num}</h3>
-                <p className="mt-1 text-sm font-medium text-gray-500">{t.catering.intro.stats2.desc}</p>
+                <h3 className="font-serif text-4xl font-bold text-tembi">
+                  {t.catering.intro.stats2.num}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-gray-500">
+                  {t.catering.intro.stats2.desc}
+                </p>
               </div>
             </div>
           </div>
@@ -150,29 +175,37 @@ export default function BuffetPage() {
 
             <div className="grid grid-cols-2 gap-4 relative z-10">
               <div className="relative h-48 w-full overflow-hidden rounded-xl shadow-md lg:h-56">
-                <Image 
-                  src="/images/foods/buffetcontent1.webp" alt="Chef" fill 
+                <Image
+                  src="/images/foods/buffetcontent1.webp"
+                  alt="Chef"
+                  fill
                   className="object-cover transition-transform duration-500 hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
               <div className="relative mt-8 h-48 w-full overflow-hidden rounded-xl shadow-md lg:h-56">
-                <Image 
-                  src="/images/foods/buffetcontent2.webp" alt="Interior" fill 
+                <Image
+                  src="/images/foods/buffetcontent2.webp"
+                  alt="Interior"
+                  fill
                   className="object-cover transition-transform duration-500 hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
               <div className="relative h-48 w-full overflow-hidden rounded-xl shadow-md lg:h-56">
-                <Image 
-                  src="/images/foods/buffetcontent3.webp" alt="Spices" fill 
+                <Image
+                  src="/images/foods/buffetcontent3.webp"
+                  alt="Spices"
+                  fill
                   className="object-cover transition-transform duration-500 hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
               <div className="relative mt-8 h-48 w-full overflow-hidden rounded-xl shadow-md lg:h-56">
-                <Image 
-                  src="/images/foods/buffetcontent4.webp" alt="Dining" fill 
+                <Image
+                  src="/images/foods/buffetcontent4.webp"
+                  alt="Dining"
+                  fill
                   className="object-cover transition-transform duration-500 hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
@@ -184,7 +217,6 @@ export default function BuffetPage() {
       {/*MENU SECTION*/}
       <section className="bg-[#F9F8F3] py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
-          
           <div className="mx-auto mb-16 max-w-2xl text-center">
             <span className="mb-3 block text-sm font-bold uppercase tracking-widest text-tembi">
               {t.catering.buffetMenu.label}
@@ -199,11 +231,14 @@ export default function BuffetPage() {
 
           <div className="flex flex-wrap justify-center gap-8">
             {menuList.map((menu, index) => (
-              <div key={index} className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] flex flex-col">
-                <MenuCard 
+              <div
+                key={index}
+                className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] flex flex-col"
+              >
+                <MenuCard
                   className="h-full"
-                  icon={menu.icon} 
-                  title={menu.title} 
+                  icon={menu.icon}
+                  title={menu.title}
                   subtitle={menu.subtitle}
                   items={menu.items}
                 />
@@ -212,12 +247,9 @@ export default function BuffetPage() {
           </div>
         </div>
       </section>
-      <BuffetPricing 
-        whatsappNumber="6282225142729"
-        packages={packages}
-       />
-       <BuffetFeatures />
-       <BuffetBooking />
+      <BuffetPricing whatsappNumber="6282225142729" packages={packages} />
+      <BuffetFeatures />
+      <BuffetBooking />
     </main>
   );
 }

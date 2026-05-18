@@ -30,49 +30,84 @@ interface RoomRow extends RowDataPacket {
 export async function GET(request: NextRequest) {
     try {
         const query = `
-            SELECT 
-                room.id,
-                room.title_ind,
-                room.title_eng,
-                room.description_ind,
-                room.description_eng,
-                room.number_guest,
-                room.spacious_room,
-                room.slug,
+            SELECT
+                r.id,
+                r.title_ind,
+                r.title_eng,
+                r.description_ind,
+                r.description_eng,
+                r.number_guest,
+                r.spacious_room,
+                r.slug,
                 room_gallery_banner.image as imagebanner,
                 mstr_tiers_room.name_id as tiers_name,
                 COALESCE(gallery_counts.total_gallery, 0) as gallery_count,
-                (
-                    SELECT JSON_ARRAYAGG(
-                        JSON_OBJECT(
-                            'id', mf.id,
-                            'name_ind', mf.name_ind,
-                            'name_eng', mf.name_eng,
-                            'icon', mf.icon
-                        )
-                    )
-                    FROM (
-                        SELECT mstr_fasilities.id, mstr_fasilities.name_ind, mstr_fasilities.name_eng, mstr_fasilities.icon
-                        FROM room_facilities
-                        JOIN mstr_fasilities ON mstr_fasilities.id = room_facilities.facilities_id
-                        WHERE room_facilities.room_id = room.id
-                        LIMIT 2
-                    ) as mf
-                ) as facilities
-            FROM room
+                facilities_agg.facilities
+            FROM
+                room r
             LEFT JOIN room_gallery as room_gallery_banner
-                ON room_gallery_banner.room_id = room.id 
+                ON
+                room_gallery_banner.room_id = r.id
                 AND room_gallery_banner.is_banner = 1
             LEFT JOIN (
-                SELECT room_id, COUNT(*) as total_gallery
-                FROM room_gallery
-                GROUP BY room_id
+                SELECT
+                    room_id,
+                    COUNT(*) as total_gallery
+                FROM
+                    room_gallery
+                GROUP BY
+                    room_id
             ) as gallery_counts
-                ON gallery_counts.room_id = room.id
+                ON
+                gallery_counts.room_id = r.id
             JOIN mstr_tiers_room
-                ON mstr_tiers_room.id = room.tiers_id
-            WHERE room.is_recomendation = 0
-            ORDER BY room.created_at DESC
+                ON
+                mstr_tiers_room.id = r.tiers_id
+            LEFT JOIN (
+                SELECT
+                    rf.room_id,
+                    CONCAT('[',
+                        GROUP_CONCAT(
+                            JSON_OBJECT(
+                                'id', mf.id,
+                                'name_ind', mf.name_ind,
+                                'name_eng', mf.name_eng,
+                                'icon', mf.icon
+                            )
+                            ORDER BY mf.id
+                            SEPARATOR ','
+                        ),
+                    ']') as facilities
+                FROM
+                    (
+                    SELECT
+                        room_facilities.room_id,
+                        room_facilities.facilities_id,
+                        @rn := IF(@prev = room_facilities.room_id, @rn + 1, 1) AS rn,
+                        @prev := room_facilities.room_id
+                    FROM
+                        room_facilities
+                    CROSS JOIN (
+                        SELECT
+                            @rn := 0,
+                            @prev := NULL) vars
+                    ORDER BY
+                        room_facilities.room_id,
+                        room_facilities.facilities_id
+                ) rf
+                JOIN mstr_fasilities mf ON
+                    mf.id = rf.facilities_id
+                WHERE
+                    rf.rn <= 2
+                GROUP BY
+                    rf.room_id
+            ) as facilities_agg
+                ON
+                facilities_agg.room_id = r.id
+            WHERE
+                r.is_recomendation = 0
+            ORDER BY
+                r.created_at DESC;
         `;
 
         const params: (number | string)[] = [];

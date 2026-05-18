@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import BackgroundMusic from "@/components/BackgroundMusic";
-import { LanguageProvider } from "./context/LanguageContext";
+import { LanguageProvider } from "../context/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 

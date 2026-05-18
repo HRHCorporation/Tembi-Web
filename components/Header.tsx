@@ -1,10 +1,9 @@
-// app/Header.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import Link from "next/link";
-import { useLanguage } from "@/app/(public)/context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 export default function Header() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -20,10 +19,8 @@ export default function Header() {
     { name: t.nav.house, href: "/rooms" },
     { name: t.nav.foods, href: "/catering" },
     { name: t.nav.venue, href: "/venue" },
-    { name: "Event", href: "/event" },
     { name: t.nav.history, href: "/sejarah" },
     { name: t.nav.collections, href: "/collections" },
-    { name: t.nav.blog || "Blog", href: "/blog" },
     { name: t.nav.checkBooking, href: "/check-booking" },
   ];
 
@@ -34,7 +31,7 @@ export default function Header() {
   if (!mounted) {
     return (
       <header className="fixed top-0 left-0 right-0 z-40 bg-white text-black h-16 shadow-sm">
-        <div className="container mx-auto px-6 py-2 h-[64px]" />
+        <div className="container mx-auto px-6 py-2 h-16" />
       </header>
     );
   }
@@ -42,23 +39,19 @@ export default function Header() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-40 bg-white text-black shadow-sm">
-        {/* PERUBAHAN 1: py-4 diubah menjadi py-2 agar atas bawah lebih rapat */}
-        <div className="container mx-auto px-6 py-2 grid grid-cols-3 items-center">
-
-          {/* Kiri: Hamburger Menu */}
+        <div className="relative container mx-auto px-4 py-2 flex items-center justify-between">
           <div className="justify-self-start flex items-center gap-4">
             <button onClick={() => setSidebarOpen(true)} className="p-2">
               <Menu size={24} />
             </button>
           </div>
-          {/* Tengah: Logo */}
-          <Link href="/" className="mx-auto">
+          <Link href="/" className="absolute left-1/2 -translate-x-1/2">
             <div className="text-center bg-[url(/images/logo-tembi.png)] bg-contain bg-center bg-no-repeat h-12 w-48 cursor-pointer">
               <h1 className="text-xl font-bold font-serif opacity-0">Tembi</h1>
             </div>
           </Link>
 
-          {/* Kanan: Language Switcher & Button */}
+          
           <div className="justify-self-end flex items-center gap-4">
             <Link
               href="/booking"
@@ -83,11 +76,9 @@ export default function Header() {
           </div>
         </div>
       </header>
-
-      {/* Sidebar & WhatsApp button tetap sama */}
       <div
         onClick={() => setSidebarOpen(false)}
-        className={`fixed inset-0 bg-black bg-opacity-30 z-40 transition-opacity duration-300 ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       />
       <aside
         className={`fixed top-0 left-0 h-full w-72 bg-white text-slate-800 z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}

@@ -60,30 +60,49 @@ export async function GET(
         const { slug } = await context.params;
 
         const query = `
-            SELECT 
-                vanue.id,
-                vanue.name_ind,
-                vanue.name_eng,
-                vanue.description_ind,
-                vanue.description_eng,
-                vanue.slug,
+            SELECT
+                v.id,
+                v.name_ind,
+                v.name_eng,
+                v.description_ind,
+                v.description_eng,
+                v.slug,
                 vanue_gallery_banner.image as imagebanner,
-                (
-                    SELECT JSON_ARRAYAGG(
+                venue_keys_agg.venue_keys,
+                facilities_agg.facilities,
+                facility_add_ons_agg.facility_add_ons,
+                preview_images_agg.preview_images,
+                all_galleries_agg.all_galleries
+            FROM
+                vanue v
+            LEFT JOIN vanue_gallery as vanue_gallery_banner
+                ON
+                vanue_gallery_banner.vanue_id = v.id
+                AND vanue_gallery_banner.is_banner = 1
+            LEFT JOIN (
+                SELECT
+                    vanue_id,
+                    JSON_ARRAYAGG(
                         JSON_OBJECT(
-                            'id', vk.id,
-                            'icon', vk.icon,
-                            'label_ind', vk.label_ind,
-                            'label_eng', vk.label_eng,
-                            'value_ind', vk.value_ind,
-                            'value_eng', vk.value_eng
+                            'id', id,
+                            'icon', icon,
+                            'label_ind', label_ind,
+                            'label_eng', label_eng,
+                            'value_ind', value_ind,
+                            'value_eng', value_eng
                         )
-                    )
-                    FROM venue_keys vk
-                    WHERE vk.vanue_id = vanue.id
-                ) as venue_keys,
-                (
-                    SELECT JSON_ARRAYAGG(
+                    ) as venue_keys
+                FROM
+                    venue_keys
+                GROUP BY
+                    vanue_id
+            ) as venue_keys_agg
+                ON
+                venue_keys_agg.vanue_id = v.id
+            LEFT JOIN (
+                SELECT
+                    vf.vanue_id,
+                    JSON_ARRAYAGG(
                         JSON_OBJECT(
                             'id', mvf.id,
                             'name_ind', mvf.name_ind,
@@ -92,13 +111,23 @@ export async function GET(
                             'description_eng', mvf.description_eng,
                             'icon', mvf.icon
                         )
-                    )
-                    FROM vanue_facilities vf
-                    JOIN mstr_vanue_facilities mvf ON mvf.id = vf.mstr_vanue_facilities
-                    WHERE vf.vanue_id = vanue.id AND vf.is_add_ons = 0
-                ) as facilities,
-                (
-                    SELECT JSON_ARRAYAGG(
+                    ) as facilities
+                FROM
+                    vanue_facilities vf
+                JOIN mstr_vanue_facilities mvf 
+                    ON
+                    mvf.id = vf.mstr_vanue_facilities
+                WHERE
+                    vf.is_add_ons = 0
+                GROUP BY
+                    vf.vanue_id
+            ) as facilities_agg
+                ON
+                facilities_agg.vanue_id = v.id
+            LEFT JOIN (
+                SELECT
+                    vf.vanue_id,
+                    JSON_ARRAYAGG(
                         JSON_OBJECT(
                             'id', mvf.id,
                             'name_ind', mvf.name_ind,
@@ -106,44 +135,80 @@ export async function GET(
                             'description_ind', mvf.description_ind,
                             'description_eng', mvf.description_eng
                         )
-                    )
-                    FROM vanue_facilities vf
-                    JOIN mstr_vanue_facilities mvf ON mvf.id = vf.mstr_vanue_facilities
-                    WHERE vf.vanue_id = vanue.id AND vf.is_add_ons = 1
-                ) as facility_add_ons,
-                (
-                    SELECT JSON_ARRAYAGG(
+                    ) as facility_add_ons
+                FROM
+                    vanue_facilities vf
+                JOIN mstr_vanue_facilities mvf 
+                    ON
+                    mvf.id = vf.mstr_vanue_facilities
+                WHERE
+                    vf.is_add_ons = 1
+                GROUP BY
+                    vf.vanue_id
+            ) as facility_add_ons_agg
+                ON
+                facility_add_ons_agg.vanue_id = v.id
+            LEFT JOIN (
+                SELECT
+                    vanue_id,
+                    JSON_ARRAYAGG(
                         JSON_OBJECT(
-                            'id', vg.id,
-                            'image', vg.image,
-                            'is_banner', vg.is_banner
+                            'id', id,
+                            'image', image,
+                            'is_banner', is_banner
                         )
-                    )
-                    FROM (
-                        SELECT id, image, is_banner
-                        FROM vanue_gallery
-                        WHERE vanue_id = vanue.id AND is_banner = 0
-                        ORDER BY RAND()
-                        LIMIT 3
-                    ) as vg
-                ) as preview_images,
-                (
-                    SELECT JSON_ARRAYAGG(
-                        JSON_OBJECT(
-                            'id', vg.id,
-                            'image', vg.image,
-                            'is_banner', vg.is_banner
-                        )
-                    )
-                    FROM vanue_gallery vg
-                    WHERE vg.vanue_id = vanue.id
-                    ORDER BY vg.is_banner DESC, vg.created_at DESC
-                ) as all_galleries
-            FROM vanue
-            LEFT JOIN vanue_gallery as vanue_gallery_banner
-                ON vanue_gallery_banner.vanue_id = vanue.id 
-                AND vanue_gallery_banner.is_banner = 1
-            WHERE vanue.slug = ?
+                    ) as preview_images
+                FROM
+                    (
+                    SELECT
+                        vg.vanue_id,
+                        vg.id,
+                        vg.image,
+                        vg.is_banner,
+                        @row_num := IF(@prev_vanue = vg.vanue_id, @row_num + 1, 1) AS rn,
+                        @prev_vanue := vg.vanue_id
+                    FROM
+                        vanue_gallery vg
+                    CROSS JOIN (
+                        SELECT
+                            @row_num := 0,
+                            @prev_vanue := NULL) vars
+                    WHERE
+                        vg.is_banner = 0
+                    ORDER BY
+                        vg.vanue_id,
+                        RAND()
+                ) as ranked
+                WHERE
+                    rn <= 3
+                GROUP BY
+                    vanue_id
+            ) as preview_images_agg
+                ON
+                preview_images_agg.vanue_id = v.id
+            LEFT JOIN (
+                SELECT
+                    vanue_id,
+                    CONCAT('[',
+                        GROUP_CONCAT(
+                            JSON_OBJECT(
+                                'id', id,
+                                'image', image,
+                                'is_banner', is_banner
+                            )
+                            ORDER BY is_banner DESC, created_at DESC
+                            SEPARATOR ','
+                        ),
+                    ']') as all_galleries
+                FROM
+                    vanue_gallery
+                GROUP BY
+                    vanue_id
+            ) as all_galleries_agg
+                ON
+                all_galleries_agg.vanue_id = v.id
+            WHERE
+                v.slug = ?
             LIMIT 1
         `;
 

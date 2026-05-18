@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const heroImages = [
   "/images/homepage/homepage-hero1.webp",
