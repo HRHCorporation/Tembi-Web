@@ -74,15 +74,11 @@ export default function HouseCard({ house }: HouseProps) {
 
   return (
     <div className="bg-white border border-gray-100 rounded-sm hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full overflow-hidden">
-      {}
-      {}
       <div
         className="relative h-80 overflow-hidden group/slider"
         onMouseEnter={hasMultipleImages ? startAutoSlide : undefined}
         onMouseLeave={hasMultipleImages ? stopAutoSlide : undefined}
       >
-        {}
-        {}
         <div
           className="flex h-full transition-transform duration-500 ease-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -96,7 +92,7 @@ export default function HouseCard({ house }: HouseProps) {
                 className="object-cover"
                 priority={index === 0}
               />
-              {}
+
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-medium text-gray-700 rounded-sm shadow-sm z-10">
                 Recommendation
               </div>
@@ -104,10 +100,8 @@ export default function HouseCard({ house }: HouseProps) {
           ))}
         </div>
 
-        {}
         {hasMultipleImages && (
           <>
-            {}
             <button
               onClick={handleManualPrev}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full opacity-0 group-hover/slider:opacity-100 transition-all duration-300 z-20 shadow-md cursor-pointer hover:scale-110"
@@ -127,7 +121,6 @@ export default function HouseCard({ house }: HouseProps) {
               </svg>
             </button>
 
-            {}
             <button
               onClick={handleManualNext}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full opacity-0 group-hover/slider:opacity-100 transition-all duration-300 z-20 shadow-md cursor-pointer hover:scale-110"
@@ -147,7 +140,6 @@ export default function HouseCard({ house }: HouseProps) {
               </svg>
             </button>
 
-            {}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1.5 z-20">
               {images.map((_, slideIndex) => (
                 <button
@@ -165,16 +157,15 @@ export default function HouseCard({ house }: HouseProps) {
         )}
       </div>
 
-      {}
       <div className="p-8 flex flex-col grow relative z-30 bg-white">
         <h3 className="text-xl font-serif font-bold mb-3 text-gray-900">
           {house.name}
         </h3>
-        {}
+
         <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-4 grow">
           {house.desc}
         </p>
-        {}
+
         <div className="flex gap-5 text-xs text-gray-500 mb-8 border-t border-gray-100 pt-4">
           <div className="flex items-center gap-2">
             <div className="relative w-3 h-3">

@@ -1,10 +1,9 @@
-// app/Header.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import Link from "next/link";
-import { useLanguage } from "@/app/(public)/context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 export default function Header() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -32,7 +31,7 @@ export default function Header() {
   if (!mounted) {
     return (
       <header className="fixed top-0 left-0 right-0 z-40 bg-white text-black h-16 shadow-sm">
-        <div className="container mx-auto px-6 py-2 h-[64px]" />
+        <div className="container mx-auto px-6 py-2 h-16" />
       </header>
     );
   }
@@ -52,7 +51,7 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Kanan: Language Switcher & Button */}
+          
           <div className="justify-self-end flex items-center gap-4">
             <Link
               href="/booking"
@@ -77,11 +76,9 @@ export default function Header() {
           </div>
         </div>
       </header>
-
-      {/* Sidebar & WhatsApp button tetap sama */}
       <div
         onClick={() => setSidebarOpen(false)}
-        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       />
       <aside
         className={`fixed top-0 left-0 h-full w-72 bg-white text-slate-800 z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}

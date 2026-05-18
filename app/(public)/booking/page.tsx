@@ -5,8 +5,6 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-// import { roomData } from '@/data/roomData';
-import { useLanguage } from "@/app/context/LanguageContext";
 
 import { differenceInCalendarDays, parseISO } from "date-fns";
 import {
@@ -20,6 +18,7 @@ import {
   Minus,
 } from "lucide-react";
 import CustomAlert from "@/components/CustomAlert";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const ADDONS_PRICE = {
   breakfast: 50000,
@@ -149,14 +148,12 @@ function BookingContent() {
     setIsChecking(true);
 
     try {
-      // 1. Panggil API Availability
       const res = await fetch(
         `/api/availability?roomSlug=${selectedRoom.slug}&checkIn=${checkIn}&checkOut=${checkOut}`,
       );
       const data = await res.json();
 
       if (data.available) {
-        // 2. Jika Tersedia, Redirect ke Halaman Payment (Isi data diri di sana)
         const params = new URLSearchParams({
           room: selectedRoom.slug,
           checkIn,
@@ -170,7 +167,6 @@ function BookingContent() {
 
         router.push(`/payment?${params.toString()}`);
       } else {
-        // 3. Jika Tidak Tersedia, Munculkan Alert
         setAlertState({
           isOpen: true,
           title: "Kamar Tidak Tersedia",
@@ -201,15 +197,14 @@ function BookingContent() {
         onClose={() => setAlertState((prev) => ({ ...prev, isOpen: false }))}
       />
 
-      {/* === HERO SECTION === */}
       <div
-        className="relative w-full h-[500px] flex flex-col items-center justify-center text-center px-4 bg-cover bg-center mb-10"
+        className="relative w-full h-125 flex flex-col items-center justify-center text-center px-4 bg-cover bg-center mb-10"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=2000&auto=format&fit=crop')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#3A4D39]/90 via-[#3A4D39]/60 to-[#EFF1F0]"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-[#3A4D39]/90 via-[#3A4D39]/60 to-[#EFF1F0]"></div>
 
         <div className="relative z-10 max-w-4xl mt-10">
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4 drop-shadow-lg">
@@ -223,14 +218,11 @@ function BookingContent() {
         </div>
       </div>
 
-      {/* === STEPPER SECTION === */}
       <div className="container mx-auto px-4">
         <BookingStepper />
       </div>
 
-      {/* === MAIN CONTENT CONTAINER === */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 px-4 md:px-8 items-start">
-        {/* LEFT COLUMN: Inputs */}
         <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-100">
           <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-4">
             <Calendar className="w-5 h-5 text-tembi" />
@@ -239,7 +231,6 @@ function BookingContent() {
             </h3>
           </div>
 
-          {/* Date Selection */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-gray-700 mb-3">
               Select Your Dates
@@ -270,7 +261,6 @@ function BookingContent() {
             </div>
           </div>
 
-          {/* Guest Selection */}
           <div className="mb-10">
             <label className="block text-sm font-semibold text-gray-700 mb-3">
               Guest Information
@@ -311,13 +301,11 @@ function BookingContent() {
             </div>
           </div>
 
-          {/* Additional Add-ons */}
           <div className="mb-10">
             <label className="block text-sm font-semibold text-gray-700 mb-3">
               Additional Services (Optional)
             </label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Kolom Extra Bed */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col justify-between">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -355,7 +343,6 @@ function BookingContent() {
                 </div>
               </div>
 
-              {/* Kolom Breakfast */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col justify-between">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -395,7 +382,6 @@ function BookingContent() {
             </div>
           </div>
 
-          {/* Room List */}
           <div className="mb-10">
             <div className="flex items-center gap-2 mb-4">
               <Home className="w-4 h-4 text-tembi" />
@@ -436,7 +422,6 @@ function BookingContent() {
             </div>
           </div>
 
-          {/* Special Requests */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-tembi text-xs">●</span>
@@ -453,7 +438,6 @@ function BookingContent() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 h-fit sticky top-28">
             <div className="flex items-center gap-2 mb-6 text-tembi border-b border-gray-100 pb-4">
@@ -474,7 +458,7 @@ function BookingContent() {
                     className="object-cover"
                     priority
                   />
-                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4">
+                  <div className="absolute bottom-0 left-0 w-full bg-linear-to-t from-black/80 via-black/40 to-transparent p-4">
                     <p className="text-white font-bold text-lg leading-tight">
                       {selectedRoom.name}
                     </p>
@@ -539,7 +523,7 @@ function BookingContent() {
                       <span className="text-gray-600 flex items-center gap-2">
                         <span className="font-bold text-tembi">
                           {addons.breakfast}x
-                        </span>{" "}
+                        </span>
                         Breakfast
                       </span>
                       <span className="font-semibold text-gray-900">
@@ -556,7 +540,7 @@ function BookingContent() {
                       <span className="text-gray-600 flex items-center gap-2">
                         <span className="font-bold text-tembi">
                           {addons.extrabed}x
-                        </span>{" "}
+                        </span>
                         Extra Bed
                       </span>
                       <span className="font-semibold text-gray-900">
@@ -572,7 +556,6 @@ function BookingContent() {
               </div>
             )}
 
-            {/* Total Price */}
             <div className="flex justify-between items-end mb-6">
               <div>
                 <p className="text-xs text-gray-500 mb-1">Total Payment</p>
@@ -582,7 +565,6 @@ function BookingContent() {
               </div>
             </div>
 
-            {/* BUTTON ACTION (Redirect to Payment Page) */}
             <button
               onClick={handleCheckAndProceed}
               disabled={!isFormValid || isChecking}

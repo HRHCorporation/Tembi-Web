@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import VenueCard from '@/components//VenueCard';
+import VenueCard from '@/components/VenueCard';
 import VenueGallery from '@/components/VenueGallery';
 import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -26,10 +26,10 @@ const VenuePage = () => {
   return (
     <main className="w-full min-h-screen">
       
-      {/*HERO SECTION*/}
+      
       <section className="relative h-screen w-full overflow-hidden">
   
-        {/* --- Background Image --- */}
+        
         <div className="absolute inset-0 z-0">
           <Image 
             src="/images/venue/venue-hero.webp" 
@@ -42,31 +42,31 @@ const VenuePage = () => {
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        {/* --- Hero Content --- */}
+        
         <div className="relative z-10 h-full max-w-7xl mx-auto px-6 sm:px-8 flex flex-col justify-center">
       
-          {/* Main Heading */}
+          
           <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold leading-tight mb-4">
             <span className="text-white">{t.venue.hero.title[0]}</span> <br />
             <span className="text-[#96A66D]">{t.venue.hero.title[1]}</span>
           </h1>
 
-          {/* Subtitle */}
+          
           <p className="text-white text-xl sm:text-2xl mb-2 font-light tracking-wide">
             {t.venue.hero.subtitle}
           </p>
 
-          {/* Quote / Tagline (Green) */}
+          
           <p className="text-[#96A66D] text-lg sm:text-xl mb-8 font-medium">
             {t.venue.hero.quote}
           </p>
 
-          {/* Description */}
+          
           <div className="max-w-3xl text-gray-200 text-base sm:text-lg leading-relaxed mb-10">
             <p>{t.venue.hero.desc}</p>
           </div>
 
-          {/* CTA Button */}
+          
           <div>
             <button className="flex items-center gap-3 bg-[#8F9F6A] hover:bg-[#7d8c5c] text-white px-8 py-3.5 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 <div className="relative w-5 h-5">
@@ -85,7 +85,7 @@ const VenuePage = () => {
         </div>
       </section>
 
-      {/*FEATURES SECTION*/}
+      
       <section className="py-24 bg-[#F9F9F0]">
         <div className="container mx-auto px-6">
           
@@ -100,12 +100,12 @@ const VenuePage = () => {
             </div>
           </ScrollReveal>
 
-          {/* Cards Grid (Dynamic Mapping) */}
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {t.venue.features.item.map((feature, idx) => (
                <ScrollReveal key={idx} animation="fadeUp" delay={idx * 150} duration={800}>
                  <FeatureCard 
-                   iconSrc={featureIcons[idx]} // Ambil icon berdasarkan index
+                   iconSrc={featureIcons[idx]} 
                    title={feature.title}
                    description={feature.description}
                  />
@@ -115,7 +115,7 @@ const VenuePage = () => {
         </div>
       </section>
 
-      {/*VENUE COLLECTION GRID*/}
+      
       <section className="py-20 bg-[#FFFDF5]">
         <div className="container mx-auto px-6">
           
@@ -130,7 +130,7 @@ const VenuePage = () => {
             </div>
           </ScrollReveal>
 
-          {/* Loop Data Venue dari Context (t.venue.items) */}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             {t.venue.items.map((venue, idx) => (
               <ScrollReveal key={venue.slug} animation="fadeUp" delay={idx * 150} duration={800}>
@@ -150,15 +150,15 @@ const VenuePage = () => {
         </div>
       </section>
 
-      {/*GALLERY COMPONENT*/}
-      {/* Jika VenueGallery perlu diterjemahkan juga, pastikan Anda mengupdate file tersebut secara terpisah */}
+      
+      
       <VenueGallery />
     
-      {/*CONTACT / CTA SECTION*/}
+      
       <section className="w-full bg-[#8F9F6A] py-20 px-6 sm:px-8">
         <div className="mx-auto max-w-5xl text-center">
           
-          {/* --- Heading & Description --- */}
+          
           <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
              {t.venue.contact.title[0]} <br className="hidden md:block" />
              {t.venue.contact.title[1]}
@@ -168,7 +168,7 @@ const VenuePage = () => {
             {t.venue.contact.desc}
           </p>
 
-          {/* --- Button Hubungi Tim Kami --- */}
+          
           <div className="mb-16">
             <Link 
               href="/contact" 
@@ -187,7 +187,7 @@ const VenuePage = () => {
             </Link>
           </div>
 
-          {/* --- Features Grid (3 Cards Dynamic) --- */}
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {t.venue.contact.item.map((item, idx) => (
@@ -217,7 +217,7 @@ const VenuePage = () => {
   );
 };
 
-// --- Komponen FeatureCard Diperbarui ---
+
 interface FeatureCardProps {
   iconSrc: string;
   title: string;
@@ -228,16 +228,16 @@ const FeatureCard = ({ iconSrc, title, description }: FeatureCardProps) => {
   return (
     <div className="bg-[#FFFDF5] p-10 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center text-center border border-[#EBEBE0]">
       
-      {/* Lingkaran Hijau Pembungkus Icon */}
+      
       <div className="w-16 h-16 rounded-full bg-[#8FA876] flex items-center justify-center mb-6 shadow-inner relative overflow-hidden">
         
-        {/* Container Gambar (Agar ukurannya proporsional di dalam lingkaran) */}
+        
         <div className="relative w-8 h-8"> 
           <Image
             src={iconSrc}
             alt={title}
             fill
-            className="object-contain" // Agar gambar tidak terpotong/gepeng
+            className="object-contain" 
           />
         </div>
 
