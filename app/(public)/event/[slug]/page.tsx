@@ -2,7 +2,7 @@
 
 import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Calendar, MapPin, Users, Clock, Share2, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, Calendar, MapPin, Share2, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/app/context/LanguageContext';
 
 interface EventDetail {
@@ -357,7 +357,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               eventDate.setHours(0, 0, 0, 0);
               return e.slug !== slug && eventDate >= today;
             })
-            .slice(0, 3);
+            .slice(0, 4);
 
           setRelatedEvents(filtered);
         }
@@ -394,8 +394,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   const eventName = language === 'id' ? event.name_ind : event.name_eng;
   const eventTagline = language === 'id' ? event.tagline_ind : event.tagline_eng;
   const eventDescription = language === 'id' ? event.description_ind : event.description_eng;
-  const eventIncluded = language === 'id' ? event.included_ind : event.included_eng;
-  const eventRequirements = language === 'id' ? event.requirements_ind : event.requirements_eng;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -571,40 +569,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
-            {/* What's in store */}
-            {eventIncluded && eventIncluded.length > 0 && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  🎁 {language === 'id' ? "Yang Termasuk" : "What's in store"}
-                </h3>
-                <ul className="space-y-3">
-                  {eventIncluded.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3 text-white/80">
-                      <span className="text-[#8da077] mt-1">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Requirements */}
-            {eventRequirements && eventRequirements.length > 0 && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h3 className="text-xl font-bold mb-4">
-                  ℹ️ {language === 'id' ? 'Informasi Penting' : 'Important Information'}
-                </h3>
-                <ul className="space-y-3">
-                  {eventRequirements.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3 text-white/80">
-                      <span className="text-[#8da077] mt-1">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
             {/* Location */}
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
               <h3 className="text-xl font-bold mb-4">
@@ -628,57 +592,41 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
-            {/* Gallery */}
-            {event.galleryImages && event.galleryImages.length > 0 && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h3 className="text-xl font-bold mb-4">
-                  📸 {language === 'id' ? 'Galeri' : 'Gallery'}
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {event.galleryImages.map((image, index) => (
-                    <div key={index} className="aspect-square rounded-lg overflow-hidden">
-                      <img
-                        src={image}
-                        alt={`${eventName} - ${index + 1}`}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Related Events */}
             {relatedEvents.length > 0 && (
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="text-xl font-bold mb-4">
-                  🎪 {language === 'id' ? 'Event Lainnya' : 'Other Events'}
+                  {language === 'id' ? 'Event Lainnya' : 'Other Events'}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedEvents.map((relatedEvent) => (
                     <Link
                       key={relatedEvent.id}
                       href={`/event/${relatedEvent.slug}`}
-                      className="group bg-white/5 rounded-lg overflow-hidden hover:bg-white/10 transition-colors"
+                      className="group bg-white/5 rounded-xl overflow-hidden hover:bg-white/10 transition-all duration-300"
                     >
                       <div className="aspect-video overflow-hidden">
                         <img
                           src={relatedEvent.imageUrl}
                           alt={language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
-                      <div className="p-4">
-                        <p className="text-xs text-white/60 mb-2 flex items-center gap-1">
-                          <Calendar size={12} />
-                          {new Date(relatedEvent.date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </p>
-                        <h4 className="font-bold group-hover:text-[#8da077] transition-colors line-clamp-2">
+                      <div className="p-5">
+                        <div className="flex items-center gap-2 text-xs text-white/60 mb-3">
+                          <Calendar size={14} />
+                          <span>{new Date(relatedEvent.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })}</span>
+                        </div>
+                        <h4 className="font-bold text-lg mb-2 group-hover:text-[#8da077] transition-colors line-clamp-2">
                           {language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
                         </h4>
+                        <p className="text-sm text-white/70 line-clamp-2">
+                          {language === 'id' ? relatedEvent.tagline_ind : relatedEvent.tagline_eng}
+                        </p>
                       </div>
                     </Link>
                   ))}
