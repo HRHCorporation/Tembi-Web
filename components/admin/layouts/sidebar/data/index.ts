@@ -118,6 +118,12 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "Event",
+        url: "/admin/event",
+        icon: Icons.FourCircle,
+        items: [],
+      },
+      {
         title: "Banner Setting",
         url: "/admin/banner",
         icon: Icons.FourCircle,
