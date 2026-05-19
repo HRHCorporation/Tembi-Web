@@ -3,7 +3,7 @@
 import { FormPage } from "@/components/admin/global/FormPage";
 import { FormActions } from "@/components/admin/global/FormActions";
 import { useCreateBlog } from "../_hooks/use-create-blogs-room";
-import { CustomEditor } from "@/components/admin/global/CustomEditor";
+import { CustomEditor } from "@/components/admin/global/Customeditornative";
 import { ImageCropper } from "@/app/admin/carousel/_components/image-cropper";
 
 export default function CreateBlogPage() {

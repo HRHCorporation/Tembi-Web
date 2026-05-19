@@ -1,16 +1,12 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { FormPage } from "@/components/admin/global/FormPage";
 import { FormActions } from "@/components/admin/global/FormActions";
-import { useEditBlog } from "../../_hooks/use-edit-blogs-room";
+import { useCreateEvent } from "../_hooks/use-create-event";
 import { CustomEditor } from "@/components/admin/global/Customeditornative";
 import { ImageCropper } from "@/app/admin/carousel/_components/image-cropper";
 
-export default function EditBlogPage() {
-    const params = useParams();
-    const id = params.id as string;
-
+export default function CreateEventPage() {
     const {
         title_ind,
         title_eng,
@@ -18,10 +14,7 @@ export default function EditBlogPage() {
         description_eng,
         slug,
         thumbnailPreview,
-        croppedBlob,
-        existingThumbnail,
         loading,
-        fetchLoading,
         errors,
         setTitleInd,
         handleTitleEngChange,
@@ -30,15 +23,19 @@ export default function EditBlogPage() {
         setThumbnailFile,
         setThumbnailPreview,
         setCroppedBlob,
-        setExistingThumbnail,
         handleSubmit,
-    } = useEditBlog(id);
+        hosted_by,
+        setHostedBy,
+        date_event,
+        setDateEvent,
+        time_event,
+        setTimeEvent,
+    } = useCreateEvent();
 
     const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setThumbnailFile(file);
-            setExistingThumbnail("");
             const reader = new FileReader();
             reader.onload = (event) => {
                 setThumbnailPreview(event.target?.result as string);
@@ -47,26 +44,16 @@ export default function EditBlogPage() {
         }
     };
 
-    if (fetchLoading) {
-        return (
-            <FormPage title="Edit Blog" description="Memuat data...">
-                <div className="flex items-center justify-center py-12">
-                    <div className="text-gray-600 dark:text-gray-400">Loading...</div>
-                </div>
-            </FormPage>
-        );
-    }
-
     return (
         <FormPage
-            title="Edit Blog"
-            description="Perbarui artikel blog"
+            title="Tambah Blog"
+            description="Tambahkan artikel blog baru"
         >
             <form
                 className="space-y-6"
                 onSubmit={(e) => {
                     e.preventDefault();
-                    handleSubmit(e);
+                    handleSubmit();
                 }}
             >
                 {/* ===== BASIC INFORMATION ===== */}
@@ -86,7 +73,7 @@ export default function EditBlogPage() {
                                 value={title_ind}
                                 onChange={(e) => setTitleInd(e.target.value)}
                                 className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan judul blog"
+                                placeholder="Masukkan judul event"
                             />
                             {errors.title_ind && (
                                 <p className="mt-1 text-sm text-red-600">{errors.title_ind}</p>
@@ -103,7 +90,7 @@ export default function EditBlogPage() {
                                 value={title_eng}
                                 onChange={(e) => handleTitleEngChange(e.target.value)}
                                 className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter blog title"
+                                placeholder="Enter Event title"
                             />
                             {errors.title_eng && (
                                 <p className="mt-1 text-sm text-red-600">{errors.title_eng}</p>
@@ -123,6 +110,57 @@ export default function EditBlogPage() {
                                 placeholder="Auto-generated from English title"
                             />
                         </div>
+
+                        {/* Hosted By */}
+                        <div>
+                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                Hosted By
+                            </label>
+                            <input
+                                type="text"
+                                value={hosted_by}
+                                onChange={(e) => setHostedBy(e.target.value)}
+                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter hosted by"
+                            />
+                            {errors.hosted_by && (
+                                <p className="mt-1 text-sm text-red-600">{errors.hosted_by}</p>
+                            )}
+                        </div>
+
+                        {/* Date Event */}
+                        <div>
+                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                Date Event
+                            </label>
+                            <input
+                                type="date"
+                                value={date_event}
+                                onChange={(e) => setDateEvent(e.target.value)}
+                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter date event"
+                            />
+                            {errors.date_event && (
+                                <p className="mt-1 text-sm text-red-600">{errors.date_event}</p>
+                            )}
+                        </div>
+
+                        {/* Time Event */}
+                        <div>
+                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                Time Event
+                            </label>
+                            <input
+                                type="time"
+                                value={time_event}
+                                onChange={(e) => setTimeEvent(e.target.value)}
+                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter time event"
+                            />
+                            {errors.time_event && (
+                                <p className="mt-1 text-sm text-red-600">{errors.time_event}</p>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -139,7 +177,7 @@ export default function EditBlogPage() {
                         <CustomEditor
                             value={description_ind}
                             onChange={setDescriptionInd}
-                            placeholder="Tulis konten blog dalam bahasa Indonesia..."
+                            placeholder="Tulis konten blog..."
                             error={errors.description_ind}
                         />
                     </div>
@@ -171,29 +209,10 @@ export default function EditBlogPage() {
                     </h2>
 
                     <div className="space-y-4">
-                        {/* Existing Thumbnail */}
-                        {existingThumbnail && !thumbnailPreview && (
-                            <div>
-                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                    Thumbnail Saat Ini
-                                </label>
-                                <img
-                                    src={existingThumbnail}
-                                    alt="existing thumbnail"
-                                    className="h-64 w-full object-cover rounded border border-gray-200 dark:border-gray-600"
-                                />
-                                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                    Upload thumbnail baru untuk mengganti
-                                </p>
-                            </div>
-                        )}
-
                         {/* File Input */}
                         <div>
                             <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                {existingThumbnail && !thumbnailPreview
-                                    ? "Ganti Thumbnail"
-                                    : "Upload Thumbnail"}
+                                Upload Thumbnail
                             </label>
                             <input
                                 type="file"
@@ -216,23 +235,6 @@ export default function EditBlogPage() {
                                     image={thumbnailPreview}
                                     setCroppedBlob={setCroppedBlob}
                                 />
-                            </div>
-                        )}
-
-                        {/* Cropped Image Preview */}
-                        {croppedBlob && (
-                            <div>
-                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                    Preview Hasil Crop
-                                </label>
-                                <img
-                                    src={URL.createObjectURL(croppedBlob)}
-                                    alt="cropped preview"
-                                    className="h-64 w-full object-cover rounded border border-gray-200 dark:border-gray-600"
-                                />
-                                <p className="mt-2 text-xs text-green-600 dark:text-green-400">
-                                    ✓ Thumbnail baru siap untuk disimpan
-                                </p>
                             </div>
                         )}
                     </div>

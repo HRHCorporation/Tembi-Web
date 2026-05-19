@@ -87,11 +87,6 @@ export function useEditBannerRoom(id: string) {
             hasError = true;
         }
 
-        if (!croppedBlob) {
-            newErrors.image = "Image wajib diupload dan dicrop";
-            hasError = true;
-        }
-
         setErrors(newErrors);
         return !hasError;
     }

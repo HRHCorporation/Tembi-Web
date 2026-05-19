@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
                 id,
                 image,
                 title_ind,
-                title_ind,
+                title_eng,
                 description_ind,
                 description_eng
             FROM room_page_meta
