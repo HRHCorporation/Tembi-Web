@@ -1,31 +1,51 @@
-import { isServer } from "@/bootstrap/helpers/global-helper";
-import { metadata } from '../../../app/layout';
+export default abstract class BaseFailure<T = unknown> extends Error {
+  public readonly data: T;
+  public readonly timestamp: Date;
+  public readonly statusCode?: number;
 
-export default abstract class BaseFailure<META_DATA> {
-  namespace: string;
-  message: string;
-  metadata: META_DATA | undefined;
+  constructor(data: T, message?: string, statusCode?: number) {
+    super(message || 'An error occurred');
+    this.name = this.constructor.name;
+    this.data = data;
+    this.timestamp = new Date();
+    this.statusCode = statusCode;
 
-  constructor(message: string, namespace: string, metadata?: META_DATA) {
-    this.message = message;
-    this.metadata = metadata ?? undefined;
-    this.namespace = namespace;
-    this.logHandler();
-  }
-
-  toPlainObject(): BaseFailure<META_DATA> {
-    return {
-      message: this.message,
-      metadata: this.metadata,
-    } as BaseFailure<META_DATA>;
-  }
-
-  private logHandler() {
-    if (isServer) {
-      console.log(
-        `Error happened in ${this.namespace} namespace, langKey is: ${this.message}, metadata: ${JSON.stringify(this.metadata)}`,
-      );
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
     }
+
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 
+  public getMessage(): string {
+    return this.message;
+  }
+
+  public getData(): T {
+    return this.data;
+  }
+
+  public getTimestamp(): Date {
+    return this.timestamp;
+  }
+
+  public getStatusCode(): number | undefined {
+    return this.statusCode;
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      name: this.name,
+      message: this.message,
+      data: this.data,
+      timestamp: this.timestamp.toISOString(),
+      statusCode: this.statusCode,
+      stack: this.stack,
+    };
+  }
+
+  
+  public getUserMessage(): string {
+    return this.message;
+  }
 }

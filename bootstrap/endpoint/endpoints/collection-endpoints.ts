@@ -2,17 +2,17 @@ import serverConfigs from "@/bootstrap/configs/server-configs";
 import Endpoint from "../endpoint";
 import publicConfigs from "@/bootstrap/configs/public-configs";
 
-export default class BackendEndpoint extends Endpoint {
-  private loginEndpoint: string;
+export default class CollectionEndpoint extends Endpoint {
+  private collectionEndpoint: string;
 
-  get login() {
-    return this.buildEndpoint(this.loginEndpoint);
+  get collection() {
+    return this.buildEndpoint(this.collectionEndpoint);
   }
 
   constructor() {
     super({
       baseUrl: publicConfigs.api.baseUrl,
     });
-    this.loginEndpoint = "auth/login";
+    this.collectionEndpoint = 'collection'
   }
 }
