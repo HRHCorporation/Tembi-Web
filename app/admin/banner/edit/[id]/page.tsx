@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useEditBannerRoom } from "../../_hooks/use-edit-banner-page";
 import { FormPage } from "@/components/admin/global/FormPage";
@@ -41,6 +41,9 @@ export default function EditFasilitiesPage() {
         fetchLoading, } = useEditBannerRoom(id);
 
 
+    const hasLoadedInd = useRef(false);
+    const hasLoadedEng = useRef(false);
+
     const editorInd = useEditor({
         extensions: [StarterKit, Link.configure({ openOnClick: false })],
         onUpdate: ({ editor }) => setDescriptionInd(editor.getHTML()),
@@ -51,18 +54,20 @@ export default function EditFasilitiesPage() {
         onUpdate: ({ editor }) => setDescriptionEng(editor.getHTML()),
     });
 
-    // ✅ Sync editor content dengan state menggunakan useEffect
+    // ✅ Load content sekali saja setelah fetch selesai
     useEffect(() => {
-        if (editorInd && description_ind) {
-            editorInd.commands.setContent(description_ind, false);
+        if (editorInd && description_ind && !fetchLoading && !hasLoadedInd.current) {
+            editorInd.commands.setContent(description_ind);
+            hasLoadedInd.current = true;
         }
-    }, [editorInd, description_ind]);
+    }, [editorInd, description_ind, fetchLoading]);
 
     useEffect(() => {
-        if (editorEng && description_eng) {
-            editorEng.commands.setContent(description_eng, false);
+        if (editorEng && description_eng && !fetchLoading && !hasLoadedEng.current) {
+            editorEng.commands.setContent(description_eng);
+            hasLoadedEng.current = true;
         }
-    }, [editorEng, description_eng]);
+    }, [editorEng, description_eng, fetchLoading]);
 
     if (fetchLoading) {
         return (
