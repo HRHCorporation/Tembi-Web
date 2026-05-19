@@ -51,9 +51,8 @@ export default function FoodPage() {
 	}, []);
 
 	const title = getLocalizedField(foodBanner, "title", language);
+	const subtitle = getLocalizedField(foodBanner, "subtitle", language);
 	const description = getLocalizedField(foodBanner, "description", language);
-
-	const { strongText, remainingText, hasContent } = useHtmlParser(description);
 
 	return (
 		<main className="w-full min-h-screen bg-white">
@@ -96,15 +95,15 @@ export default function FoodPage() {
 						</div>
 
 						<h1 className="font-serif text-6xl font-bold text-white mb-6 leading-none drop-shadow-lg">
-							{title}
+							{title || t.foods.hero.title[0]}
 						</h1>
 
 						<p className="font-serif italic text-lg text-gray-200 mb-6 tracking-wide">
-							{strongText || t.foods.hero.subtitle}
+							{subtitle || t.foods.hero.subtitle}
 						</p>
 
 						<p className="text-base text-gray-300 leading-relaxed max-w-xl">
-							{remainingText || t.foods.hero.desc}
+							{description || t.foods.hero.desc}
 						</p>
 					</div>
 
