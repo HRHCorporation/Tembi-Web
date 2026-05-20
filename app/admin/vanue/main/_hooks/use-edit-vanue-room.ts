@@ -10,6 +10,12 @@ interface VenueFacility {
     label: string;
 }
 
+// ✅ TAMBAHKAN INTERFACE INI
+interface SelectedFacility {
+    facility_id: number;
+    is_add_ons: boolean;
+}
+
 interface VenueGalleryImage {
     file?: File;
     preview: string;
@@ -62,8 +68,8 @@ export function useEditVenue(id: string) {
     const [description_eng, setDescriptionEng] = useState("");
     const [slug, setSlug] = useState("");
 
-    // ✅ Children fields
-    const [selectedFacilities, setSelectedFacilities] = useState<number[]>([]);
+    // ✅ Children fields - UBAH TIPE DATA selectedFacilities
+    const [selectedFacilities, setSelectedFacilities] = useState<SelectedFacility[]>([]);
     const [images, setImages] = useState<VenueGalleryImage[]>([]);
     const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
     const [venueKeys, setVenueKeys] = useState<VenueKey[]>([]);
@@ -92,10 +98,17 @@ export function useEditVenue(id: string) {
                 setDescriptionEng((data.description_eng as string) || "");
                 setSlug((data.slug as string) || "");
 
-                // ✅ Set facilities dengan type yang benar (value: number)
-                const facilityIds = data.selected_facilities as number[] || [];
+                // ✅ Set facilities dengan structure {facility_id, is_add_ons}
+                const facilityData = data.selected_facilities as Array<{
+                    facility_id: number;
+                    is_add_ons: boolean;
+                }> || [];
+                
                 setSelectedFacilities(
-                    facilityIds
+                    facilityData.map((item) => ({
+                        facility_id: item.facility_id,
+                        is_add_ons: Boolean(item.is_add_ons),
+                    }))
                 );
 
                 // ✅ Set images
@@ -275,7 +288,7 @@ export function useEditVenue(id: string) {
                 description_ind,
                 description_eng,
                 slug,
-                selected_facilities: selectedFacilities,
+                selected_facilities: selectedFacilities, // Kirim dalam format {facility_id, is_add_ons}[]
                 images,
                 deleted_image_ids: deletedImageIds,
                 venue_keys: venueKeys,

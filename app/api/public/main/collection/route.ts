@@ -12,11 +12,11 @@ interface CollectionRow extends RowDataPacket {
 }
 
 /* ======================================================
-    GET DATA - Fetch all carousels
+    GET DATA - Fetch latest 4 collections
 ====================================================== */
 export async function GET(request: NextRequest) {
     try {
-        let query = `
+        const query = `
             SELECT 
                 collection.id,
                 collection.image,
@@ -25,13 +25,11 @@ export async function GET(request: NextRequest) {
                 collection.description_ind,
                 collection.description_eng
             FROM collection
+            ORDER BY collection.created_at DESC
+            LIMIT 4
         `;
 
-        const params: (number | string)[] = [];
-
-        query += ' ORDER BY collection.created_at DESC';
-
-        const [rows] = await dbWeb.query<CollectionRow[]>(query, params);
+        const [rows] = await dbWeb.query<CollectionRow[]>(query);
 
         return NextResponse.json({
             success: true,
@@ -39,7 +37,7 @@ export async function GET(request: NextRequest) {
         });
 
     } catch (error) {
-        console.error('Error fetching carousels:', error);
+        console.error('Error fetching collections:', error);
         return NextResponse.json(
             {
                 success: false,

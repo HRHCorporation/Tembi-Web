@@ -35,6 +35,10 @@ export default function EditFasilitiesPage() {
     const { title_eng, title_ind, description_eng, description_ind,
         setTitle_ind, setTitle_eng, setDescriptionInd, setDescriptionEng,
         image, setImage, croppedBlob, setCroppedBlob, existingImage,
+        subtitle_ind,
+        setSubtitle_ind,
+        subtitle_eng,
+        setSubtitle_eng,
         loading,
         errors,
         handleSubmit,
@@ -81,8 +85,8 @@ export default function EditFasilitiesPage() {
 
     return (
         <FormPage
-            title="Edit Fasilitas"
-            description="Update data fasilitas"
+            title="Edit Banner Page"
+            description="Update data Banner Page"
         >
 
             {/* FORM */}
@@ -165,6 +169,46 @@ export default function EditFasilitiesPage() {
                         {errors.title_eng}
                     </p>
                 )}
+
+                {/* Subtitle (Indonesia) */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Subtitle (Indonesia)
+                    </label>
+                    <input
+                        type="text"
+                        value={subtitle_ind}
+                        onChange={(e) => setSubtitle_ind(e.target.value)}
+                        className="w-full rounded border p-3
+                                bg-white text-gray-900
+                                dark:bg-gray-700 dark:text-white dark:border-gray-600
+                                focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                        (Optional)
+                    </span>
+                </div>
+
+                {/* Subtitle (English) */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Subtitle (English)
+                    </label>
+                    <input
+                        type="text"
+                        value={subtitle_eng}
+                        onChange={(e) => setSubtitle_eng(e.target.value)}
+                        className="w-full rounded border p-3
+                                bg-white text-gray-900
+                                dark:bg-gray-700 dark:text-white dark:border-gray-600
+                                focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                        (Optional)
+                    </span>
+                </div>
+
+
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div>

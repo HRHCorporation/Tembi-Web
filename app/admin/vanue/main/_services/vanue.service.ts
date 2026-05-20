@@ -28,13 +28,19 @@ interface ImageFile {
     id?: number;
 }
 
+// ✅ TAMBAHKAN INTERFACE INI
+interface SelectedFacility {
+    facility_id: number;
+    is_add_ons: boolean;
+}
+
 export async function createVenue(payload: {
     name_ind: string;
     name_eng: string;
     description_ind: string;
     description_eng: string;
     slug: string;
-    selected_facilities: number[];
+    selected_facilities: SelectedFacility[]; // ✅ UBAH DARI number[] KE SelectedFacility[]
     images: ImageFile[];
     venue_keys: VenueKey[];
     venue_services: VenueService[];
@@ -79,7 +85,7 @@ export async function updateVenue(
         description_ind: string;
         description_eng: string;
         slug: string;
-        selected_facilities: number[];
+        selected_facilities: SelectedFacility[]; // ✅ UBAH DARI number[] KE SelectedFacility[]
         images: ImageFile[];
         deleted_image_ids: number[];
         venue_keys: VenueKey[];

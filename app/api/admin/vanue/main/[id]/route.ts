@@ -86,6 +86,11 @@ interface NoteRow extends RowDataPacket {
 }
 
 // ✅ GET - Fetch venue by ID dengan semua children
+interface FacilityRow {
+    mstr_vanue_facilities: number;
+    is_add_ons: number; // ✅ TAMBAHKAN FIELD INI
+}
+
 export async function GET(
     req: NextRequest,
     { params }: { params: { id: string } }
@@ -106,9 +111,9 @@ export async function GET(
             );
         }
 
-        // Fetch all children
+        // ✅ UBAH QUERY UNTUK MENGAMBIL is_add_ons JUGA
         const [facilities] = await dbWeb.query<FacilityRow[]>(
-            "SELECT mstr_vanue_facilities FROM vanue_facilities WHERE vanue_id = ?",
+            "SELECT mstr_vanue_facilities, is_add_ons FROM vanue_facilities WHERE vanue_id = ?",
             [venueId]
         );
 
@@ -143,7 +148,11 @@ export async function GET(
             success: true,
             data: {
                 ...venueData,
-                selected_facilities: facilitiesArray.map((f) => f.mstr_vanue_facilities),
+                // ✅ UBAH FORMAT RETURN FACILITIES
+                selected_facilities: facilitiesArray.map((f) => ({
+                    facility_id: f.mstr_vanue_facilities,
+                    is_add_ons: Boolean(f.is_add_ons),
+                })),
                 images: imagesArray,
                 venue_keys: keysArray,
                 venue_services: servicesArray,
@@ -157,6 +166,12 @@ export async function GET(
             { status: 500 }
         );
     }
+}
+
+// ✅ TAMBAHKAN INTERFACE DI BAGIAN ATAS FILE
+interface SelectedFacility {
+    facility_id: number;
+    is_add_ons: boolean;
 }
 
 // ✅ PUT - Update venue
@@ -198,7 +213,8 @@ export async function PUT(
         const venueNotesJson = formData.get("venue_notes") as string;
         const deletedNoteIdsJson = formData.get("deleted_note_ids") as string;
 
-        const selectedFacilities = JSON.parse(selectedFacilitiesJson) as number[];
+        // ✅ UBAH PARSING DARI number[] KE SelectedFacility[]
+        const selectedFacilities = JSON.parse(selectedFacilitiesJson) as SelectedFacility[];
         const deletedImageIds = JSON.parse(deletedImageIdsJson) as number[];
         const venueKeys = JSON.parse(venueKeysJson) as VenueKey[];
         const deletedKeyIds = JSON.parse(deletedKeyIdsJson) as number[];
@@ -274,12 +290,15 @@ export async function PUT(
                 [name_ind, name_eng, description_ind, description_eng, slug, updatedBy, venueId]
             );
 
-            // ✅ Update facilities
+            // ✅ Update facilities DENGAN is_add_ons
             await connection.query("DELETE FROM vanue_facilities WHERE vanue_id = ?", [venueId]);
-            for (const facilityId of selectedFacilities) {
+            for (const facility of selectedFacilities) {
                 await connection.query(
-                    `INSERT INTO vanue_facilities (vanue_id, mstr_vanue_facilities, created_by, created_at) VALUES (?, ?, ?, NOW())`,
-                    [venueId, facilityId, updatedBy]
+                    `
+                    INSERT INTO vanue_facilities (vanue_id, mstr_vanue_facilities, is_add_ons, created_by, created_at) 
+                    VALUES (?, ?, ?, ?, NOW())
+                    `,
+                    [venueId, facility.facility_id, facility.is_add_ons ? 1 : 0, updatedBy]
                 );
             }
 

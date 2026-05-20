@@ -10,6 +10,12 @@ interface VenueFacility {
     label: string;
 }
 
+// ✅ TAMBAHKAN INTERFACE INI
+interface SelectedFacility {
+    facility_id: number;
+    is_add_ons: boolean;
+}
+
 interface VenueGalleryImage {
     file?: File;
     preview: string;
@@ -62,8 +68,8 @@ export function useCreateVenue() {
     const [description_eng, setDescriptionEng] = useState("");
     const [slug, setSlug] = useState("");
 
-    // ✅ Children fields
-    const [selectedFacilities, setSelectedFacilities] = useState<number[]>([]);
+    // ✅ Children fields - UBAH TIPE DATA selectedFacilities
+    const [selectedFacilities, setSelectedFacilities] = useState<SelectedFacility[]>([]);
     const [images, setImages] = useState<VenueGalleryImage[]>([]);
     const [venueKeys, setVenueKeys] = useState<VenueKey[]>([]);
     const [venueServices, setVenueServices] = useState<VenueService[]>([]);
@@ -173,7 +179,7 @@ export function useCreateVenue() {
                 description_ind,
                 description_eng,
                 slug,
-                selected_facilities: selectedFacilities,
+                selected_facilities: selectedFacilities, // Kirim dalam format {facility_id, is_add_ons}[]
                 images,
                 venue_keys: venueKeys,
                 venue_services: venueServices,
