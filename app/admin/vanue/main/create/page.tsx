@@ -4,7 +4,7 @@ import { FormPage } from "@/components/admin/global/FormPage";
 import { FormActions } from "@/components/admin/global/FormActions";
 import { useCreateVenue } from "../_hooks/use-create-vanue-room";
 import { useVenueFacilities } from "../_hooks/use-venue-facilities";
-import { MultiSelect } from "@/components/admin/global/MultiSelect";
+import { FacilitySelector } from "@/components/admin/global/FacilitySelector";
 import { ImageUploadVenue } from "@/components/admin/global/ImageUploadVenue";
 import { VenueKeysManager } from "@/components/admin/global/VenueKeysManager";
 import { VenueServicesManager } from "@/components/admin/global/VenueServicesManager";
@@ -151,11 +151,13 @@ export default function CreateVenuePage() {
                         <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
                             Pilih Fasilitas
                         </label>
-                        <MultiSelect
-                            options={facilities}
+                        <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+                            Pilih fasilitas yang tersedia dan tandai mana yang merupakan fasilitas tambahan (add-ons)
+                        </p>
+                        <FacilitySelector
+                            facilities={facilities}
                             value={selectedFacilities}
                             onChange={setSelectedFacilities}
-                            placeholder="Pilih fasilitas..."
                             error={errors.selected_facilities}
                         />
                     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useEditBannerRoom } from "../../_hooks/use-edit-banner-page";
 import { FormPage } from "@/components/admin/global/FormPage";
@@ -35,11 +35,18 @@ export default function EditFasilitiesPage() {
     const { title_eng, title_ind, description_eng, description_ind,
         setTitle_ind, setTitle_eng, setDescriptionInd, setDescriptionEng,
         image, setImage, croppedBlob, setCroppedBlob, existingImage,
+        subtitle_ind,
+        setSubtitle_ind,
+        subtitle_eng,
+        setSubtitle_eng,
         loading,
         errors,
         handleSubmit,
         fetchLoading, } = useEditBannerRoom(id);
 
+
+    const hasLoadedInd = useRef(false);
+    const hasLoadedEng = useRef(false);
 
     const editorInd = useEditor({
         extensions: [StarterKit, Link.configure({ openOnClick: false })],
@@ -51,18 +58,20 @@ export default function EditFasilitiesPage() {
         onUpdate: ({ editor }) => setDescriptionEng(editor.getHTML()),
     });
 
-    // ✅ Sync editor content dengan state menggunakan useEffect
+    // ✅ Load content sekali saja setelah fetch selesai
     useEffect(() => {
-        if (editorInd && description_ind) {
-            editorInd.commands.setContent(description_ind, false);
+        if (editorInd && description_ind && !fetchLoading && !hasLoadedInd.current) {
+            editorInd.commands.setContent(description_ind);
+            hasLoadedInd.current = true;
         }
-    }, [editorInd, description_ind]);
+    }, [editorInd, description_ind, fetchLoading]);
 
     useEffect(() => {
-        if (editorEng && description_eng) {
-            editorEng.commands.setContent(description_eng, false);
+        if (editorEng && description_eng && !fetchLoading && !hasLoadedEng.current) {
+            editorEng.commands.setContent(description_eng);
+            hasLoadedEng.current = true;
         }
-    }, [editorEng, description_eng]);
+    }, [editorEng, description_eng, fetchLoading]);
 
     if (fetchLoading) {
         return (
@@ -76,8 +85,8 @@ export default function EditFasilitiesPage() {
 
     return (
         <FormPage
-            title="Edit Fasilitas"
-            description="Update data fasilitas"
+            title="Edit Banner Page"
+            description="Update data Banner Page"
         >
 
             {/* FORM */}
@@ -160,6 +169,46 @@ export default function EditFasilitiesPage() {
                         {errors.title_eng}
                     </p>
                 )}
+
+                {/* Subtitle (Indonesia) */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Subtitle (Indonesia)
+                    </label>
+                    <input
+                        type="text"
+                        value={subtitle_ind}
+                        onChange={(e) => setSubtitle_ind(e.target.value)}
+                        className="w-full rounded border p-3
+                                bg-white text-gray-900
+                                dark:bg-gray-700 dark:text-white dark:border-gray-600
+                                focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                        (Optional)
+                    </span>
+                </div>
+
+                {/* Subtitle (English) */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Subtitle (English)
+                    </label>
+                    <input
+                        type="text"
+                        value={subtitle_eng}
+                        onChange={(e) => setSubtitle_eng(e.target.value)}
+                        className="w-full rounded border p-3
+                                bg-white text-gray-900
+                                dark:bg-gray-700 dark:text-white dark:border-gray-600
+                                focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                        (Optional)
+                    </span>
+                </div>
+
+
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div>

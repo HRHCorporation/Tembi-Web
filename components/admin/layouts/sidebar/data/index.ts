@@ -18,7 +18,7 @@ export const NAV_DATA = [
       },
       {
         title: "Rooms",
-        icon: Icons.FourCircle,
+        icon: Icons.RoomIcon,
         items: [
           {
             title: "Master",
@@ -57,7 +57,7 @@ export const NAV_DATA = [
       },
       {
         title: "Food Catering",
-        icon: Icons.FourCircle,
+        icon: Icons.FoodIcon,
         items: [
           {
             title: "Catering",
@@ -80,12 +80,12 @@ export const NAV_DATA = [
       {
         title: "Celebrate",
         url: "/admin/celebrate",
-        icon: Icons.FourCircle,
+        icon: Icons.BoxIcon,
         items: [],
       },
       {
         title: "Vanue",
-        icon: Icons.FourCircle,
+        icon: Icons.TagIcon,
         items: [
           {
             title: "Master Fasilities",
@@ -99,7 +99,7 @@ export const NAV_DATA = [
       },
       {
         title: "Collections",
-        icon: Icons.FourCircle,
+        icon: Icons.CalendarIcon,
         items: [
           {
             title: "Master Collections",
@@ -114,13 +114,19 @@ export const NAV_DATA = [
       {
         title: "Blog",
         url: "/admin/blogs",
-        icon: Icons.FourCircle,
+        icon: Icons.DocumentIcon,
+        items: [],
+      },
+      {
+        title: "Event",
+        url: "/admin/event",
+        icon: Icons.ChevronUp,
         items: [],
       },
       {
         title: "Banner Setting",
         url: "/admin/banner",
-        icon: Icons.FourCircle,
+        icon: Icons.SettingsIcon,
         items: [],
       },
     ],

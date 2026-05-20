@@ -19,6 +19,7 @@ interface FoodPackageRow extends RowDataPacket {
     minimum_pax: number;
     image: string;
     primary_foods: string | PrimaryFood[] | null;
+    slug: string;
 }
 
 /* ======================================================
@@ -37,6 +38,7 @@ export async function GET(request: NextRequest) {
                 food_packages.subtitle_menu_eng,
                 food_packages.minimum_pax,
                 food_packages.image,
+                food_packages.slug,
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', food_packages_primary.id,
@@ -56,7 +58,8 @@ export async function GET(request: NextRequest) {
                 food_packages.subtitle_menu_ind,
                 food_packages.subtitle_menu_eng,
                 food_packages.minimum_pax,
-                food_packages.image
+                food_packages.image,
+                food_packages.slug
             ORDER BY food_packages.created_at DESC
         `;
 
@@ -96,6 +99,7 @@ export async function GET(request: NextRequest) {
                 subtitle_menu_eng: row.subtitle_menu_eng,
                 minimum_pax: row.minimum_pax,
                 image: row.image || '',
+                slug: row.slug,
                 primary_foods: primary_foods
             };
         });

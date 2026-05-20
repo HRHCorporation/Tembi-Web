@@ -10,6 +10,18 @@ import { ArrowLeftIcon, ChevronUp } from "./icons";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
 
+// Helper function to check if path is active
+const isPathActive = (itemUrl: string, currentPath: string) => {
+  // Exact match
+  if (itemUrl === currentPath) return true;
+  
+  // Check if current path starts with item url (for nested routes)
+  // But make sure it's a proper path segment (not just prefix)
+  if (currentPath.startsWith(itemUrl + "/")) return true;
+  
+  return false;
+};
+
 export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
@@ -24,21 +36,47 @@ export function Sidebar() {
   };
 
   useEffect(() => {
-    // Keep collapsible open, when it's subpage is active
-    NAV_DATA.some((section) => {
-      return section.items.some((item) => {
-        return item.items.some((subItem) => {
-          if (subItem.url === pathname) {
-            if (!expandedItems.includes(item.title)) {
-              toggleExpanded(item.title);
-            }
-
-            // Break the loop
+    // Reset expanded items and only open the ones that are active
+    const activeItems: string[] = [];
+    
+    NAV_DATA.forEach((section) => {
+      section.items.forEach((item) => {
+        // Check if any subitem is active
+        const hasActiveSubItem = item.items.some((subItem) => {
+          // Check direct subitem
+          if (isPathActive(subItem.url, pathname)) {
             return true;
           }
+          
+          // Check nested subitems (third level)
+          if (subItem.items?.length > 0) {
+            return subItem.items.some((childItem) => 
+              isPathActive(childItem.url, pathname)
+            );
+          }
+          
+          return false;
         });
+        
+        if (hasActiveSubItem) {
+          activeItems.push(item.title);
+          
+          // Also check for third level nested items
+          item.items.forEach((subItem) => {
+            if (subItem.items?.length > 0) {
+              const hasActiveChild = subItem.items.some((childItem) => 
+                isPathActive(childItem.url, pathname)
+              );
+              if (hasActiveChild) {
+                activeItems.push(subItem.title);
+              }
+            }
+          });
+        }
       });
     });
+    
+    setExpandedItems(activeItems);
   }, [pathname]);
 
   return (
@@ -100,7 +138,7 @@ export function Sidebar() {
                           <div>
                             <MenuItem
                               isActive={item.items.some(
-                                ({ url }) => url === pathname,
+                                ({ url }) => isPathActive(url, pathname),
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
@@ -133,7 +171,7 @@ export function Sidebar() {
                                         <MenuItem
                                           onClick={() => toggleExpanded(subItem.title)}
                                           isActive={subItem.items.some(
-                                            ({ url }) => url === pathname,
+                                            ({ url }) => isPathActive(url, pathname),
                                           )}
                                         >
                                           <span>{subItem.title}</span>
@@ -154,7 +192,7 @@ export function Sidebar() {
                                                 <MenuItem
                                                   as="link"
                                                   href={childItem.url}
-                                                  isActive={pathname === childItem.url}
+                                                  isActive={isPathActive(childItem.url, pathname)}
                                                 >
                                                   <span>{childItem.title}</span>
                                                 </MenuItem>
@@ -167,7 +205,7 @@ export function Sidebar() {
                                       <MenuItem
                                         as="link"
                                         href={subItem.url}
-                                        isActive={pathname === subItem.url}
+                                        isActive={isPathActive(subItem.url, pathname)}
                                       >
                                         <span>{subItem.title}</span>
                                       </MenuItem>
@@ -190,7 +228,7 @@ export function Sidebar() {
                                 className="flex items-center gap-3 py-3"
                                 as="link"
                                 href={href}
-                                isActive={pathname === href}
+                                isActive={isPathActive(href, pathname)}
                               >
                                 <item.icon
                                   className="size-6 shrink-0"

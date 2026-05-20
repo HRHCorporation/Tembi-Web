@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 
-interface FacilityOption {
-    value: number;
-    label: string;
+interface Facility {
+    id: number;
+    name: string;
 }
 
 export function useVenueFacilities() {
-    const [facilities, setFacilities] = useState<FacilityOption[]>([]);
+    const [facilities, setFacilities] = useState<Facility[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -18,7 +18,12 @@ export function useVenueFacilities() {
                 const result = await res.json();
 
                 if (result.success && Array.isArray(result.data)) {
-                    setFacilities(result.data);
+                    // Transform dari {value, label} ke {id, name}
+                    const transformedData = result.data.map((item: { value: number; label: string }) => ({
+                        id: item.value,
+                        name: item.label,
+                    }));
+                    setFacilities(transformedData);
                 }
             } catch (error) {
                 console.error("Error fetching facilities:", error);
