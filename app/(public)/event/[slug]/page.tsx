@@ -419,7 +419,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 pb-20">
+      <div className="container mx-auto px-6 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* LEFT SIDEBAR */}
@@ -436,7 +436,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
             {/* Organizer Card */}
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
               <p className="text-xs text-gray-500 mb-3 uppercase tracking-wider font-semibold">
-                {language === 'id' ? 'Diselenggarakan oleh' : 'Presented by'}
+                {language === 'id' ? 'Diselenggarakan oleh' : 'Hosted By'}
               </p>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-xl">
@@ -519,22 +519,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
-            {/* Hosted By */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-              <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
-                {language === 'id' ? 'Diselenggarakan oleh' : 'Hosted By'}
-              </h3>
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-2xl shrink-0">
-                  T
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg text-[#2d3436]">Tembi Cultural House</h4>
-                  <p className="text-sm text-gray-600">{language === 'id' ? 'Rumah Budaya Tembi' : 'Tembi Cultural House'}</p>
-                </div>
-              </div>
-            </div>
-
             {/* Related Events */}
             {relatedEvents.length > 0 && (
               <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
@@ -581,7 +565,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       </div>
 
       {/* Maps Section - Inside Grid Layout */}
-      <div className="container mx-auto px-6 pb-20">
+      <div className="container mx-auto px-6 pb-20 pt-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-4"></div>
           <div className="lg:col-span-8">
@@ -594,7 +578,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </p>
               <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden">
                 <iframe
-                  src="https://maps.app.goo.gl/4GUiiNHKgN2iBUsD9"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2385032245816!2d110.3513346807974!3d-7.870093171916599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a560cf1551d0b%3A0x1db36094db031949!2sTembi%20-%20Historical%20Home!5e0!3m2!1sid!2ssg!4v1779109785518!5m2!1sid!2ssg"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
