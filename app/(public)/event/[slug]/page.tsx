@@ -405,14 +405,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
     });
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
-
   return (
     <div className="min-h-screen bg-[#fdfcf7] text-[#2d3436]">
       {/* Back Button */}
@@ -513,28 +505,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
-            {/* Registration Section */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-              <h3 className="text-lg font-bold font-serif mb-3 text-[#2d3436]">
-                {language === 'id' ? 'Pendaftaran' : 'Registration'}
-              </h3>
-              <p className="text-gray-700 mb-4">
-                {language === 'id'
-                  ? 'Selamat datang! Untuk bergabung dengan acara ini, silakan daftar di bawah ini.'
-                  : 'Welcome! To join the event, please register below.'}
-              </p>
-              <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
-                <span className="text-gray-600">{language === 'id' ? 'Harga per orang' : 'Price per person'}</span>
-                <span className="text-2xl font-bold text-[#8da077]">{formatPrice(event.price)}</span>
-              </div>
-              <Link
-                href={`/booking?event=${event.slug}&date=${event.date}`}
-                className="block w-full bg-[#8da077] text-white py-4 rounded-xl font-bold text-center hover:bg-[#7a8a68] transition-colors"
-              >
-                {language === 'id' ? 'Daftar Sekarang' : 'Register Now'}
-              </Link>
-            </div>
-
             {/* About Event */}
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
               <h2 className="text-2xl font-bold font-serif mb-6 text-[#2d3436]">
@@ -610,26 +580,31 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
         </div>
       </div>
 
-      {/* Maps Section - Full Width at Bottom */}
+      {/* Maps Section - Inside Grid Layout */}
       <div className="container mx-auto px-6 pb-20">
-        <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-          <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
-            📍 {language === 'id' ? 'Lokasi Tembi Cultural House' : 'Tembi Cultural House Location'}
-          </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
-          </p>
-          <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden">
-            <iframe
-              src="https://www.google.com/travel/hotels/s/AJT4YKzKxtuV81H3A"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="rounded-xl"
-            ></iframe>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-4"></div>
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+              <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
+                📍 {language === 'id' ? 'Lokasi Tembi Cultural House' : 'Tembi Cultural House Location'}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
+              </p>
+              <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden">
+                <iframe
+                  src="https://maps.app.goo.gl/4GUiiNHKgN2iBUsD9"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="rounded-xl"
+                ></iframe>
+              </div>
+            </div>
           </div>
         </div>
       </div>
