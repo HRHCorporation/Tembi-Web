@@ -419,8 +419,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 pb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="container mx-auto px-6 pb-0 mb-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-0">
 
           {/* LEFT SIDEBAR */}
           <div className="lg:col-span-4 space-y-6">
@@ -433,8 +433,9 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               />
             </div>
 
-            {/* Organizer Card */}
+            {/* Event Info Card - Combined */}
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+              {/* Hosted By */}
               <p className="text-xs text-gray-500 mb-3 uppercase tracking-wider font-semibold">
                 {language === 'id' ? 'Diselenggarakan oleh' : 'Hosted By'}
               </p>
@@ -447,12 +448,49 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                   <p className="text-sm text-gray-600">{language === 'id' ? 'Rumah Budaya' : 'Cultural House'}</p>
                 </div>
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed mb-4">
+              <p className="text-sm text-gray-700 leading-relaxed mb-6">
                 {language === 'id'
                   ? 'Melestarikan warisan budaya Jawa melalui pengalaman autentik dan pembelajaran tradisional.'
                   : 'Preserving Javanese cultural heritage through authentic experiences and traditional learning.'}
               </p>
-              <div className="flex gap-3">
+
+              {/* Divider */}
+              <div className="border-t border-gray-200 my-4"></div>
+
+              {/* Date */}
+              <div className="mb-4">
+                <p className="text-xs text-gray-500 mb-3 uppercase tracking-wider font-semibold">
+                  {language === 'id' ? 'Tanggal' : 'Date'}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-[#8da077] rounded-lg flex items-center justify-center text-white shrink-0">
+                    <Calendar size={24} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#2d3436]">{formatDate(event.date)}</p>
+                    <p className="text-sm text-gray-600">{event.time}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div>
+                <p className="text-xs text-gray-500 mb-3 uppercase tracking-wider font-semibold">
+                  {language === 'id' ? 'Lokasi' : 'Location'}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-[#8da077] rounded-lg flex items-center justify-center text-white shrink-0">
+                    <MapPin size={24} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#2d3436]">{event.location}</p>
+                    <p className="text-sm text-gray-600">Tembi Cultural House</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Share Button */}
+              <div className="flex gap-3 mt-4 pt-4 border-t border-gray-200">
                 <button className="text-gray-500 hover:text-[#8da077] transition-colors">
                   <Share2 size={18} />
                 </button>
@@ -461,56 +499,23 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
           </div>
 
           {/* RIGHT CONTENT */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8">
             {/* Header */}
-            <div>
+            <div className="mb-8">
               <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4 leading-tight text-[#2d3436]">
                 {eventName}
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-gray-600">
                 {eventTagline}
               </p>
-
-              {/* Event Info Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#8da077] rounded-lg flex items-center justify-center text-white">
-                      <Calendar size={24} />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1 font-semibold">
-                        {language === 'id' ? 'Tanggal' : 'Date'}
-                      </p>
-                      <p className="font-semibold text-[#2d3436]">{formatDate(event.date)}</p>
-                      <p className="text-sm text-gray-600">{event.time}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#8da077] rounded-lg flex items-center justify-center text-white">
-                      <MapPin size={24} />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1 font-semibold">
-                        {language === 'id' ? 'Lokasi' : 'Location'}
-                      </p>
-                      <p className="font-semibold text-[#2d3436]">{event.location}</p>
-                      <p className="text-sm text-gray-600">Tembi Cultural House</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* About Event */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-              <h2 className="text-2xl font-bold font-serif mb-6 text-[#2d3436]">
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg mb-8">
+              <h2 className="text-2xl font-bold font-serif mb-4 text-[#2d3436]">
                 {language === 'id' ? 'Tentang Acara' : 'About Event'}
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {eventDescription.map((paragraph, index) => (
                   <p key={index} className="text-gray-700 leading-relaxed">
                     {paragraph}
@@ -565,8 +570,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       </div>
 
       {/* Maps Section - Inside Grid Layout */}
-      <div className="container mx-auto px-6 pb-20 pt-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="container mx-auto px-6 pb-20" style={{ marginTop: '-10rem' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
           <div className="lg:col-span-4"></div>
           <div className="lg:col-span-8">
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
@@ -576,16 +581,15 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               <p className="text-sm text-gray-600 mb-4">
                 Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
               </p>
-              <div className="aspect-video bg-gray-100 rounded-xl overflow-hidden">
+              <div className="w-full h-96 bg-gray-100 rounded-xl overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2385032245816!2d110.3513346807974!3d-7.870093171916599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a560cf1551d0b%3A0x1db36094db031949!2sTembi%20-%20Historical%20Home!5e0!3m2!1sid!2ssg!4v1779109785518!5m2!1sid!2ssg"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.238503224582!2d110.35133468479795!3d-7.870093194318616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a560cf1551d0b%3A0x1db36094db031949!2sTembi%20-%20Historical%20Home!5e0!3m2!1sen!2sid!4v1650000000000!5m2!1sen!2sid"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
-                  allowFullScreen
+                  allowFullScreen={true}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="rounded-xl"
                 ></iframe>
               </div>
             </div>

@@ -8,35 +8,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const geistSans = Geist({
-<<<<<<< HEAD
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["system-ui", "arial"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["monospace"],
-});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  display: "swap",
-  fallback: ["serif", "Georgia"],
-});
-
-const lato = Lato({
-  variable: "--font-lato",
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  display: "swap",
-  fallback: ["sans-serif", "Arial"],
-=======
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
 });
@@ -56,7 +27,6 @@ const lato = Lato({
 	variable: "--font-lato",
 	subsets: ["latin"],
 	weight: ["300", "400", "700"],
->>>>>>> dev-adri
 });
 
 export const metadata: Metadata = {
