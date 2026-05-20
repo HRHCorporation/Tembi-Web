@@ -1,8 +1,11 @@
-import { DependencyContainer } from "tsyringe";
-import { iHomeRepoKey } from "../core/homes/domain/i-repo/home.i-repo";
+import { DependencyContainer, InjectionToken } from "tsyringe";
+import { bannerModuleKey } from "../core/banner/banner.module-key";
+import globalModule from "./data/global.module";
+import getBannerDi from "../core/banner/data/module/banner.di";
+import di from "@/bootstrap/di/init-di";
 
 const moduleKeyToDi: Record<string, (di: DependencyContainer) => DependencyContainer> = {
-  // [iHomeRepoKey]: getHomeRepoDi,
+  [bannerModuleKey]: getBannerDi
 }
 
 const memoizedDis: Record<string, DependencyContainer> = {};

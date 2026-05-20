@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { container, DependencyContainer } from "tsyringe";
 
 const InitDI = (): DependencyContainer => {
