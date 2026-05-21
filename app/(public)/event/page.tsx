@@ -10,14 +10,13 @@ interface Event {
   id: number;
   title_ind: string;
   title_eng: string;
-  shortDesc_ind: string;
-  shortDesc_eng: string;
-  imageUrl: string;
+  about_ind: string;
+  about_eng: string;
+  thumbnail: string;
   slug: string;
-  date: string;
-  location: string;
-  capacity: number;
-  price: number;
+  date_event: string;
+  hosted_by: string;
+  time_event: string;
 }
 
 // Fallback dummy data
@@ -27,132 +26,122 @@ const fallbackEventsData: Event[] = [
     id: 1,
     title_ind: 'Upacara Pernikahan Jawa',
     title_eng: 'Javanese Wedding Ceremony',
-    shortDesc_ind: 'Upacara pernikahan tradisional Jawa di pendopo yang indah',
-    shortDesc_eng: 'Traditional Javanese wedding ceremony in our beautiful pendopo',
-    imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Upacara pernikahan tradisional Jawa di pendopo yang indah',
+    about_eng: 'Traditional Javanese wedding ceremony in our beautiful pendopo',
+    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop',
     slug: 'javanese-wedding-ceremony',
-    date: '2026-07-15',
-    location: 'Main Pendopo',
-    capacity: 150,
-    price: 25000000
+    date_event: '2026-07-15',
+    hosted_by: 'Main Pendopo',
+    time_event: '10:00'
   },
   {
     id: 2,
     title_ind: 'Workshop Musik Gamelan',
     title_eng: 'Gamelan Music Workshop',
-    shortDesc_ind: 'Belajar musik gamelan tradisional Jawa dari musisi profesional',
-    shortDesc_eng: 'Learn traditional Javanese gamelan from master musicians',
-    imageUrl: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Belajar musik gamelan tradisional Jawa dari musisi profesional',
+    about_eng: 'Learn traditional Javanese gamelan from master musicians',
+    thumbnail: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2000&auto=format&fit=crop',
     slug: 'gamelan-music-workshop',
-    date: '2026-06-20',
-    location: 'Cultural Hall',
-    capacity: 30,
-    price: 250000
+    date_event: '2026-06-20',
+    hosted_by: 'Cultural Hall',
+    time_event: '14:00'
   },
   {
     id: 3,
     title_ind: 'Kelas Membatik',
     title_eng: 'Batik Making Class',
-    shortDesc_ind: 'Ciptakan karya batik Anda sendiri dengan teknik tradisional',
-    shortDesc_eng: 'Create your own batik masterpiece with traditional techniques',
-    imageUrl: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Ciptakan karya batik Anda sendiri dengan teknik tradisional',
+    about_eng: 'Create your own batik masterpiece with traditional techniques',
+    thumbnail: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2000&auto=format&fit=crop',
     slug: 'batik-making-class',
-    date: '2026-06-25',
-    location: 'Art Studio',
-    capacity: 20,
-    price: 350000
+    date_event: '2026-06-25',
+    hosted_by: 'Art Studio',
+    time_event: '09:00'
   },
   {
     id: 4,
     title_ind: 'Malam Kuliner Jawa',
     title_eng: 'Javanese Culinary Night',
-    shortDesc_ind: 'Nikmati hidangan autentik Jawa dalam suasana tradisional',
-    shortDesc_eng: 'Experience authentic Javanese cuisine in a traditional setting',
-    imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Nikmati hidangan autentik Jawa dalam suasana tradisional',
+    about_eng: 'Experience authentic Javanese cuisine in a traditional setting',
+    thumbnail: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=2000&auto=format&fit=crop',
     slug: 'javanese-culinary-night',
-    date: '2026-07-01',
-    location: 'Garden Pavilion',
-    capacity: 80,
-    price: 450000
+    date_event: '2026-07-01',
+    hosted_by: 'Garden Pavilion',
+    time_event: '19:00'
   },
   {
     id: 5,
     title_ind: 'Retreat Yoga & Meditasi',
     title_eng: 'Yoga & Meditation Retreat',
-    shortDesc_ind: 'Temukan kedamaian batin dengan yoga dan meditasi di alam',
-    shortDesc_eng: 'Find inner peace with yoga and meditation in nature',
-    imageUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Temukan kedamaian batin dengan yoga dan meditasi di alam',
+    about_eng: 'Find inner peace with yoga and meditation in nature',
+    thumbnail: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
     slug: 'yoga-meditation-retreat',
-    date: '2026-07-10',
-    location: 'Garden Area',
-    capacity: 25,
-    price: 300000
+    date_event: '2026-07-10',
+    hosted_by: 'Garden Area',
+    time_event: '06:00'
   },
   {
     id: 6,
     title_ind: 'Tur Fotografi Warisan Budaya',
     title_eng: 'Heritage Photography Tour',
-    shortDesc_ind: 'Abadikan keindahan arsitektur tradisional Jawa',
-    shortDesc_eng: 'Capture the beauty of traditional Javanese architecture',
-    imageUrl: 'https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Abadikan keindahan arsitektur tradisional Jawa',
+    about_eng: 'Capture the beauty of traditional Javanese architecture',
+    thumbnail: 'https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?q=80&w=2000&auto=format&fit=crop',
     slug: 'heritage-photography-tour',
-    date: '2026-06-30',
-    location: 'All Venues',
-    capacity: 15,
-    price: 400000
+    date_event: '2026-06-30',
+    hosted_by: 'All Venues',
+    time_event: '08:00'
   },
   // Past Events (before May 17, 2026)
   {
     id: 7,
     title_ind: 'Festival Wayang Kulit',
     title_eng: 'Shadow Puppet Festival',
-    shortDesc_ind: 'Festival seni wayang kulit dengan dalang profesional',
-    shortDesc_eng: 'Traditional shadow puppet performance by master puppeteers',
-    imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Festival seni wayang kulit dengan dalang profesional',
+    about_eng: 'Traditional shadow puppet performance by master puppeteers',
+    thumbnail: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2000&auto=format&fit=crop',
     slug: 'shadow-puppet-festival',
-    date: '2026-04-15',
-    location: 'Main Pendopo',
-    capacity: 100,
-    price: 150000
+    date_event: '2026-04-15',
+    hosted_by: 'Main Pendopo',
+    time_event: '20:00'
   },
   {
     id: 8,
     title_ind: 'Workshop Tari Tradisional',
     title_eng: 'Traditional Dance Workshop',
-    shortDesc_ind: 'Belajar tarian tradisional Jawa dari penari profesional',
-    shortDesc_eng: 'Learn authentic Javanese dance from professional dancers',
-    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Belajar tarian tradisional Jawa dari penari profesional',
+    about_eng: 'Learn authentic Javanese dance from professional dancers',
+    thumbnail: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2000&auto=format&fit=crop',
     slug: 'traditional-dance-workshop',
-    date: '2026-03-20',
-    location: 'Cultural Hall',
-    capacity: 25,
-    price: 200000
+    date_event: '2026-03-20',
+    hosted_by: 'Cultural Hall',
+    time_event: '15:00'
   },
   {
     id: 9,
     title_ind: 'Perayaan Tahun Baru Jawa',
     title_eng: 'Javanese New Year Celebration',
-    shortDesc_ind: 'Perayaan tradisional menyambut Tahun Baru Jawa (Satu Suro)',
-    shortDesc_eng: 'Traditional celebration welcoming Javanese New Year (Satu Suro)',
-    imageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Perayaan tradisional menyambut Tahun Baru Jawa (Satu Suro)',
+    about_eng: 'Traditional celebration welcoming Javanese New Year (Satu Suro)',
+    thumbnail: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000&auto=format&fit=crop',
     slug: 'javanese-new-year',
-    date: '2026-02-28',
-    location: 'Garden Pavilion',
-    capacity: 200,
-    price: 500000
+    date_event: '2026-02-28',
+    hosted_by: 'Garden Pavilion',
+    time_event: '18:00'
   },
   {
     id: 10,
     title_ind: 'Kelas Memasak Tradisional',
     title_eng: 'Traditional Cooking Class',
-    shortDesc_ind: 'Pelajari cara memasak hidangan Jawa autentik',
-    shortDesc_eng: 'Learn to cook authentic Javanese dishes from expert chefs',
-    imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2000&auto=format&fit=crop',
+    about_ind: 'Pelajari cara memasak hidangan Jawa autentik',
+    about_eng: 'Learn to cook authentic Javanese dishes from expert chefs',
+    thumbnail: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2000&auto=format&fit=crop',
     slug: 'traditional-cooking-class',
-    date: '2026-01-25',
-    location: 'Kitchen Area',
-    capacity: 15,
-    price: 300000
+    date_event: '2026-01-25',
+    hosted_by: 'Kitchen Area',
+    time_event: '11:00'
   }
 ];
 
@@ -166,7 +155,7 @@ export default function EventPage() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch('/api/public/events');
+        const response = await fetch('/api/public/event');
         const result = await response.json();
 
         if (result.success) {
@@ -192,7 +181,7 @@ export default function EventPage() {
   today.setHours(0, 0, 0, 0);
 
   const filteredEvents = events.filter(event => {
-    const eventDate = new Date(event.date);
+    const eventDate = new Date(event.date_event);
     eventDate.setHours(0, 0, 0, 0);
 
     if (filter === 'upcoming') {
@@ -339,11 +328,11 @@ export default function EventPage() {
                       id: event.id,
                       slug: event.slug,
                       title: language === 'id' ? event.title_ind : event.title_eng,
-                      shortDesc: language === 'id' ? event.shortDesc_ind : event.shortDesc_eng,
-                      imageUrl: event.imageUrl,
-                      date: event.date,
-                      location: event.location,
-                      capacity: event.capacity,
+                      shortDesc: language === 'id' ? event.about_ind : event.about_eng,
+                      imageUrl: event.thumbnail,
+                      date: event.date_event,
+                      location: event.hosted_by,
+                      capacity: 0,
                       category: '' // Category removed as per previous update
                     }}
                   />
