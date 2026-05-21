@@ -1,180 +1,16 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useEventContext } from "@/app/context/EventContext";
 import EventCard from "@/components/EventCard";
 import ScrollReveal from "@/components/ScrollReveal";
 
-interface Event {
-  id: number;
-  title_ind: string;
-  title_eng: string;
-  about_ind: string;
-  about_eng: string;
-  thumbnail: string;
-  slug: string;
-  date_event: string;
-  hosted_by: string;
-  time_event: string;
-}
-
-// Fallback dummy data
-const fallbackEventsData: Event[] = [
-  // Upcoming Events (after May 17, 2026)
-  {
-    id: 1,
-    title_ind: 'Upacara Pernikahan Jawa',
-    title_eng: 'Javanese Wedding Ceremony',
-    about_ind: 'Upacara pernikahan tradisional Jawa di pendopo yang indah',
-    about_eng: 'Traditional Javanese wedding ceremony in our beautiful pendopo',
-    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop',
-    slug: 'javanese-wedding-ceremony',
-    date_event: '2026-07-15',
-    hosted_by: 'Main Pendopo',
-    time_event: '10:00'
-  },
-  {
-    id: 2,
-    title_ind: 'Workshop Musik Gamelan',
-    title_eng: 'Gamelan Music Workshop',
-    about_ind: 'Belajar musik gamelan tradisional Jawa dari musisi profesional',
-    about_eng: 'Learn traditional Javanese gamelan from master musicians',
-    thumbnail: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2000&auto=format&fit=crop',
-    slug: 'gamelan-music-workshop',
-    date_event: '2026-06-20',
-    hosted_by: 'Cultural Hall',
-    time_event: '14:00'
-  },
-  {
-    id: 3,
-    title_ind: 'Kelas Membatik',
-    title_eng: 'Batik Making Class',
-    about_ind: 'Ciptakan karya batik Anda sendiri dengan teknik tradisional',
-    about_eng: 'Create your own batik masterpiece with traditional techniques',
-    thumbnail: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2000&auto=format&fit=crop',
-    slug: 'batik-making-class',
-    date_event: '2026-06-25',
-    hosted_by: 'Art Studio',
-    time_event: '09:00'
-  },
-  {
-    id: 4,
-    title_ind: 'Malam Kuliner Jawa',
-    title_eng: 'Javanese Culinary Night',
-    about_ind: 'Nikmati hidangan autentik Jawa dalam suasana tradisional',
-    about_eng: 'Experience authentic Javanese cuisine in a traditional setting',
-    thumbnail: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=2000&auto=format&fit=crop',
-    slug: 'javanese-culinary-night',
-    date_event: '2026-07-01',
-    hosted_by: 'Garden Pavilion',
-    time_event: '19:00'
-  },
-  {
-    id: 5,
-    title_ind: 'Retreat Yoga & Meditasi',
-    title_eng: 'Yoga & Meditation Retreat',
-    about_ind: 'Temukan kedamaian batin dengan yoga dan meditasi di alam',
-    about_eng: 'Find inner peace with yoga and meditation in nature',
-    thumbnail: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2000&auto=format&fit=crop',
-    slug: 'yoga-meditation-retreat',
-    date_event: '2026-07-10',
-    hosted_by: 'Garden Area',
-    time_event: '06:00'
-  },
-  {
-    id: 6,
-    title_ind: 'Tur Fotografi Warisan Budaya',
-    title_eng: 'Heritage Photography Tour',
-    about_ind: 'Abadikan keindahan arsitektur tradisional Jawa',
-    about_eng: 'Capture the beauty of traditional Javanese architecture',
-    thumbnail: 'https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?q=80&w=2000&auto=format&fit=crop',
-    slug: 'heritage-photography-tour',
-    date_event: '2026-06-30',
-    hosted_by: 'All Venues',
-    time_event: '08:00'
-  },
-  // Past Events (before May 17, 2026)
-  {
-    id: 7,
-    title_ind: 'Festival Wayang Kulit',
-    title_eng: 'Shadow Puppet Festival',
-    about_ind: 'Festival seni wayang kulit dengan dalang profesional',
-    about_eng: 'Traditional shadow puppet performance by master puppeteers',
-    thumbnail: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2000&auto=format&fit=crop',
-    slug: 'shadow-puppet-festival',
-    date_event: '2026-04-15',
-    hosted_by: 'Main Pendopo',
-    time_event: '20:00'
-  },
-  {
-    id: 8,
-    title_ind: 'Workshop Tari Tradisional',
-    title_eng: 'Traditional Dance Workshop',
-    about_ind: 'Belajar tarian tradisional Jawa dari penari profesional',
-    about_eng: 'Learn authentic Javanese dance from professional dancers',
-    thumbnail: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2000&auto=format&fit=crop',
-    slug: 'traditional-dance-workshop',
-    date_event: '2026-03-20',
-    hosted_by: 'Cultural Hall',
-    time_event: '15:00'
-  },
-  {
-    id: 9,
-    title_ind: 'Perayaan Tahun Baru Jawa',
-    title_eng: 'Javanese New Year Celebration',
-    about_ind: 'Perayaan tradisional menyambut Tahun Baru Jawa (Satu Suro)',
-    about_eng: 'Traditional celebration welcoming Javanese New Year (Satu Suro)',
-    thumbnail: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000&auto=format&fit=crop',
-    slug: 'javanese-new-year',
-    date_event: '2026-02-28',
-    hosted_by: 'Garden Pavilion',
-    time_event: '18:00'
-  },
-  {
-    id: 10,
-    title_ind: 'Kelas Memasak Tradisional',
-    title_eng: 'Traditional Cooking Class',
-    about_ind: 'Pelajari cara memasak hidangan Jawa autentik',
-    about_eng: 'Learn to cook authentic Javanese dishes from expert chefs',
-    thumbnail: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2000&auto=format&fit=crop',
-    slug: 'traditional-cooking-class',
-    date_event: '2026-01-25',
-    hosted_by: 'Kitchen Area',
-    time_event: '11:00'
-  }
-];
-
 export default function EventPage() {
-  const { t, language } = useLanguage();
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { language } = useLanguage();
+  const { events, eventsLoading, eventsError } = useEventContext();
   const [filter, setFilter] = useState<'upcoming' | 'past'>('upcoming');
-
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await fetch('/api/public/event');
-        const result = await response.json();
-
-        if (result.success) {
-          setEvents(result.data);
-        } else {
-          // Use fallback dummy data
-          setEvents(fallbackEventsData);
-        }
-      } catch (err) {
-        // Use fallback dummy data on error
-        setEvents(fallbackEventsData);
-        console.error('Error fetching events:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchEvents();
-  }, []);
 
   // Filter events by date
   const today = new Date();
@@ -298,16 +134,13 @@ export default function EventPage() {
         </ScrollReveal>
 
         {/* Loading State */}
-        {loading && (
+        {eventsLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B9D68]"></div>
           </div>
-        )}
-
-        {/* Error State */}
-        {error && (
+        ) : eventsError ? (
           <div className="text-center py-20">
-            <p className="text-red-600 mb-4">{error}</p>
+            <p className="text-red-600 mb-4">{eventsError}</p>
             <button
               onClick={() => window.location.reload()}
               className="bg-[#8B9D68] text-white px-6 py-2 rounded-lg hover:bg-[#7a8c5e] transition-colors"
@@ -315,10 +148,7 @@ export default function EventPage() {
               Retry
             </button>
           </div>
-        )}
-
-        {/* Events Grid */}
-        {!loading && !error && (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredEvents.length > 0 ? (
               filteredEvents.map((event, index) => (

@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { useBlogContext } from '@/app/context/BlogContext';
 import { BlogCard } from '@/components/BlogCard';
 import Image from 'next/image';
 import ScrollReveal from "@/components/ScrollReveal";
 
 interface BlogPost {
-  id: string;
+  id: string | number;
   slug: string;
   title_ind?: string;
   title_eng?: string;
@@ -19,36 +20,12 @@ interface BlogPost {
   date: string;
   thumbnail?: string;
   imageUrl?: string;
+  created_at?: string;
 }
 
 export default function BlogPage() {
   const { t, language } = useLanguage();
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        const response = await fetch('/api/public/blogs');
-        const result = await response.json();
-
-        if (result.success) {
-          setBlogPosts(result.data);
-        } else {
-          // Fallback to static data
-          setBlogPosts(fallbackBlogPosts);
-        }
-      } catch (err) {
-        console.error('Error fetching blogs:', err);
-        // Fallback to static data
-        setBlogPosts(fallbackBlogPosts);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchBlogs();
-  }, []);
+  const { blogs, blogsLoading, blogsError } = useBlogContext();
 
   const fallbackBlogPosts: BlogPost[] = [
     {
@@ -162,32 +139,46 @@ export default function BlogPage() {
           </div>
         </ScrollReveal>
 
-        {loading ? (
+        {blogsLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B9D68]"></div>
           </div>
-        ) : (
+        ) : blogsError ? (
+          <div className="text-center py-20">
+            <p className="text-red-600 mb-4">{blogsError}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-[#8B9D68] text-white px-6 py-2 rounded-lg hover:bg-[#7a8c5e] transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        ) : blogs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {blogPosts.map((post, idx) => (
+            {blogs.map((post, idx) => (
               <ScrollReveal key={post.id} animation="fadeUp" delay={idx * 150} duration={800}>
                 <BlogCard
                   post={{
-                    id: post.id,
+                    id: post.id.toString(),
                     slug: post.slug,
-                    title: language === 'id'
-                      ? (post.title_ind || post.title || '')
-                      : (post.title_eng || post.title || ''),
-                    excerpt: language === 'id'
-                      ? (post.description_ind || post.excerpt || '')
-                      : (post.description_eng || post.excerpt || ''),
-                    category: post.category,
-                    date: post.date,
-                    imageUrl: post.thumbnail || post.imageUrl || ''
+                    title: language === 'id' ? post.title_ind : post.title_eng,
+                    excerpt: language === 'id' ? post.description_ind : post.description_eng,
+                    category: 'Article',
+                    date: new Date(post.created_at).toLocaleDateString('id-ID', {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric'
+                    }),
+                    imageUrl: post.thumbnail
                   }}
                   readMoreText={t.nav.readMore || "BACA SELENGKAPNYA"}
                 />
               </ScrollReveal>
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-lg">No blog posts available at the moment</p>
           </div>
         )}
       </section>

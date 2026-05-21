@@ -7,26 +7,22 @@ import { useLanguage } from '@/app/context/LanguageContext';
 
 interface EventDetail {
   id: number;
-  name_ind: string;
-  name_eng: string;
-  tagline_ind: string;
-  tagline_eng: string;
-  shortDesc_ind: string;
-  shortDesc_eng: string;
-  description_ind: string[];
-  description_eng: string[];
-  imageUrl: string;
+  title_ind: string;
+  title_eng: string;
+  about_ind: string;
+  about_eng: string;
+  thumbnail: string;
   slug: string;
-  date: string;
-  time: string;
-  location: string;
-  capacity: number;
-  price: number;
-  included_ind: string[];
-  included_eng: string[];
-  requirements_ind: string[];
-  requirements_eng: string[];
-  galleryImages: string[];
+  hosted_by: string;
+  date_event: string;
+  time_event: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface EventDetailResponse {
+  detail: EventDetail;
+  upcoming: EventDetail[];
 }
 
 // Fallback static data for development
@@ -265,43 +261,34 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   const { slug } = use(params);
   const { language } = useLanguage();
   const [event, setEvent] = useState<EventDetail | null>(null);
-  const [relatedEvents, setRelatedEvents] = useState<any[]>([]);
+  const [relatedEvents, setRelatedEvents] = useState<EventDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchEventDetail() {
       try {
-        const response = await fetch(`/api/public/events/${slug}`);
+        const response = await fetch(`/api/public/event/${slug}`);
         const result = await response.json();
 
-        if (result.success) {
-          setEvent(result.data);
+        if (result.success && result.data) {
+          // API returns { detail: EventDetail, upcoming: EventDetail[] }
+          setEvent(result.data.detail);
+          setRelatedEvents(result.data.upcoming);
         } else {
           const fallbackEvent = fallbackEventsData.find((e) => e.slug === slug);
           if (fallbackEvent) {
             setEvent({
               id: 0,
-              name_ind: fallbackEvent.name,
-              name_eng: fallbackEvent.name,
-              tagline_ind: fallbackEvent.tagline,
-              tagline_eng: fallbackEvent.tagline,
-              shortDesc_ind: '',
-              shortDesc_eng: '',
-              description_ind: fallbackEvent.description,
-              description_eng: fallbackEvent.description,
-              imageUrl: fallbackEvent.imageUrl,
+              title_ind: fallbackEvent.name,
+              title_eng: fallbackEvent.name,
+              about_ind: fallbackEvent.description.join('\n\n'),
+              about_eng: fallbackEvent.description.join('\n\n'),
+              thumbnail: fallbackEvent.imageUrl,
               slug: fallbackEvent.slug,
-              date: fallbackEvent.date,
-              time: fallbackEvent.time,
-              location: fallbackEvent.location,
-              capacity: fallbackEvent.capacity,
-              price: fallbackEvent.price,
-              included_ind: fallbackEvent.included,
-              included_eng: fallbackEvent.included,
-              requirements_ind: fallbackEvent.requirements,
-              requirements_eng: fallbackEvent.requirements,
-              galleryImages: fallbackEvent.galleryImages
+              hosted_by: 'Tembi Cultural House',
+              date_event: fallbackEvent.date,
+              time_event: fallbackEvent.time
             });
           } else {
             setError(result.message || 'Event not found');
@@ -312,26 +299,15 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
         if (fallbackEvent) {
           setEvent({
             id: 0,
-            name_ind: fallbackEvent.name,
-            name_eng: fallbackEvent.name,
-            tagline_ind: fallbackEvent.tagline,
-            tagline_eng: fallbackEvent.tagline,
-            shortDesc_ind: '',
-            shortDesc_eng: '',
-            description_ind: fallbackEvent.description,
-            description_eng: fallbackEvent.description,
-            imageUrl: fallbackEvent.imageUrl,
+            title_ind: fallbackEvent.name,
+            title_eng: fallbackEvent.name,
+            about_ind: fallbackEvent.description.join('\n\n'),
+            about_eng: fallbackEvent.description.join('\n\n'),
+            thumbnail: fallbackEvent.imageUrl,
             slug: fallbackEvent.slug,
-            date: fallbackEvent.date,
-            time: fallbackEvent.time,
-            location: fallbackEvent.location,
-            capacity: fallbackEvent.capacity,
-            price: fallbackEvent.price,
-            included_ind: fallbackEvent.included,
-            included_eng: fallbackEvent.included,
-            requirements_ind: fallbackEvent.requirements,
-            requirements_eng: fallbackEvent.requirements,
-            galleryImages: fallbackEvent.galleryImages
+            hosted_by: 'Tembi Cultural House',
+            date_event: fallbackEvent.date,
+            time_event: fallbackEvent.time
           });
         } else {
           setError('Failed to load event');
@@ -342,32 +318,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
       }
     }
 
-    async function fetchRelatedEvents() {
-      try {
-        const response = await fetch('/api/public/events');
-        const result = await response.json();
-
-        if (result.success) {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          const filtered = result.data
-            .filter((e: any) => {
-              const eventDate = new Date(e.date);
-              eventDate.setHours(0, 0, 0, 0);
-              return e.slug !== slug && eventDate >= today;
-            })
-            .slice(0, 4);
-
-          setRelatedEvents(filtered);
-        }
-      } catch (err) {
-        console.error('Error fetching related events:', err);
-      }
-    }
-
     fetchEventDetail();
-    fetchRelatedEvents();
   }, [slug]);
 
   if (loading) {
@@ -391,9 +342,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
     );
   }
 
-  const eventName = language === 'id' ? event.name_ind : event.name_eng;
-  const eventTagline = language === 'id' ? event.tagline_ind : event.tagline_eng;
-  const eventDescription = language === 'id' ? event.description_ind : event.description_eng;
+  const eventName = language === 'id' ? event.title_ind : event.title_eng;
+  const eventDescription = language === 'id' ? event.about_ind : event.about_eng;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -427,7 +377,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
             {/* Event Banner */}
             <div className="bg-gray-100 rounded-2xl overflow-hidden aspect-square shadow-xl">
               <img
-                src={event.imageUrl}
+                src={event.thumbnail}
                 alt={eventName}
                 className="w-full h-full object-cover"
               />
@@ -467,8 +417,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                     <Calendar size={24} />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#2d3436]">{formatDate(event.date)}</p>
-                    <p className="text-sm text-gray-600">{event.time}</p>
+                    <p className="font-semibold text-[#2d3436]">{formatDate(event.date_event)}</p>
+                    <p className="text-sm text-gray-600">{event.time_event}</p>
                   </div>
                 </div>
               </div>
@@ -483,8 +433,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                     <MapPin size={24} />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#2d3436]">{event.location}</p>
-                    <p className="text-sm text-gray-600">Tembi Cultural House</p>
+                    <p className="font-semibold text-[#2d3436]">Tembi Cultural House</p>
+                    <p className="text-sm text-gray-600">{event.hosted_by}</p>
                   </div>
                 </div>
               </div>
@@ -505,9 +455,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4 leading-tight text-[#2d3436]">
                 {eventName}
               </h1>
-              <p className="text-xl text-gray-600">
-                {eventTagline}
-              </p>
             </div>
 
             {/* About Event */}
@@ -515,13 +462,18 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               <h2 className="text-2xl font-bold font-serif mb-4 text-[#2d3436]">
                 {language === 'id' ? 'Tentang Acara' : 'About Event'}
               </h2>
-              <div className="space-y-3">
-                {eventDescription.map((paragraph, index) => (
-                  <p key={index} className="text-gray-700 leading-relaxed">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+              <div
+                className="prose prose-lg max-w-none text-gray-700 leading-relaxed
+                  prose-headings:text-[#2d3436] prose-headings:font-serif
+                  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+                  prose-img:rounded-xl prose-img:shadow-lg prose-img:my-6
+                  prose-a:text-[#8da077] prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-[#2d3436] prose-strong:font-semibold
+                  prose-ul:list-disc prose-ul:pl-6 prose-ul:my-4
+                  prose-ol:list-decimal prose-ol:pl-6 prose-ol:my-4
+                  prose-li:text-gray-700 prose-li:mb-2"
+                dangerouslySetInnerHTML={{ __html: eventDescription }}
+              />
             </div>
 
             {/* Related Events */}
@@ -539,25 +491,25 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                     >
                       <div className="aspect-video overflow-hidden">
                         <img
-                          src={relatedEvent.imageUrl}
-                          alt={language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
+                          src={relatedEvent.thumbnail}
+                          alt={language === 'id' ? relatedEvent.title_ind : relatedEvent.title_eng}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
                       <div className="p-5">
                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
                           <Calendar size={14} className="text-[#8da077]" />
-                          <span>{new Date(relatedEvent.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+                          <span>{new Date(relatedEvent.date_event).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
                             day: 'numeric',
                             month: 'long',
                             year: 'numeric'
                           })}</span>
                         </div>
                         <h4 className="font-bold font-serif text-lg mb-2 group-hover:text-[#8da077] transition-colors line-clamp-2 text-[#2d3436]">
-                          {language === 'id' ? relatedEvent.name_ind : relatedEvent.name_eng}
+                          {language === 'id' ? relatedEvent.title_ind : relatedEvent.title_eng}
                         </h4>
                         <p className="text-sm text-gray-600 line-clamp-2">
-                          {language === 'id' ? relatedEvent.tagline_ind : relatedEvent.tagline_eng}
+                          {language === 'id' ? relatedEvent.about_ind : relatedEvent.about_eng}
                         </p>
                       </div>
                     </Link>

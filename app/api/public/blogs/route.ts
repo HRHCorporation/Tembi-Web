@@ -10,6 +10,7 @@ interface BlogRow extends RowDataPacket {
     description_eng: string;
     thumbnail: string;
     slug: string;
+    created_at: string;
 }
 
 /* ======================================================
@@ -18,14 +19,15 @@ interface BlogRow extends RowDataPacket {
 export async function GET(request: NextRequest) {
     try {
         const query = `
-            SELECT 
+            SELECT
                 id,
                 title_ind,
                 title_eng,
                 description_ind,
                 description_eng,
                 thumbnail,
-                slug
+                slug,
+                created_at
             FROM blogs
             ORDER BY created_at DESC
         `;
@@ -62,7 +64,8 @@ export async function GET(request: NextRequest) {
                 description_ind: getFirstSentence(row.description_ind),
                 description_eng: getFirstSentence(row.description_eng),
                 thumbnail: row.thumbnail || '',
-                slug: row.slug
+                slug: row.slug,
+                created_at: row.created_at
             };
         });
 
