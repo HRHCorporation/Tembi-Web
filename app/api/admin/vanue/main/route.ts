@@ -96,6 +96,12 @@ interface ErrorResponse {
     [key: string]: string;
 }
 
+// ✅ TAMBAHKAN INTERFACE INI DI BAGIAN ATAS FILE
+interface SelectedFacility {
+    facility_id: number;
+    is_add_ons: boolean;
+}
+
 export async function POST(request: NextRequest) {
     const connection = await dbWeb.getConnection();
 
@@ -125,7 +131,8 @@ export async function POST(request: NextRequest) {
         const venueServicesJson = formData.get("venue_services") as string;
         const venueNotesJson = formData.get("venue_notes") as string;
 
-        const selectedFacilities = JSON.parse(selectedFacilitiesJson) as number[];
+        // ✅ UBAH PARSING DARI number[] KE SelectedFacility[]
+        const selectedFacilities = JSON.parse(selectedFacilitiesJson) as SelectedFacility[];
         const venueKeys = JSON.parse(venueKeysJson) as VenueKey[];
         const venueServices = JSON.parse(venueServicesJson) as VenueService[];
         const venueNotes = JSON.parse(venueNotesJson) as VenueNote[];
@@ -206,14 +213,14 @@ export async function POST(request: NextRequest) {
 
             const venueId = (venueResult as unknown as { insertId: number }).insertId;
 
-            // ✅ Insert vanue_facilities (junction table)
-            for (const facilityId of selectedFacilities) {
+            // ✅ Insert vanue_facilities (junction table) DENGAN is_add_ons
+            for (const facility of selectedFacilities) {
                 await connection.query(
                     `
-                    INSERT INTO vanue_facilities (vanue_id, mstr_vanue_facilities, created_by, created_at)
-                    VALUES (?, ?, ?, NOW())
+                    INSERT INTO vanue_facilities (vanue_id, mstr_vanue_facilities, is_add_ons, created_by, created_at)
+                    VALUES (?, ?, ?, ?, NOW())
                     `,
-                    [venueId, facilityId, createdBy]
+                    [venueId, facility.facility_id, facility.is_add_ons ? 1 : 0, createdBy]
                 );
             }
 

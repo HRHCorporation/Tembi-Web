@@ -6,6 +6,8 @@ interface BannerRow extends RowDataPacket {
     id: number;
     title_ind: string;
     title_eng: string;
+    subtitle_ind: string;
+    subtitle_eng: string;
     description_ind: number;
     description_eng: number;
     image: string;
@@ -22,6 +24,8 @@ export async function GET(request: NextRequest) {
                 image,
                 title_ind,
                 title_eng,
+                subtitle_ind,
+                subtitle_eng,
                 description_ind,
                 description_eng
             FROM room_page_meta

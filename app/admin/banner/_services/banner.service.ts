@@ -14,6 +14,8 @@ export async function updateBanner(
         title_eng: string,
         description_ind: string,
         description_eng: string,
+        subtitle_ind: string,
+        subtitle_eng: string,
         image: Blob | null
     }
 ) {
@@ -34,6 +36,15 @@ export async function updateBanner(
     formData.append(
         "description_eng",
         payload.description_eng
+    );
+
+    formData.append(
+        "subtitle_ind",
+        payload.subtitle_ind
+    );
+    formData.append(
+        "subtitle_eng",
+        payload.subtitle_eng
     );
 
     if (payload.image) {

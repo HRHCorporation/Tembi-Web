@@ -78,6 +78,8 @@ export async function PUT(
         const title_eng = formData.get("title_eng") as string;
         const description_ind = formData.get("description_ind") as string;
         const description_eng = formData.get("description_eng") as string;
+        const subtitle_ind = formData.get("subtitle_ind") as string;
+        const subtitle_eng = formData.get("subtitle_eng") as string;
 
         const imageFile = formData.get("image") as File | null;
 
@@ -126,14 +128,17 @@ export async function PUT(
             let updateQuery = `
                 UPDATE room_page_meta SET
                     title_ind = ?, title_eng = ?,
-                    description_ind = ?, description_eng = ?
+                    description_ind = ?, description_eng = ?, 
+                    subtitle_ind = ?, subtitle_eng = ?
             `;
 
             const updateParams: unknown[] = [
                 title_ind,
                 title_eng,
                 description_ind,
-                description_eng
+                description_eng,
+                subtitle_ind,
+                subtitle_eng
             ];
 
             // ✅ Add image to UPDATE if new image uploaded

@@ -8,6 +8,8 @@ interface BannerRow extends RowDataPacket {
     title_eng: string;
     description_ind: number;
     description_eng: number;
+    subtitle_ind: string;
+    subtitle_eng: string;
     image: string;
 }
 
@@ -22,6 +24,8 @@ export async function GET(request: NextRequest) {
                 image,
                 title_ind,
                 title_eng,
+                subtitle_ind,
+                subtitle_eng,
                 description_ind,
                 description_eng
             FROM room_page_meta
@@ -42,11 +46,11 @@ export async function GET(request: NextRequest) {
     } catch (error) {
         console.error('Error fetching carousels:', error);
         return NextResponse.json(
-            { 
-                success: false, 
+            {
+                success: false,
                 message: "Failed to fetch data",
                 error: error instanceof Error ? error.message : 'Unknown error'
-            }, 
+            },
             { status: 500 }
         );
     }

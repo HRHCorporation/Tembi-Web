@@ -11,6 +11,8 @@ interface ErrorState {
     title_eng?: string;
     description_ind?: string;
     description_eng?: string;
+    subtitle_ind?: string;
+    subtitle_eng?: string;
     image?: string;
 }
 
@@ -23,6 +25,8 @@ export function useEditBannerRoom(id: string) {
     const [title_eng, setTitle_eng] = useState("");
     const [description_ind, setDescriptionInd] = useState("");
     const [description_eng, setDescriptionEng] = useState("");
+    const [subtitle_ind, setSubtitle_ind] = useState("");
+    const [subtitle_eng, setSubtitle_eng] = useState("");
 
     const [image, setImage] = useState<string | null>(null);
     const [croppedBlob, setCroppedBlob] = useState<Blob | null>(null);
@@ -42,6 +46,8 @@ export function useEditBannerRoom(id: string) {
                 setTitle_eng(data.title_eng);
                 setDescriptionInd(data.description_ind);
                 setDescriptionEng(data.description_eng);
+                setSubtitle_ind(data.subtitle_ind ?? "");
+                setSubtitle_eng(data.subtitle_eng ?? "");
 
                 const imageUrl = data.image as string;
                 if (imageUrl) {
@@ -109,6 +115,8 @@ export function useEditBannerRoom(id: string) {
                 title_eng,
                 description_ind,
                 description_eng,
+                subtitle_ind,
+                subtitle_eng,
                 image: croppedBlob
             });
 
@@ -137,6 +145,10 @@ export function useEditBannerRoom(id: string) {
         setDescriptionInd,
         description_eng,
         setDescriptionEng,
+        subtitle_ind,
+        setSubtitle_ind,
+        subtitle_eng,
+        setSubtitle_eng,
         image,
         setImage,
         existingImage,
