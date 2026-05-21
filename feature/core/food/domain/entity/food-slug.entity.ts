@@ -146,8 +146,10 @@ export default class FoodSlug {
       image: response.image,
       slug: response.slug,
       minimum_pax: response.minimum_pax,
-      menus: response.menus?.map((menu: any) => Menu.fromResponse(menu)),
-      packages: response.packages?.map((pkg: any) => Package.fromResponse(pkg)),
+      menus: response.our_menus?.map((menu: any) => {
+        console.log("🍽️ Processing menu:", menu);
+        return Menu.fromResponse(menu);
+      }) || [], packages: response.packages?.map((pkg: any) => Package.fromResponse(pkg)),
       hours_service_min: response.hours_service_min,
       hours_service_max: response.hours_service_max,
       title_menu_ind: response.title_menu_ind,

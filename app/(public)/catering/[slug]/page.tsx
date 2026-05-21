@@ -6,11 +6,8 @@ import BuffetFeatures from "@/components/BuffetFeatures";
 import BuffetBooking from "@/components/BuffetBooking";
 import MenuCard from "@/components/MenuCard";
 import { useFoodContext } from "@/app/context/FoodContext";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { icons } from "lucide-react";
-import Package from "@/feature/core/food/domain/entity/package.entity";
-import PackageInclude from "@/feature/core/food/domain/entity/package-include.entity";
 import BuffetPricing from "@/components/BuffetPricing";
 
 export default function CateringDetailPage() {
@@ -28,7 +25,7 @@ export default function CateringDetailPage() {
 	}, [slug, refreshSlug]);
 
 	useEffect(() => {
-		console.log("📊 State updated:", {
+		console.log("State updated:", {
 			loading: foodSlugLoading,
 			error: foodSlugError,
 			hasData: !!foodSlug,
@@ -36,22 +33,6 @@ export default function CateringDetailPage() {
 		});
 	}, [foodSlugLoading, foodSlugError, foodSlug, slug]);
 
-	// const packages: Package[] = useMemo(() => {
-	// 	return foodSlug!.packages;
-	// }, [foodSlug, language, t]);
-
-	const menuList = [
-		t.catering.riceMenu.menuCard1,
-		t.catering.riceMenu.menuCard2,
-		t.catering.riceMenu.menuCard3,
-		t.catering.riceMenu.menuCard4,
-	];
-
-	useEffect(() => {
-		if (slug) {
-			refreshSlug(slug);
-		}
-	}, [slug, refreshSlug]);
 	return (
 		<main className="min-h-screen w-full bg-white overflow-x-hidden">
 			<section className="relative h-screen w-full overflow-hidden">
@@ -234,22 +215,27 @@ export default function CateringDetailPage() {
 					</div>
 					<div className="flex flex-wrap justify-center gap-8">
 						{foodSlug?.menus && foodSlug.menus.length > 0 ? (
-							foodSlug.menus.map((menu) => (
-								<div
-									key={menu.id}
-									className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] flex flex-col"
-								>
-									<MenuCard
-										className="h-full"
-										icon={menu.getIcon()}
-										title={menu.getName(language)}
-										subtitle={menu.getSubname(language)}
-										items={
-											menu.foods?.map((food) => food.getName(language)) || []
-										}
-									/>
-								</div>
-							))
+							foodSlug.menus.map((menu) => {
+								console.log("Menu data:", menu);
+								console.log("Menu foods:", menu.foods);
+								console.log("Menu icon:", menu.icon);
+								return (
+									<div
+										key={menu.id}
+										className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] flex flex-col"
+									>
+										<MenuCard
+											className="h-full"
+											icon={menu.getIcon()}
+											title={menu.getName(language)}
+											subtitle={menu.getSubname(language)}
+											items={
+												menu.foods?.map((food) => food.getName(language)) || []
+											}
+										/>
+									</div>
+								);
+							})
 						) : (
 							<p className="text-gray-500">
 								{language === "id"
