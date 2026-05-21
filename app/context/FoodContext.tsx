@@ -172,28 +172,23 @@ export function FoodProvider({ children }: { children: React.ReactNode }) {
 		setFoodSlugLoading(true);
 		setFoodSlugError(null);
 
-		try {
-			const result = await fetchFoodBySlugUsecase(slug)();
-			pipe(
-				result,
-				fold(
-					(failure) => {
-						console.error("Failed to fetch food by slug:", failure);
-						setFoodSlugError(failure.message);
-						setFoodSlugLoading(false);
-					},
-					(food) => {
-						console.log("Food data loaded:", food);
-						setFoodSlug(food);
-						setFoodSlugLoading(false);
-					},
-				),
-			);
-		} catch (error) {
-			console.error("Unexpected error:", error);
-			setFoodSlugError("An unexpected error occurred");
-			setFoodSlugLoading(false);
-		}
+		const result = await fetchFoodBySlugUsecase(slug)();
+
+		pipe(
+			result,
+			fold(
+				(failure) => {
+					console.error("Failed to fetch food by slug:", failure);
+					setFoodSlugError(failure.message);
+					setFoodSlugLoading(false);
+				},
+				(food) => {
+					console.log("Food data loaded:", food);
+					setFoodSlug(food);
+					setFoodSlugLoading(false);
+				},
+			),
+		);
 	}, []);
 
 	useEffect(() => {
