@@ -8,8 +8,6 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useViewportHeight } from "@/hooks/useViewportHeight";
 import { getLocalizedField } from "@/utils/language-helper";
 import { useFoodContext } from "@/app/context/FoodContext";
-import FoodHighlight from "../../../feature/core/food/domain/entity/food-highlight.entity";
-import { map } from "fp-ts/lib/TaskEither";
 
 export default function FoodPage() {
 	const { t, language } = useLanguage();
