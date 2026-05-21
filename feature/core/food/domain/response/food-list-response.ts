@@ -10,5 +10,6 @@ export type FoodListResponse = {
   subtitle_menu_eng: string | null;
   minimum_pax: number;
   image: string;
+  slug: string;
   primary_foods: FoodItemResponse[];
 };

@@ -11,7 +11,7 @@ export default class PackageInclude {
   name_ind: string;
   name_eng: string;
 
-  constructor(data: PackageIncludeProps) {
+  constructor(data: Omit<PackageInclude, "getName">) {
     this.id = data.id;
     this.name_ind = data.name_ind;
     this.name_eng = data.name_eng;

@@ -1,61 +1,43 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 import MenuItemCard from "@/components/MenuItemCard";
 import PackageCard from "@/components/PackageCard";
 import ScrollReveal from "@/components/ScrollReveal";
-import fetchFoodBannersUsecase from "@/feature/core/banner/domain/usecase/fetch-food.usecase";
-import { pipe } from "fp-ts/lib/function";
-import { fold } from "fp-ts/lib/Either";
-import Banner from "@/feature/core/banner/domain/entity/banner.entity";
 import { useViewportHeight } from "@/hooks/useViewportHeight";
-import { useHtmlParser } from "@/hooks/useHtmlParser";
 import { getLocalizedField } from "@/utils/language-helper";
+import { useFoodContext } from "@/app/context/FoodContext";
 
 export default function FoodPage() {
 	const { t, language } = useLanguage();
-	useViewportHeight();
+	const {
+		foodBanner,
+		bannerLoading,
+		bannerError,
+		foodList,
+		foodListLoading,
+		foodListError,
+		foodHighlight,
+		foodHighlightLoading,
+		foodHighlightError,
+		foodCelebrate,
+		foodCelebrateLoading,
+		foodCelebrateError,
+	} = useFoodContext();
 
-	const [foodBanner, setFoodBanner] = useState<Banner | null>(null);
-	const [bannerLoading, setBannerLoading] = useState(true);
-	const [bannerError, setBannerError] = useState<string | null>(null);
+	useViewportHeight();
 
 	const buffetMenu = t.foods.menus.buffet.item;
 	const snackMenu = t.foods.menus.snack.item;
 	const riceBoxMenu = t.foods.menus.rice.item;
-
-	useEffect(() => {
-		const loadBanner = async () => {
-			const result = await fetchFoodBannersUsecase()();
-
-			pipe(
-				result,
-				fold(
-					(failure) => {
-						console.error("Failed to fetch food banner:", failure);
-						setBannerError(failure.message);
-						setBannerLoading(false);
-					},
-					(banners) => {
-						if (banners.length > 0) {
-							setFoodBanner(banners[0]);
-						}
-						setBannerLoading(false);
-					},
-				),
-			);
-		};
-		loadBanner();
-	}, []);
 
 	const title = getLocalizedField(foodBanner, "title", language);
 	const subtitle = getLocalizedField(foodBanner, "subtitle", language);
 	const description = getLocalizedField(foodBanner, "description", language);
 
 	return (
-		<main className="w-full min-h-screen bg-white">
+		<main className="w-full min-h-screen bg-white overflow-x-hidden">
 			<section
 				className="relative w-full overflow-hidden"
 				style={{ height: "calc(var(--vh, 1vh) * 100)" }}
@@ -140,16 +122,13 @@ export default function FoodPage() {
 									{t.foods.intro.label}
 								</span>
 							</div>
-
 							<h2 className="font-serif text-4xl  font-bold text-gray-900 leading-[1.15] mb-8">
 								{t.foods.intro.title[0]} <br className="hidden lg:block" />
 								<span className="text-[#8F9E75]">{t.foods.intro.title[1]}</span>
 							</h2>
-
 							<p className="text-base text-gray-600 leading-relaxed mb-10">
 								{t.foods.intro.desc}
 							</p>
-
 							<div className="space-y-8">
 								<FeatureItem
 									title={t.foods.intro.itemTitle[0]}
@@ -199,61 +178,74 @@ export default function FoodPage() {
 									{t.foods.packages.label}
 								</span>
 							</div>
-
 							<h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
 								{t.foods.packages.title[0]}
 								<span className="text-[#8F9E75]">
 									{t.foods.packages.title[1]}
 								</span>
 							</h2>
-
 							<p className="text-gray-600 text-lg leading-relaxed">
 								{t.foods.packages.subtitle}
 							</p>
 						</div>
 					</ScrollReveal>
-
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-						<ScrollReveal animation="fadeUp" delay={0} duration={800}>
-							<PackageCard
-								image="/images/foods/foods5.webp"
-								badge={t.foods.packages.card1.badge}
-								title={t.foods.packages.card1.title}
-								subtitle={t.foods.packages.card1.subtitle}
-								desc={t.foods.packages.card1.desc}
-								features={t.foods.packages.card1.features}
-								linkUrl={t.foods.packages.card1.linkUrl}
-								buttonText={t.foods.packages.card1.buttonText}
-							/>
-						</ScrollReveal>
-
-						<ScrollReveal animation="fadeUp" delay={150} duration={800}>
-							<PackageCard
-								image="/images/foods/foods6.webp"
-								badge={t.foods.packages.card2.badge}
-								title={t.foods.packages.card2.title}
-								subtitle={t.foods.packages.card2.subtitle}
-								desc={t.foods.packages.card2.desc}
-								features={t.foods.packages.card2.features}
-								linkUrl={t.foods.packages.card2.linkUrl}
-								buttonText={t.foods.packages.card2.buttonText}
-							/>
-						</ScrollReveal>
-
-						<ScrollReveal animation="fadeUp" delay={300} duration={800}>
-							<PackageCard
-								image="/images/foods/foods7.webp"
-								badge={t.foods.packages.card3.badge}
-								title={t.foods.packages.card3.title}
-								subtitle={t.foods.packages.card3.subtitle}
-								desc={t.foods.packages.card3.desc}
-								features={t.foods.packages.card3.features}
-								linkUrl={t.foods.packages.card3.linkUrl}
-								buttonText={t.foods.packages.card3.buttonText}
-							/>
-						</ScrollReveal>
-					</div>
-
+					{foodListLoading && (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+							{[1, 2, 3].map((i) => (
+								<div
+									key={i}
+									className="bg-white rounded-2xl h-125 animate-pulse"
+								/>
+							))}
+						</div>
+					)}
+					{foodListError && (
+						<div className="text-center py-12">
+							<p className="text-red-500 mb-4">{foodListError}</p>
+							<button
+								onClick={() => window.location.reload()}
+								className="bg-[#8F9E75] text-white px-6 py-2 rounded-lg hover:bg-[#7A8B60]"
+							>
+								Try Again
+							</button>
+						</div>
+					)}
+					{!foodListLoading && !foodListError && foodList.length > 0 && (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+							{foodList.map((food, index) => (
+								<ScrollReveal
+									key={food.id}
+									animation="fadeUp"
+									delay={index * 150}
+									duration={800}
+								>
+									<PackageCard
+										image={
+											food.hasImage() ? food.image : "/images/foods/foods5.webp"
+										}
+										badge={"≥" + food.minimum_pax.toString() + " pax" || ""}
+										title={food.getName(language)}
+										subtitle={food.getSubtitleMenu(language) || ""}
+										desc={food.getDescriptionCard(language) || ""}
+										features={
+											food.primary_foods?.map((item) =>
+												item.getName(language),
+											) || []
+										}
+										linkUrl={`/catering/${food.slug}`}
+										buttonText={food.getButtonText(language)}
+									/>
+								</ScrollReveal>
+							))}
+						</div>
+					)}
+					{!foodListLoading && !foodListError && foodList.length === 0 && (
+						<div className="text-center py-12">
+							<p className="text-gray-500 text-lg">
+								No packages available at the moment.
+							</p>
+						</div>
+					)}
 					<div className="bg-white rounded-xl p-8 md:p-12 shadow-sm border border-gray-100">
 						<div className="flex flex-col md:flex-row justify-center items-center gap-8 text-center">
 							<InfoItem
@@ -270,7 +262,6 @@ export default function FoodPage() {
 					</div>
 				</div>
 			</section>
-
 			<section className="py-24 px-6 sm:px-12 lg:px-24 max-w-full bg-white">
 				<div className="max-w-7xl mx-auto">
 					<div className="text-center max-w-3xl mx-auto mb-20">
@@ -330,7 +321,6 @@ export default function FoodPage() {
 							))}
 						</div>
 					</div>
-
 					<div>
 						<div className="text-center mb-10">
 							<h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
@@ -338,7 +328,6 @@ export default function FoodPage() {
 							</h3>
 							<p className="text-gray-500 text-sm">{t.foods.menus.rice.desc}</p>
 						</div>
-
 						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
 							{riceBoxMenu.map((item, idx) => (
 								<MenuItemCard key={idx} {...item} />
@@ -360,7 +349,6 @@ export default function FoodPage() {
 									className="object-cover"
 								/>
 							</div>
-
 							<div className="hidden md:block absolute bottom-10 -left-10 w-80 bg-white p-6 rounded-2xl shadow-2xl shadow-gray-200/50">
 								<div className="flex items-start gap-4 mb-4">
 									<div className="w-12 h-12 rounded-full bg-[#8F9E75] flex items-center justify-center shrink-0">
@@ -381,15 +369,12 @@ export default function FoodPage() {
 										</p>
 									</div>
 								</div>
-
 								<div className="border-t border-gray-100 my-4"></div>
-
 								<p className="text-sm text-gray-600 italic leading-relaxed">
 									{t.foods.gen.card.desc}
 								</p>
 							</div>
 						</div>
-
 						<div>
 							<div className="flex items-center gap-2 mb-6">
 								<Image
@@ -403,16 +388,13 @@ export default function FoodPage() {
 									{t.foods.gen.label}
 								</span>
 							</div>
-
 							<h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
 								{t.foods.gen.title[0]} <br />
 								<span className="text-[#8F9E75]">{t.foods.gen.title[1]}</span>
 							</h2>
-
 							<p className="text-gray-600 leading-relaxed mb-10 text-lg">
 								{t.foods.gen.desc}
 							</p>
-
 							<div className="space-y-8">
 								<HeritageItem
 									icon="/images/icons/book-black.png"

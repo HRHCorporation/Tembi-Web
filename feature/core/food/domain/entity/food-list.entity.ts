@@ -11,6 +11,7 @@ export type FoodListProps = {
   subtitle_menu_eng: string | null;
   minimum_pax: number;
   image: string;
+  slug: string;
   primary_foods?: FoodItem[];
 };
 
@@ -24,6 +25,7 @@ export default class FoodList {
   subtitle_menu_eng: string | null;
   minimum_pax: number;
   image: string;
+  slug: string;
   primary_foods?: FoodItem[];
 
   constructor(data: FoodListProps) {
@@ -36,7 +38,10 @@ export default class FoodList {
     this.subtitle_menu_eng = data.subtitle_menu_eng;
     this.minimum_pax = data.minimum_pax;
     this.image = data.image;
-    this.primary_foods = data.primary_foods;
+    this.slug = data.slug;
+    this.primary_foods = data.primary_foods?.map((food) =>
+      food instanceof FoodItem ? food : new FoodItem(food)
+    );
   }
 
   getName(language: "id" | "en"): string {
@@ -63,6 +68,10 @@ export default class FoodList {
     return !!this.primary_foods && this.primary_foods.length > 0;
   }
 
+  getButtonText(language: "id" | "en"): string {
+    return language === "id" ? "Lihat " + this.name_ind : "View " + this.name_eng;
+  }
+
   static fromResponse(response: FoodListResponse): FoodList {
     return new FoodList({
       id: response.id,
@@ -74,6 +83,7 @@ export default class FoodList {
       subtitle_menu_eng: response.subtitle_menu_eng,
       minimum_pax: response.minimum_pax,
       image: response.image,
+      slug: response.slug,
       primary_foods: response.primary_foods?.map((food) =>
         FoodItem.fromResponse(food)
       ),

@@ -4,6 +4,7 @@ import PackageInclude from "./package-include.entity";
 export default class Package {
   id: number;
   icon: string;
+  theme: "standard" | "premium" | "exclusive";
   color: string;
   includes: PackageInclude[];
   name_eng: string;
@@ -13,9 +14,12 @@ export default class Package {
   description_eng: string;
   description_ind: string;
 
-  constructor(data: Omit<Package, "getName" | "getDescription">) {
+  constructor(
+    data: Omit<Package, "getName" | "getDescription" | "getPackageIncludes" | "getMinimumGuest">
+  ) {
     this.id = data.id;
     this.icon = data.icon;
+    this.theme = data.theme;
     this.color = data.color;
     this.includes = data.includes;
     this.name_eng = data.name_eng;
@@ -35,11 +39,20 @@ export default class Package {
     return language === "id" ? this.description_ind : this.description_eng;
   }
 
+  getPackageIncludes(): PackageInclude[] {
+    return this.includes || [];
+  }
+
+  getMinimumGuest(language: "id" | "en"): string {
+    return language === "id" ? `Minimum ${this.minimum_guest} tamu` : `Minimum guests ${this.minimum_guest} Pax`;
+  }
+
 
   static fromResponse(response: PackageResponse): Package {
     return new Package({
       id: response.id,
       icon: response.icon,
+      theme: response.is_popular === 1 ? "premium" : "standard",
       color: response.color,
       includes: response.includes.map((inc) => PackageInclude.fromResponse(inc)),
       name_eng: response.name_eng,

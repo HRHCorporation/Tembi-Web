@@ -3,52 +3,47 @@
 import { useEffect, useRef } from "react";
 
 const BackgroundMusic = () => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+	const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+	useEffect(() => {
+		const audio = audioRef.current;
+		if (!audio) return;
 
-    audio.volume = 0.3;
+		audio.volume = 0.3;
 
-    const playAudio = () => {
-      const playPromise = audio.play();
+		const playAudio = () => {
+			const playPromise = audio.play();
 
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.log("Menunggu interaksi user untuk memutar musik...");
-        });
-      }
-    };
+			if (playPromise !== undefined) {
+				playPromise.catch((error) => {
+					console.log("Menunggu interaksi user untuk memutar musik...");
+				});
+			}
+		};
 
-    playAudio();
+		playAudio();
 
-    const handleInteraction = () => {
-      playAudio();
+		const handleInteraction = () => {
+			playAudio();
 
-      ["click", "scroll", "keydown", "touchstart"].forEach((event) =>
-        document.removeEventListener(event, handleInteraction),
-      );
-    };
+			["click", "scroll", "keydown", "touchstart"].forEach((event) =>
+				document.removeEventListener(event, handleInteraction),
+			);
+		};
 
-    ["click", "scroll", "keydown", "touchstart"].forEach((event) =>
-      document.addEventListener(event, handleInteraction),
-    );
+		["click", "scroll", "keydown", "touchstart"].forEach((event) =>
+			document.addEventListener(event, handleInteraction),
+		);
 
-    return () => {
-      ["click", "scroll", "keydown", "touchstart"].forEach((event) =>
-        document.removeEventListener(event, handleInteraction),
-      );
-    };
-  }, []);
-
-  return (
-    <audio ref={audioRef} loop hidden>
-      
-      <source src="/audio/backsound.mp3" type="audio/mpeg" />
-      Browser Anda tidak mendukung elemen audio.
-    </audio>
-  );
+		return () => {
+			["click", "scroll", "keydown", "touchstart"].forEach((event) =>
+				document.removeEventListener(event, handleInteraction),
+			);
+		};
+	}, []);
+	return (
+		<audio src="/audio/background-music.mp3" loop autoPlay className="hidden" />
+	);
 };
 
 export default BackgroundMusic;

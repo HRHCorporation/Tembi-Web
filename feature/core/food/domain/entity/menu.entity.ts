@@ -32,6 +32,14 @@ export default class Menu {
       : this.subname_eng || this.subname_ind || "";
   }
 
+  getIcon(): string {
+    return this.icon || "";
+  }
+
+  getFoodItems(): FoodItem[] {
+    return this.foods || [];
+  }
+
   static fromResponse(response: MenuResponse): Menu {
     return new Menu({
       id: response.id,
