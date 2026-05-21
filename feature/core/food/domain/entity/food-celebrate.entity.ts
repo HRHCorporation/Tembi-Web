@@ -50,6 +50,10 @@ export default class FoodCelebrate {
     return this.items.length;
   }
 
+  getItems(): FoodItem[] {
+    return this.items;
+  }
+
   static fromResponse(response: FoodCelebrateResponse): FoodCelebrate {
     return new FoodCelebrate({
       id: response.id,

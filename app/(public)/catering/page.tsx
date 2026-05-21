@@ -417,81 +417,93 @@ export default function FoodPage() {
 				</div>
 			</section>
 
-			<section className="py-24 px-6 sm:px-12 lg:px-24 max-w-full bg-white">
-				<div className="max-w-7xl mx-auto">
-					<div className="text-center max-w-3xl mx-auto mb-16">
-						<div className="inline-flex items-center gap-2 mb-4">
-							<Image
-								src="/images/icons/calendar-black.png"
-								alt="icon"
-								width={16}
-								height={16}
-								className="w-4 h-4 opacity-80"
-							/>
-							<span className="text-sm font-semibold text-gray-800 uppercase tracking-wide">
-								{t.foods.celebrate.label}
-							</span>
+			{!foodCelebrateLoading &&
+				!foodCelebrateError &&
+				foodCelebrate.length > 0 && (
+					<section className="py-24 px-6 sm:px-12 lg:px-24 max-w-full bg-white">
+						<div className="max-w-7xl mx-auto">
+							<div className="text-center max-w-3xl mx-auto mb-16">
+								<div className="inline-flex items-center gap-2 mb-4">
+									<Image
+										src="/images/icons/calendar-black.png"
+										alt="icon"
+										width={16}
+										height={16}
+										className="w-4 h-4 opacity-80"
+									/>
+									<span className="text-sm font-semibold text-gray-800 uppercase tracking-wide">
+										{t.foods.celebrate.label}
+									</span>
+								</div>
+
+								<h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+									{t.foods.celebrate.title[0]}
+									<span className="text-[#8F9E75]">
+										{t.foods.celebrate.title[1]}
+									</span>
+								</h2>
+
+								<p className="text-gray-600 text-lg leading-relaxed">
+									{t.foods.celebrate.desc}
+								</p>
+							</div>
+							<div
+								className={`mb-24 ${
+									foodCelebrate.length === 1
+										? "flex justify-center"
+										: foodCelebrate.length === 2
+											? "grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto"
+											: "grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
+								}`}
+							>
+								{foodCelebrate.map((item) => (
+									<div
+										key={item.id}
+										className={
+											foodCelebrate.length === 1 ? "w-full max-w-md" : ""
+										}
+									>
+										<OccasionItem
+											image={
+												item.hasImage()
+													? item.image
+													: "/images/foods/foods10.webp"
+											}
+											title={item.getName(language)}
+											subtitle={item.getDescription(language)}
+											features={
+												item.getItems()?.map((f) => f.getName(language)) || []
+											}
+										/>
+									</div>
+								))}
+							</div>
+
+							<div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center pt-16">
+								<StatItem
+									icon="/images/icons/star-white.png"
+									number={t.foods.celebrate.stat1.number}
+									label={t.foods.celebrate.stat1.label}
+								/>
+								<StatItem
+									icon="/images/icons/group-white.png"
+									number={t.foods.celebrate.stat2.number}
+									label={t.foods.celebrate.stat2.label}
+								/>
+								<StatItem
+									icon="/images/icons/heart-white.png"
+									number={t.foods.celebrate.stat3.number}
+									label={t.foods.celebrate.stat3.label}
+								/>
+								<StatItem
+									icon="/images/icons/calendar-white.png"
+									number={t.foods.celebrate.stat4.number}
+									label={t.foods.celebrate.stat4.label}
+								/>
+							</div>
 						</div>
-
-						<h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-							{t.foods.celebrate.title[0]}
-							<span className="text-[#8F9E75]">
-								{t.foods.celebrate.title[1]}
-							</span>
-						</h2>
-
-						<p className="text-gray-600 text-lg leading-relaxed">
-							{t.foods.celebrate.desc}
-						</p>
-					</div>
-
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-24">
-						<OccasionItem
-							image="/images/foods/foods9.webp"
-							title={t.foods.celebrate.card1.title}
-							subtitle={t.foods.celebrate.card1.subtitle}
-							features={t.foods.celebrate.card1.features}
-						/>
-
-						<OccasionItem
-							image="/images/foods/foods10.webp"
-							title={t.foods.celebrate.card2.title}
-							subtitle={t.foods.celebrate.card2.subtitle}
-							features={t.foods.celebrate.card2.features}
-						/>
-
-						<OccasionItem
-							image="/images/foods/foods11.webp"
-							title={t.foods.celebrate.card3.title}
-							subtitle={t.foods.celebrate.card3.subtitle}
-							features={t.foods.celebrate.card3.features}
-						/>
-					</div>
-
-					<div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center pt-16">
-						<StatItem
-							icon="/images/icons/star-white.png"
-							number={t.foods.celebrate.stat1.number}
-							label={t.foods.celebrate.stat1.label}
-						/>
-						<StatItem
-							icon="/images/icons/group-white.png"
-							number={t.foods.celebrate.stat2.number}
-							label={t.foods.celebrate.stat2.label}
-						/>
-						<StatItem
-							icon="/images/icons/heart-white.png"
-							number={t.foods.celebrate.stat3.number}
-							label={t.foods.celebrate.stat3.label}
-						/>
-						<StatItem
-							icon="/images/icons/calendar-white.png"
-							number={t.foods.celebrate.stat4.number}
-							label={t.foods.celebrate.stat4.label}
-						/>
-					</div>
-				</div>
-			</section>
+					</section>
+				)}
 
 			<section className="py-24 px-6 sm:px-12 lg:px-24 max-w-full bg-white">
 				<div className="max-w-7xl mx-auto">
