@@ -12,7 +12,6 @@ export default function CollectionsPage() {
   const collectionsData = t.collection.items;
   return (
     <main className="w-full">
-      {}
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
@@ -23,10 +22,8 @@ export default function CollectionsPage() {
             quality={90}
             className="object-cover object-center"
           />
-
           <div className="absolute inset-0 bg-black/60 sm:bg-linear-to-r sm:from-black/80 sm:to-black/40" />
         </div>
-
         <div className="relative z-10 h-full max-w-7xl mx-auto px-6 sm:px-8 flex flex-col justify-center">
           <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 text-gray-100 px-4 py-1.5 rounded-full w-fit mb-6">
             <div className="relative flex items-center justify-center">
@@ -42,19 +39,16 @@ export default function CollectionsPage() {
               {t.collection.hero.badge}
             </span>
           </div>
-
           <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold text-white leading-tight mb-6">
             {t.collection.hero.title[0]} <br />
             {t.collection.hero.title[1]}
           </h1>
-
           <div className="max-w-2xl text-gray-200 text-base sm:text-lg leading-relaxed space-y-4 mb-10">
             <p>{t.collection.hero.desc[0]}</p>
             <p className="hidden sm:block text-gray-300/90">
               {t.collection.hero.desc[1]}
             </p>
           </div>
-
           <div>
             <button className="group flex items-center gap-3 bg-[#8F9F6A] hover:bg-[#7d8c5c] text-white px-6 py-3.5 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <div className="relative w-5 h-5 group-hover:scale-110 transition-transform duration-300">
@@ -73,8 +67,6 @@ export default function CollectionsPage() {
           </div>
         </div>
       </section>
-
-      {}
       <section className="w-full bg-white py-16 sm:py-24 px-6 sm:px-12 lg:px-24">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap justify-center gap-16 lg:gap-48">
@@ -97,11 +89,9 @@ export default function CollectionsPage() {
                       />
                     </div>
                   </div>
-
                   <h3 className="font-serif text-4xl sm:text-5xl font-bold text-[#433422] mb-2">
                     {stat.value}
                   </h3>
-
                   <p className="font-sans text-sm sm:text-base text-gray-500 tracking-wide font-medium">
                     {stat.label}
                   </p>
@@ -111,7 +101,6 @@ export default function CollectionsPage() {
           </div>
         </div>
       </section>
-
       <div className="w-full bg-[#FAFAFA] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
           {collectionsData.map((category, index) => (
@@ -123,7 +112,6 @@ export default function CollectionsPage() {
                   </h2>
                 </div>
               </ScrollReveal>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {category.items.map((item, itemIdx) => (
                   <ScrollReveal

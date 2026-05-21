@@ -1,20 +1,22 @@
-"use client";
 import { useEffect } from "react";
 
 export function useViewportHeight() {
   useEffect(() => {
-    const setVh = () => {
+    const setVH = () => {
       const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+      document.documentElement.style.setProperty(
+        "--vh",
+        `${vh}px`
+      );
     };
 
-    setVh();
-    window.addEventListener("resize", setVh);
-    window.addEventListener("orientationchange", setVh);
+    setVH();
+
+    window.addEventListener("resize", setVH);
 
     return () => {
-      window.removeEventListener("resize", setVh);
-      window.removeEventListener("orientationchange", setVh);
+      window.removeEventListener("resize", setVH);
     };
   }, []);
 }

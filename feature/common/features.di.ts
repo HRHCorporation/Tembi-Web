@@ -3,9 +3,12 @@ import { bannerModuleKey } from "../core/banner/banner.module-key";
 import globalModule from "./data/global.module";
 import getBannerDi from "../core/banner/data/module/banner.di";
 import di from "@/bootstrap/di/init-di";
+import { foodModuleKey } from "../core/food/food.module-key";
+import getFoodDi from "../core/food/data/module/food.di";
 
 const moduleKeyToDi: Record<string, (di: DependencyContainer) => DependencyContainer> = {
-  [bannerModuleKey]: getBannerDi
+  [bannerModuleKey]: getBannerDi,
+  [foodModuleKey]: getFoodDi,
 }
 
 const memoizedDis: Record<string, DependencyContainer> = {};

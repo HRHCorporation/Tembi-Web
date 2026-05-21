@@ -39,6 +39,8 @@ interface OurMenuPackage {
 
 interface FoodPackageDetailRow extends RowDataPacket {
     id: number;
+    type_catering_service_ind: string;
+    type_catering_service_eng: string;
     name_ind: string;
     name_eng: string;
     description_ind: string;
@@ -71,6 +73,8 @@ export async function GET(
         const query = `
             SELECT 
                 food_packages.id,
+                mstr_type_catering_service.name_ind as type_catering_service_ind,
+                mstr_type_catering_service.name_eng as type_catering_service_eng,
                 food_packages.name_ind,
                 food_packages.name_eng,
                 food_packages.description_ind,
@@ -142,6 +146,7 @@ export async function GET(
                     ORDER BY omp.index
                 ) as packages
             FROM food_packages
+            LEFT JOIN mstr_type_catering_service ON food_packages.type_catering_service_id = mstr_type_catering_service.id
             WHERE food_packages.slug = ?
             LIMIT 1
         `;
@@ -206,6 +211,8 @@ export async function GET(
 
         const result = {
             id: row.id,
+            type_catering_service_ind: row.type_catering_service_ind,
+            type_catering_service_eng: row.type_catering_service_eng,
             name_ind: row.name_ind,
             name_eng: row.name_eng,
             description_ind: row.description_ind,

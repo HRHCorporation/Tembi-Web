@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import BackgroundMusic from "@/components/BackgroundMusic";
-import { LanguageProvider } from "../context/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AppProviders } from "@/app/context/AppProviders";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -42,15 +42,14 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				suppressHydrationWarning={true}
 				className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${lato.variable} font-sans antialiased overflow-x-hidden`}
 			>
-				<BackgroundMusic />
-				<LanguageProvider>
+				<AppProviders>
+					<BackgroundMusic />
 					<Header />
 					{children}
 					<Footer />
-				</LanguageProvider>
+				</AppProviders>
 			</body>
 		</html>
 	);

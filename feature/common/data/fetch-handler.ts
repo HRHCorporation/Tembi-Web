@@ -1,13 +1,12 @@
 import { pipe } from "fp-ts/lib/function";
 import ApiTask from "./api-task";
-import { tryCatch } from "fp-ts/lib/TaskEither"
+import { tryCatch } from "fp-ts/lib/TaskEither";
 import { failureOrCurry } from "../failure/failure-helpers";
 import NetworkFailure from "../failure/network.failure";
 
-
 export type FetchOptions<
   BODY extends Record<string, unknown> | string | string[] | undefined =
-  undefined,
+    undefined,
 > = {
   endpoint: string;
   method: "POST" | "GET" | "PUT" | "DELETE";
@@ -22,11 +21,27 @@ export default class FetchHandler {
   >(options: FetchOptions<BODY>): ApiTask<Response> {
     return pipe(
       tryCatch(
-        async () =>
-          fetch(options.endpoint, {
+        async () => {
+          const response = await fetch(options.endpoint, {
             method: options.method,
-            body: JSON.stringify(options.body),
-          }),
+            headers: {
+              "Content-Type": "application/json",
+              ...options.header,
+            },
+            ...(options.method !== "GET" && options.body
+              ? {
+                  body: JSON.stringify(options.body),
+                }
+              : {}),
+            cache: options.cache ?? "no-store",
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          return response;
+        },
         failureOrCurry(new NetworkFailure()),
       ),
     );

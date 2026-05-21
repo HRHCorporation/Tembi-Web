@@ -6,9 +6,8 @@ interface MenuFood {
     id: number;
     name_ind: string;
     name_eng: string;
-    image: string | null;
-    description_ind: string | null;
-    description_eng: string | null;
+    description_menu_highlight_ind: string;
+    description_menu_highlight_eng: string;
 }
 
 interface FoodPackageHighlightRow extends RowDataPacket {
@@ -28,6 +27,8 @@ export async function GET(request: NextRequest) {
                 food_packages.id,
                 food_packages.name_ind,
                 food_packages.name_eng,
+                food_packages.description_menu_highlight_ind,
+                food_packages.description_menu_highlight_eng,
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'id', our_menu_food.id,
@@ -80,6 +81,8 @@ export async function GET(request: NextRequest) {
                 id: row.id,
                 name_ind: row.name_ind,
                 name_eng: row.name_eng,
+                description_menu_highlight_ind: row.description_menu_highlight_ind,
+                description_menu_highlight_eng: row.description_menu_highlight_eng,
                 menu_foods: menu_foods
             };
         });
