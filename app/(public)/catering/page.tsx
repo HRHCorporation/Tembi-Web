@@ -8,6 +8,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useViewportHeight } from "@/hooks/useViewportHeight";
 import { getLocalizedField } from "@/utils/language-helper";
 import { useFoodContext } from "@/app/context/FoodContext";
+import FoodHighlight from "../../../feature/core/food/domain/entity/food-highlight.entity";
+import { map } from "fp-ts/lib/TaskEither";
 
 export default function FoodPage() {
 	const { t, language } = useLanguage();
@@ -27,10 +29,6 @@ export default function FoodPage() {
 	} = useFoodContext();
 
 	useViewportHeight();
-
-	const buffetMenu = t.foods.menus.buffet.item;
-	const snackMenu = t.foods.menus.snack.item;
-	const riceBoxMenu = t.foods.menus.rice.item;
 
 	const title = getLocalizedField(foodBanner, "title", language);
 	const subtitle = getLocalizedField(foodBanner, "subtitle", language);
@@ -287,53 +285,66 @@ export default function FoodPage() {
 							{t.foods.menus.desc}
 						</p>
 					</div>
-
-					<div className="mb-20">
-						<div className="text-center mb-10">
-							<h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
-								{t.foods.menus.buffet.title}
-							</h3>
-							<p className="text-gray-500 text-sm">
-								{t.foods.menus.buffet.desc}
-							</p>
-						</div>
-
-						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-							{buffetMenu.map((item, idx) => (
-								<MenuItemCard key={idx} {...item} />
-							))}
-						</div>
-					</div>
-
-					<div className="mb-20">
-						<div className="text-center mb-10">
-							<h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
-								{t.foods.menus.snack.title}
-							</h3>
-							<p className="text-gray-500 text-sm">
-								{t.foods.menus.snack.desc}
-							</p>
-						</div>
-
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-							{snackMenu.map((item, idx) => (
-								<MenuItemCard key={idx} {...item} />
-							))}
-						</div>
-					</div>
-					<div>
-						<div className="text-center mb-10">
-							<h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
-								{t.foods.menus.rice.title}
-							</h3>
-							<p className="text-gray-500 text-sm">{t.foods.menus.rice.desc}</p>
-						</div>
-						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-							{riceBoxMenu.map((item, idx) => (
-								<MenuItemCard key={idx} {...item} />
-							))}
-						</div>
-					</div>
+					{!foodHighlightLoading &&
+						!foodHighlightError &&
+						foodHighlight.length > 0 && (
+							<div className="mb-20">
+								{foodHighlight.map((item) => {
+									const menuFoodsCount = item.menu_foods?.length || 0;
+									const getGridClasses = (count: number) => {
+										if (count === 0) return "";
+										if (count === 1) return "flex justify-center";
+										if (count === 2)
+											return "grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto";
+										if (count === 3)
+											return "grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto";
+										if (count === 4)
+											return "grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto";
+										return "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6";
+									};
+									const getItemClasses = (count: number) => {
+										if (count === 1) return "w-full max-w-xs";
+										return "";
+									};
+									return (
+										<div key={item.id} className="mb-10">
+											<div className="text-center mb-6">
+												<h3 className="font-serif text-2xl font-bold text-gray-900 mb-2">
+													{item.getName(language)}
+												</h3>
+												<p className="text-gray-500 text-sm">
+													{item.getHighlightDescription(language)}
+												</p>
+											</div>
+											<div className={getGridClasses(menuFoodsCount)}>
+												{item.menu_foods.map((menu, idx) => (
+													<div
+														key={idx}
+														className={getItemClasses(menuFoodsCount)}
+													>
+														<MenuItemCard
+															image={menu.image || "/images/foods/foods5.webp"}
+															title={
+																(typeof menu.getName === "function" &&
+																	menu.getName(language)) ||
+																menu.name_ind ||
+																menu.name_eng ||
+																""
+															}
+															desc={
+																menu.description_ind ||
+																menu.description_eng ||
+																""
+															}
+														/>
+													</div>
+												))}
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						)}
 				</div>
 			</section>
 

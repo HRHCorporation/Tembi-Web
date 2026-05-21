@@ -18,20 +18,10 @@ export default function CateringDetailPage() {
 	const { t, language } = useLanguage();
 
 	useEffect(() => {
-		console.log("CateringDetailPage mounted with slug:", slug);
 		if (slug) {
 			refreshSlug(slug);
 		}
 	}, [slug, refreshSlug]);
-
-	useEffect(() => {
-		console.log("State updated:", {
-			loading: foodSlugLoading,
-			error: foodSlugError,
-			hasData: !!foodSlug,
-			slug: slug,
-		});
-	}, [foodSlugLoading, foodSlugError, foodSlug, slug]);
 
 	return (
 		<main className="min-h-screen w-full bg-white overflow-x-hidden">
