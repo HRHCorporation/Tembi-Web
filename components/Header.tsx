@@ -14,19 +14,6 @@ export default function Header() {
 		setMounted(true);
 	}, []);
 
-<<<<<<< HEAD
-  const navLinks = [
-    { name: t.nav.home, href: "/" },
-    { name: t.nav.house, href: "/rooms" },
-    { name: t.nav.foods, href: "/catering" },
-    { name: t.nav.venue, href: "/venue" },
-    { name: t.nav.history, href: "/sejarah" },
-    { name: t.nav.collections, href: "/collections" },
-    { name: t.nav.event, href: "/event" },
-    { name: t.nav.blog, href: "/blog" },
-    { name: t.nav.checkBooking, href: "/check-booking" },
-  ];
-=======
 	const navLinks = [
 		{ name: t.nav.home, href: "/" },
 		{ name: t.nav.house, href: "/rooms" },
@@ -36,7 +23,6 @@ export default function Header() {
 		{ name: t.nav.collections, href: "/collections" },
 		{ name: t.nav.checkBooking, href: "/check-booking" },
 	];
->>>>>>> 74ccfa3f319beedaa0f106b8a818607bfaf7b061
 
 	const toggleLanguage = () => {
 		setLanguage(language === "en" ? "id" : "en");
