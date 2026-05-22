@@ -6,7 +6,7 @@ type ServicesData = {
   icon?: string;
   name_eng?: string;
   name_ind?: string;
-  is_addition?: boolean;
+  is_addition?: number;
   amenities?: Amenities[];
 }
 
@@ -15,7 +15,7 @@ export default class Services {
   icon?: string;
   name_eng?: string;
   name_ind?: string;
-  is_addition?: boolean;
+  is_addition?: number;
   amenities?: Amenities[];
 
   constructor(data: ServicesData) {

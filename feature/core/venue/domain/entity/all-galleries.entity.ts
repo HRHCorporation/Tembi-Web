@@ -3,9 +3,9 @@ import { AllGalleryResponse } from "../response/all-galleries.response";
 export default class AllGaleries {
   id: number;
   image?: string;
-  isBanner?: boolean;
+  isBanner?: number;
 
-  constructor({ id, image, isBanner }: { id: number; image?: string; isBanner?: boolean }) {
+  constructor({ id, image, isBanner }: { id: number; image?: string; isBanner?: number }) {
     this.id = id;
     this.image = image;
     this.isBanner = isBanner;

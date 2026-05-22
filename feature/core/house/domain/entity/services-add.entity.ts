@@ -5,7 +5,7 @@ type ServicesAddData = {
   icon?: string;
   name_eng?: string;
   name_ind?: string;
-  is_addition?: boolean;
+  is_addition?: number;
 }
 
 export default class ServicesAdd {
@@ -13,7 +13,7 @@ export default class ServicesAdd {
   icon?: string;
   name_eng?: string;
   name_ind?: string;
-  is_addition?: boolean;
+  is_addition?: number;
 
   constructor(data: ServicesAddData) {
     this.id = data.id;

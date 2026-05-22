@@ -3,9 +3,9 @@ import { PreviewImageResponse } from "../response/preview-images.response";
 export default class PreviewImage {
   id: number;
   image?: string;
-  isBanner?: boolean;
+  isBanner?: number;
 
-  constructor({ id, image, isBanner }: { id: number; image?: string; isBanner?: boolean }) {
+  constructor({ id, image, isBanner }: { id: number; image?: string; isBanner?: number }) {
     this.id = id;
     this.image = image;
     this.isBanner = isBanner;
