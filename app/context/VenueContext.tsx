@@ -166,4 +166,16 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 		refreshVenueSlug: loadVenueSlug,
 		refreshVenueGallery: loadVenueGallery,
 	};
+
+	return (
+		<VenueContext.Provider value={value}>{children}</VenueContext.Provider>
+	);
 }
+
+export const useVenueContext = () => {
+	const context = React.useContext(VenueContext);
+	if (context === undefined) {
+		throw new Error("useVenueContext must be used within a VenueProvider");
+	}
+	return context;
+};
