@@ -6,6 +6,17 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+
   allowedDevOrigins: [
     "10.241.20.214",
     "127.0.0.1"
