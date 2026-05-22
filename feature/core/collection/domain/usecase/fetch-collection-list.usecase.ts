@@ -3,8 +3,9 @@ import { CollectionResponse } from "../response/collection-response";
 import { diResolve } from "@/feature/common/features.di";
 import CollectionRepo, { collectionRepoKey } from "../i-repo/collection.i-repo";
 import { collectionModuleKey } from "../../collection.module-key";
+import Collection from "@/feature/core/main/domain/entity/collection.entity";
 
-export default function fetchCollectionListUsecase(): ApiTask<CollectionResponse[]> {
+export default function fetchCollectionListUsecase(): ApiTask<Collection[]> {
   const repo = diResolve<CollectionRepo>(collectionModuleKey, collectionRepoKey);
   return repo.fetchCollectionList();
 }
