@@ -8,7 +8,13 @@ import fetchHouseUsecase from "@/feature/core/main/domain/usecase/fetch-house.us
 import fetchVenueUsecase from "@/feature/core/main/domain/usecase/fetch-venue.usecase";
 import { fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { createContext, useEffect, useState } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 
 interface MainContextType {
 	carousel: Carousel[];
@@ -52,13 +58,12 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 	const [venueLoading, setVenueLoading] = useState(true);
 	const [venueError, setVenueError] = useState<string | null>(null);
 
-	const loadCarousel = async () => {
+	const loadCarousel = useCallback(async () => {
 		setCarouselLoading(true);
 		setCarousel([]);
 		setCarouselError(null);
 
 		const result = await fetchCarouselUsecase()();
-
 		pipe(
 			result,
 			fold(
@@ -72,15 +77,14 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
-	const loadCollection = async () => {
+	const loadCollection = useCallback(async () => {
 		setCollectionLoading(true);
 		setCollection([]);
 		setCollectionError(null);
 
 		const result = await fetchCollectionUsecase()();
-
 		pipe(
 			result,
 			fold(
@@ -94,15 +98,14 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
-	const loadHouse = async () => {
+	const loadHouse = useCallback(async () => {
 		setHouseLoading(true);
 		setHouse([]);
 		setHouseError(null);
 
 		const result = await fetchHouseUsecase()();
-
 		pipe(
 			result,
 			fold(
@@ -116,15 +119,14 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
-	const loadVenue = async () => {
+	const loadVenue = useCallback(async () => {
 		setVenueLoading(true);
 		setVenue([]);
 		setVenueError(null);
 
 		const result = await fetchVenueUsecase()();
-
 		pipe(
 			result,
 			fold(
@@ -138,14 +140,14 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
 	useEffect(() => {
 		loadCarousel();
 		loadCollection();
 		loadHouse();
 		loadVenue();
-	}, []);
+	}, [loadCarousel, loadCollection, loadHouse, loadVenue]);
 
 	const value: MainContextType = {
 		carousel,
@@ -165,11 +167,12 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 		refreshHouse: loadHouse,
 		refreshVenue: loadVenue,
 	};
+
 	return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }
 
 export function useMainContext() {
-	const context = createContext(MainContext);
+	const context = useContext(MainContext);
 	if (context === undefined) {
 		throw new Error("useMainContext must be used within a MainProvider");
 	}

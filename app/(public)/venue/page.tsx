@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import VenueCard from "@/components/VenueCard";
 import VenueGallery from "@/components/VenueGallery";
@@ -12,14 +12,42 @@ import { useViewportHeight } from "@/hooks/useViewportHeight";
 import fetchVenueBannersUsecase from "@/feature/core/banner/domain/usecase/fetch-venue-banners.usecase";
 import { pipe } from "fp-ts/lib/function";
 import { fold } from "fp-ts/lib/Either";
+import { useVenueContext } from "@/app/context/VenueContext";
 
 const VenuePage = () => {
-	const { t } = useLanguage();
+	const { t, language } = useLanguage();
 	useViewportHeight();
 
-	const [venueBanner, setVenueBanner] = useState<Banner | null>(null);
-	const [bannerLoading, setBannerLoading] = useState(true);
-	const [bannerError, setBannerError] = useState<string | null>(null);
+	const {
+		venueBanner,
+		venueBannerError,
+		venueBannerLoading,
+		venuGallery,
+		venuGalleryError,
+		venuGalleryLoading,
+		venueList,
+		venueListError,
+		venueListLoading,
+	} = useVenueContext();
+
+	const titleParts = useMemo(() => {
+		const description = venueBanner?.getTitle(language);
+
+		if (!description) {
+			return {
+				firstPart: t.venue.hero.title[0],
+				secondPart: t.venue.hero.title[1],
+			};
+		}
+		const cleanText = description.replace(/<[^>]*>/g, "").trim();
+		const words = cleanText.split(/\s+/);
+		const midPoint = Math.ceil(words.length / 2);
+
+		return {
+			firstPart: words.slice(0, midPoint).join(" "),
+			secondPart: words.slice(midPoint).join(" "),
+		};
+	}, [venueBanner, language, t.venue.hero.title]);
 
 	const featureIcons = [
 		"/images/icons/build-white.png",
@@ -32,29 +60,6 @@ const VenuePage = () => {
 		"/images/icons/handshake-white.png",
 		"/images/icons/star-white.png",
 	];
-
-	useEffect(() => {
-		const loadBanner = async () => {
-			const result = await fetchVenueBannersUsecase()();
-			pipe(
-				result,
-				fold(
-					(failure) => {
-						console.error("Failed to load venue banners:", failure);
-						setBannerError(failure.message);
-						setBannerLoading(false);
-					},
-					(banners) => {
-						if (banners.length > 0) {
-							setVenueBanner(banners[0]);
-						}
-						setBannerLoading(false);
-					},
-				),
-			);
-		};
-		loadBanner();
-	}, []);
 
 	return (
 		<main className="w-full min-h-screen">
@@ -70,19 +75,41 @@ const VenuePage = () => {
 					/>
 					<div className="absolute inset-0 bg-black/50" />
 				</div> */}
+				{venueBannerLoading ? (
+					<div className="w-full h-full bg-linear-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse">
+						<div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent" />
+					</div>
+				) : (
+					<>
+						<div className="absolute inset-0 z-0">
+							<Image
+								src={venueBanner?.image || "/images/venue/venue-hero.webp"}
+								alt={
+									venueBanner?.getTitle(language) || "Tembi Venue Background"
+								}
+								fill
+								sizes="10vw"
+								priority
+								quality={90}
+								className="object-cover object-center"
+							/>
+							<div className="absolute inset-0 bg-black/50" />
+						</div>
+					</>
+				)}
 
 				<div className="relative z-10 h-full max-w-7xl mx-auto px-6 sm:px-8 flex flex-col justify-center">
 					<h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold leading-tight mb-4">
-						<span className="text-white">{t.venue.hero.title[0]}</span> <br />
-						<span className="text-[#96A66D]">{t.venue.hero.title[1]}</span>
+						<span className="text-white">{titleParts.firstPart}</span> <br />
+						<span className="text-[#96A66D]">{titleParts.secondPart}</span>
 					</h1>
 
 					<p className="text-white text-xl sm:text-2xl mb-2 font-light tracking-wide">
-						{t.venue.hero.subtitle}
+						{venueBanner?.getSubtitle(language) || t.venue.hero.subtitle}
 					</p>
 
 					<p className="text-[#96A66D] text-lg sm:text-xl mb-8 font-medium">
-						{t.venue.hero.quote}
+						{venueBanner?.getDescription(language) || t.venue.hero.quote}
 					</p>
 
 					<div className="max-w-3xl text-gray-200 text-base sm:text-lg leading-relaxed mb-10">
@@ -140,7 +167,7 @@ const VenuePage = () => {
 				</div>
 			</section>
 
-			<section className="py-20 bg-[#FFFDF5]">
+			{/* <section className="py-20 bg-[#FFFDF5]">
 				<div className="container mx-auto px-6">
 					<ScrollReveal animation="fadeUp" duration={800}>
 						<div className="text-center mb-16">
@@ -177,7 +204,51 @@ const VenuePage = () => {
 						))}
 					</div>
 				</div>
-			</section>
+			</section> */}
+			{!venueListLoading &&
+				!venueListError &&
+				venueList &&
+				venueList.length > 0 && (
+					<section className="py-20 bg-[#FFFDF5]">
+						<div className="container mx-auto px-6">
+							<ScrollReveal animation="fadeUp" duration={800}>
+								<div className="text-center mb-16">
+									<h2 className="text-4xl md:text-5xl font-serif text-[#2C2420] mb-4">
+										{t.venue.gallery.title}
+									</h2>
+									<p className="text-[#5C5C5C] max-w-2xl mx-auto">
+										{t.venue.gallery.desc}
+									</p>
+								</div>
+							</ScrollReveal>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+								{venueList.map((venue, idx) => (
+									<ScrollReveal
+										key={venue.slug}
+										animation="fadeUp"
+										delay={idx * 150}
+										duration={800}
+									>
+										<Link
+											href={`/venue/${venue.slug}`}
+											className="group block h-full"
+										>
+											<VenueCard
+												imageSrc={venue.imagebanner!}
+												title={venue.getName(language)!}
+												description={venue.getDescription(language)!}
+												capacity={venue.getCapacity(language)!}
+												facilities={venue.facilities!.map(
+													(f) => f.getName(language)!,
+												)}
+											/>
+										</Link>
+									</ScrollReveal>
+								))}
+							</div>
+						</div>
+					</section>
+				)}
 
 			<VenueGallery />
 

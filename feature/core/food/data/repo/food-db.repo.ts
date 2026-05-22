@@ -14,6 +14,7 @@ import { FoodHighlightResponse } from "../../domain/response/food-highlight-resp
 import FoodSlug from "../../domain/entity/food-slug.entity";
 import { FoodSlugResponse } from "../../domain/response/food-by-slug-response";
 import FoodCelebrate from "../../domain/entity/food-celebrate.entity";
+import { FoodCelebrateResponse } from "../../domain/response/food-celebrate-response";
 
 export default class FoodDbRepo implements FoodRepo {
   private endpoint: FoodEndpoint;
@@ -95,21 +96,48 @@ export default class FoodDbRepo implements FoodRepo {
         endpoint: this.endpoint.celebrate,
         method: "GET",
       }),
-      mapLeft((error) => new FoodFetchFailure("food celebrate", error.message)),
+      mapLeft((error) => {
+        console.error("[FoodCelebrate] Fetch failed:", error);
+        return new FoodFetchFailure("food celebrate", error.message);
+      }),
       chain((response) =>
         TE.tryCatch(
-          () => response.json() as Promise<ApiResponse<FoodCelebrate[]>>,
-          () => new FoodParseFailure("food celebrate", "Failed to parse JSON response")
+          async () => {
+            const json = await response.json();
+            console.log("[FoodCelebrate] Raw response:", json);
+            return json as ApiResponse<FoodCelebrateResponse[]>;
+          },
+          (error) => {
+            console.error("[FoodCelebrate] JSON parse failed:", error);
+            return new FoodParseFailure("food celebrate", "Failed to parse JSON response");
+          }
         )
       ),
-      chain((result) =>
-        Array.isArray(result.data)
-          ? TE.right(result.data.map((item) => FoodCelebrate.fromResponse(item)))
-          : TE.left(
+      chain((result) => {
+        console.log("[FoodCelebrate] Parsed data:", result.data);
+
+        if (!Array.isArray(result.data)) {
+          console.error("[FoodCelebrate] Expected array, got:", typeof result.data);
+          return TE.left(
             new FoodParseFailure("food celebrate", "Expected array but got different type")
-          )
-      ),
-      map((celebrates) => celebrates.map((celebrate) => new FoodCelebrate(celebrate)))
+          );
+        }
+
+        try {
+          const celebrates = result.data.map((item, index) => {
+            console.log(`[FoodCelebrate] Processing item ${index}:`, item);
+            return FoodCelebrate.fromResponse(item);
+          });
+
+          console.log("[FoodCelebrate] Final entities:", celebrates);
+          return TE.right(celebrates);
+        } catch (error) {
+          console.error("[FoodCelebrate] Entity mapping failed:", error);
+          return TE.left(
+            new FoodParseFailure("food celebrate", `Failed to map entities: ${error}`)
+          );
+        }
+      })
     );
   }
 }

@@ -1,6 +1,5 @@
 import ApiTask from "@/feature/common/data/api-task";
-import { CollectionResponse } from "../response/collection-response";
-import Collection from "@/feature/core/main/domain/entity/collection.entity";
+import Collection from "../entity/collection.entity";
 
 export default interface CollectionRepo {
   fetchCollectionList(): ApiTask<Collection[]>;

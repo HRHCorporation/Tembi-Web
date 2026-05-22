@@ -5,9 +5,9 @@ type FoodCelebrateData = {
   id: number;
   name_ind: string;
   name_eng: string;
-  description_ind: string;
-  description_eng: string;
-  image: string;
+  description_ind?: string;
+  description_eng?: string;
+  image?: string;
   items: FoodItem[];
 };
 
@@ -24,10 +24,10 @@ export default class FoodCelebrate {
     this.id = data.id;
     this.name_ind = data.name_ind;
     this.name_eng = data.name_eng;
-    this.description_ind = data.description_ind;
-    this.description_eng = data.description_eng;
-    this.image = data.image;
-    this.items = data.items;
+    this.description_ind = data.description_ind || "";
+    this.description_eng = data.description_eng || "";
+    this.image = data.image || "";
+    this.items = data.items || [];
   }
 
   getName(language: "id" | "en"): string {
@@ -54,6 +54,11 @@ export default class FoodCelebrate {
     return this.items;
   }
 
+  getImageUrl(baseUrl?: string): string {
+    if (!this.hasImage()) return "";
+    return `${baseUrl || ""}${this.image}`;
+  }
+
   static fromResponse(response: FoodCelebrateResponse): FoodCelebrate {
     return new FoodCelebrate({
       id: response.id,
@@ -62,7 +67,7 @@ export default class FoodCelebrate {
       description_ind: response.description_ind,
       description_eng: response.description_eng,
       image: response.image,
-      items: response.items.map((item) => FoodItem.fromResponse(item)),
+      items: response.items?.map((item) => FoodItem.fromResponse(item)) || [],
     });
   }
 }

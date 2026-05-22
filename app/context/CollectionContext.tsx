@@ -1,10 +1,10 @@
 import Banner from "@/feature/core/banner/domain/entity/banner.entity";
 import fetchCollectionBannersUsecase from "@/feature/core/banner/domain/usecase/fetch-collection.usecase";
+import Collection from "@/feature/core/collection/domain/entity/collection.entity";
 import fetchCollectionListUsecase from "@/feature/core/collection/domain/usecase/fetch-collection-list.usecase";
-import Collection from "@/feature/core/main/domain/entity/collection.entity";
 import { fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface CollectionContextType {
 	collectionBanner: Banner | null;
@@ -106,9 +106,11 @@ export function CollectionProvider({
 }
 
 export function useCollectionContext() {
-	const context = createContext(CollectionContext);
+	const context = useContext(CollectionContext);
 	if (context === undefined) {
-		throw new Error("useCollectionContext must be used within a CollectionProvider");
+		throw new Error(
+			"useCollectionContext must be used within a CollectionProvider",
+		);
 	}
 	return context;
 }

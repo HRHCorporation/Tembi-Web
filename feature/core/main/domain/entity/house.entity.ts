@@ -30,31 +30,31 @@ export default class House {
     this.description_eng = description_eng;
     this.slug = slug;
     this.is_recommendation = is_recommendation;
-    this.galleries = galleries;
+    this.galleries = galleries || [];
   }
 
-  getTitle(language: "id" | "en"): string | undefined {
-    return language === "id" ? this.title_ind : this.title_eng;
+  getTitle(language: "id" | "en"): string {
+    return (language === "id" ? this.title_ind : this.title_eng) || "";
   }
 
-  getDescription(language: "id" | "en"): string | undefined {
-    return language === "id" ? this.description_ind : this.description_eng;
+  getDescription(language: "id" | "en"): string {
+    return (language === "id" ? this.description_ind : this.description_eng) || "";
   }
 
   getIsRecommendation(): boolean {
     return this.is_recommendation === 1;
   }
 
-  getGalleries(): AllGaleries[] | undefined {
-    return this.galleries;
+  getGalleries(): AllGaleries[] {
+    return this.galleries || [];
   }
 
   static fromResponse(response: HouseResponse): House {
-    const galleries = response.galleries?.map(gallery => new AllGaleries({
-      id: gallery.id,
-      image: gallery.image,
-      isBanner: gallery.is_banner
-    }));
+
+    const galleries = response.galleries?.map(gallery =>
+      AllGaleries.fromResponse(gallery)
+    ) || [];
+
     return new House({
       id: response.id,
       title_ind: response.title_ind,
@@ -63,7 +63,7 @@ export default class House {
       description_eng: response.description_eng,
       slug: response.slug,
       is_recommendation: response.is_recommendation,
-      galleries: galleries
+      galleries: galleries,
     });
   }
 }

@@ -1,19 +1,33 @@
 import { OurMenuResponse } from '../response/our-menu.response';
 export default class OurMenu {
   id: number;
-  image: string
+  image?: string;
   name_eng: string;
-  name_ind: string
-  description_eng: string;
-  description_ind: string;
+  name_ind: string;
+  description_eng?: string;
+  description_ind?: string;
 
-  constructor({ id, image, name_eng, name_ind, description_eng, description_ind }: { id: number; image: string; name_eng: string; name_ind: string; description_eng: string; description_ind: string }) {
+  constructor({
+    id,
+    image,
+    name_eng,
+    name_ind,
+    description_eng,
+    description_ind
+  }: {
+    id: number;
+    image?: string;
+    name_eng: string;
+    name_ind: string;
+    description_eng?: string;
+    description_ind?: string;
+  }) {
     this.id = id;
-    this.image = image;
+    this.image = image || "";
     this.name_eng = name_eng;
     this.name_ind = name_ind;
-    this.description_eng = description_eng;
-    this.description_ind = description_ind;
+    this.description_eng = description_eng || "";
+    this.description_ind = description_ind || "";
   }
 
   getName(language: "id" | "en"): string {
@@ -21,7 +35,8 @@ export default class OurMenu {
   }
 
   getDescription(language: "id" | "en"): string {
-    return language === "id" ? this.description_ind : this.description_eng;
+    const desc = language === "id" ? this.description_ind : this.description_eng;
+    return desc || "";
   }
 
   hasImage(): boolean {

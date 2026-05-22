@@ -7,7 +7,26 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    unoptimized: true,
     remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '10.241.20.214',
+        port: '3000',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '3000',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
@@ -16,11 +35,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  allowedDevOrigins: [
-    "10.241.20.214",
-    "127.0.0.1"
-  ],
 };
 
 export default nextConfig;

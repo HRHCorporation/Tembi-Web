@@ -1,17 +1,18 @@
 import { CollectionResponse } from "../response/collection-response";
+import CollectionItem from "./collection-item.entity";
 
 type CollectionData = {
   id: number;
   name_ind?: string;
   name_eng?: string;
-  items?: Collection[];
+  items?: CollectionItem[];
 }
 
 export default class Collection {
   id: number;
   name_ind: string;
   name_eng: string;
-  items: Collection[];
+  items: CollectionItem[];
 
   constructor(data: CollectionData) {
     this.id = data.id;
@@ -32,13 +33,13 @@ export default class Collection {
     return this.items.length;
   }
 
-  getItems(): Collection[] {
+  getItems(): CollectionItem[] {
     return this.items;
   }
 
   static fromResponse(response: CollectionResponse): Collection {
     const items = response.items
-      ? response.items.map((item) => Collection.fromResponse(item))
+      ? response.items.map((item) => CollectionItem.fromResponse(item))
       : [];
     return new Collection({
       id: response.id,

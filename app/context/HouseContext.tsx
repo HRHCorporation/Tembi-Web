@@ -12,7 +12,7 @@ import fetchServicesAddUsecase from "@/feature/core/house/domain/usecase/fetch-s
 import fetchServicesUsecase from "@/feature/core/house/domain/usecase/fetch-services.usecase";
 import { fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface HouseContextType {
 	houseBanner: Banner | null;
@@ -218,7 +218,7 @@ export function HouseProvider({ children }: { children: React.ReactNode }) {
 		loadServiceAdd();
 		loadServices();
 		loadHouseRecommendation();
-	});
+	}, []);
 
 	const value: HouseContextType = {
 		houseBanner,
@@ -253,9 +253,9 @@ export function HouseProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useHouseContext() {
-	const context = createContext(HouseContext);
+	const context = useContext(HouseContext);
 	if (context === undefined) {
-		throw new Error("useFoodContext must be used within a FoodProvider");
+		throw new Error("useHouseContext must be used within a HouseProvider");
 	}
 	return context;
 }

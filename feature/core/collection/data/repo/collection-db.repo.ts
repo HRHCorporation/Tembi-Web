@@ -8,7 +8,7 @@ import FetchHandler from "@/feature/common/data/fetch-handler";
 import { CollectionFetchFailure, CollectionParseFailure } from '../../domain/failure/collection-failure';
 import { ApiResponse } from "@/types/api-response.types";
 import { pipe } from "fp-ts/lib/function";
-import Collection from '../../domain/entity/collection.response';
+import Collection from '../../domain/entity/collection.entity';
 
 export default class CollectionDbRepo implements CollectionRepo {
   private endpoint: CollectionEndpoint;
@@ -19,7 +19,7 @@ export default class CollectionDbRepo implements CollectionRepo {
     this.fetchHanlder = new FetchHandler();
   }
 
-  fetchCollectionList(): ApiTask<CollectionResponse[]> {
+  fetchCollectionList(): ApiTask<Collection[]> {
     return pipe(
       this.fetchHanlder.fetchWithoutAuthWithRepsonseStatus({
         endpoint: this.endpoint.collection,
