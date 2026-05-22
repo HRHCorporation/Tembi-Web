@@ -1,4 +1,4 @@
-import { AminitiesResponse } from "./amenities.response";
+import { AmenitiesResponse } from "./amenities.response";
 
 export type ServicesResponse = {
   id: number;
@@ -6,5 +6,5 @@ export type ServicesResponse = {
   name_eng?: string;
   name_ind?: string;
   is_addition?: boolean;
-  amenities?: AminitiesResponse[];
+  amenities?: AmenitiesResponse[];
 }
