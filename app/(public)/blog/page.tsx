@@ -171,7 +171,7 @@ export default function BlogPage() {
                     }),
                     imageUrl: post.thumbnail
                   }}
-                  readMoreText={t.nav.readMore || "BACA SELENGKAPNYA"}
+                  readMoreText={(t.nav as any)?.readMore || "BACA SELENGKAPNYA"}
                 />
               </ScrollReveal>
             ))}
