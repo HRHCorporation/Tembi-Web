@@ -6,6 +6,7 @@ import Image from "next/image";
 import { AmenitiesSection } from "@/components/AmenitiesSection";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useHouseContext } from "@/app/context/HouseContext";
 
 interface RoomItem {
   id: number;
@@ -24,7 +25,26 @@ interface RoomItem {
 }
 
 export default function Catalog() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const {
+    houseBanner,
+    bannerLoading,
+    bannerError,
+    houseList,
+    houseListLoading,
+    houseListError,
+    houseRecommendation,
+    houseRecommendationLoading,
+    houseRecommendationError,
+  } = useHouseContext();
+
+  const getGridClass = () => {
+    const count = houseList.length;
+    if (count === 1) return "grid grid-cols-1 max-w-md mx-auto";
+    if (count === 2) return "grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto";
+    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+  };
 
   const rooms = t.house.item as unknown as RoomItem[];
   const featuredRooms = rooms.filter((room) => room.layoutType === "featured");
@@ -34,24 +54,31 @@ export default function Catalog() {
     <main className="bg-white">
       <div className="relative w-full">
         <div className="relative h-175 w-full">
-          <Image
-            src="/images/rooms/cover.webp"
-            alt="Room Background"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/40 z-10"></div>
-
+          {bannerLoading ? (
+            <div className="w-full h-full bg-linear-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse">
+              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent" />
+            </div>
+          ) : (
+            <>
+              <Image
+                src={houseBanner?.image || "/images/homepage/content3.webp"}
+                alt={houseBanner?.getTitle(language) || "House Banner"}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-black/40 z-10"></div>
+            </>
+          )}
           <div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-center pb-20">
             <div className="text-sm text-gray-200 mb-4 font-medium">
               {t.house.hero.address[0]} &gt; {t.house.hero.address[1]}
             </div>
             <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight">
-              {t.house.hero.title}
+              {houseBanner?.getTitle(language) || t.house.hero.title}
             </h1>
             <p className="max-w-2xl text-lg text-gray-100 mb-8 leading-relaxed">
-              {t.house.hero.desc}
+              {houseBanner?.getDescription(language) || t.house.hero.desc}
             </p>
             <div>
               <button className="bg-tembi hover:bg-darktembi text-white px-8 py-3 rounded transition-colors duration-300 flex items-center gap-3 font-medium">
@@ -117,7 +144,7 @@ export default function Catalog() {
           </ScrollReveal>
 
           <div className="space-y-12 mb-20">
-            {featuredRooms.map((room, idx) => (
+            {/* {featuredRooms.map((room, idx) => (
               <ScrollReveal
                 key={room.id}
                 animation="fadeUp"
@@ -136,27 +163,54 @@ export default function Catalog() {
                   recommendationText={t.homepage.accommodation.rec}
                 />
               </ScrollReveal>
+            ))} */}
+            {houseRecommendation.map((house, idx) => (
+              <ScrollReveal
+                key={house.id}
+                animation="fadeUp"
+                delay={idx * 150}
+                duration={800}
+              >
+                <FeaturedRoomCard
+                  slug={house.slug || ""}
+                  name={house.getTitle(language) || ""}
+                  description={house.getDescription(language) || ""}
+                  imageUrl={
+                    house.imagebanner || "/images/homepage/content3.webp"
+                  }
+                  size={house.spacious_room || "-"}
+                  guests={house.number_guest || 0}
+                  recommendationText={t.homepage.accommodation.rec}
+                  facilities={house.getFacilities().map((facility) => ({
+                    name: facility.getName(language) || "",
+                    icon: facility.getIcon() || "",
+                  }))}
+                />
+              </ScrollReveal>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {standardRooms.map((room, idx) => (
+          <div className={`${getGridClass()} gap-8`}>
+            {houseList.map((house, idx) => (
               <ScrollReveal
-                key={room.id}
+                key={house.id}
                 animation="fadeUp"
                 delay={idx * 150}
                 duration={800}
               >
                 <StandardRoomCard
-                  slug={room.slug}
-                  imageUrl={room.imageUrl}
-                  badge={room.badge}
-                  name={room.name}
-                  description={room.description}
-                  size={room.details.size}
-                  guests={room.details.guests}
-                  view={room.details.view}
-                  detailsIcon={room.detailsIcons}
+                  slug={house.slug || ""}
+                  imageUrl={house.imagebanner || ""}
+                  badge={house.tiers_name || t.house.standardCard.buttonText}
+                  name={house.getTitle(language) || ""}
+                  description={house.getDescription(language) || ""}
+                  size={house.spacious_room || ""}
+                  facilities={house.getFacilities().map((facility) => ({
+                    name: facility.getName(language) || "",
+                    icon: facility.getIcon() || "",
+                  }))}
+                  guests={house.number_guest || 0}
+                  galleryCount={house.gallery_count || 0}
                 />
               </ScrollReveal>
             ))}

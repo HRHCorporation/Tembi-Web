@@ -6,7 +6,7 @@ type ServicesAddData = {
   name_eng?: string;
   name_ind?: string;
   is_addition?: number;
-}
+};
 
 export default class ServicesAdd {
   id: number;
@@ -31,13 +31,25 @@ export default class ServicesAdd {
     }
   }
 
+  getIcon(): string {
+    if (!this.icon || this.icon.trim() === "") {
+      return "/images/icons/default-amenity.png";
+    }
+
+    if (this.icon.startsWith("/images")) {
+      return this.icon;
+    }
+
+    return `/images/icons/${this.icon}`;
+  }
+
   static fromResponse(data: ServicesAddResponse): ServicesAdd {
     return new ServicesAdd({
       id: data.id,
       icon: data.icon,
       name_eng: data.name_eng,
       name_ind: data.name_ind,
-      is_addition: data.is_addition
+      is_addition: data.is_addition,
     });
   }
 }

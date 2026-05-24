@@ -168,7 +168,6 @@ export function FoodProvider({ children }: { children: React.ReactNode }) {
 			return;
 		}
 
-		console.log("🔄 Fetching food with slug:", slug);
 		setFoodSlugLoading(true);
 		setFoodSlugError(null);
 

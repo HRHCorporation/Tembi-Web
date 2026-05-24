@@ -12,7 +12,7 @@ type RoomRecommendationData = {
   slug?: string;
   imagebanner?: string;
   facilities?: Facilities[];
-}
+};
 
 export default class RoomRecommendation {
   id: number;
@@ -26,17 +26,17 @@ export default class RoomRecommendation {
   imagebanner?: string;
   facilities?: Facilities[];
 
-  constructor({ id, title_ind, title_eng, description_ind, description_eng, number_guest, spacious_room, slug, imagebanner, facilities }: RoomRecommendationData) {
-    this.id = id;
-    this.title_ind = title_ind;
-    this.title_eng = title_eng;
-    this.description_ind = description_ind;
-    this.description_eng = description_eng;
-    this.number_guest = number_guest;
-    this.spacious_room = spacious_room;
-    this.slug = slug;
-    this.imagebanner = imagebanner;
-    this.facilities = facilities;
+  constructor(data: RoomRecommendationData) {
+    this.id = data.id || 0;
+    this.title_ind = data.title_ind || "";
+    this.title_eng = data.title_eng || "";
+    this.description_ind = data.description_ind || "";
+    this.description_eng = data.description_eng || "";
+    this.number_guest = data.number_guest || 0;
+    this.spacious_room = data.spacious_room || "";
+    this.slug = data.slug || "";
+    this.imagebanner = data.imagebanner || "";
+    this.facilities = data.facilities || [];
   }
 
   getTitle(language: "id" | "en"): string | undefined {
@@ -47,7 +47,16 @@ export default class RoomRecommendation {
     return language === "id" ? this.description_ind : this.description_eng;
   }
 
-  static fromResponse(response: RoomRecommendationResponse): RoomRecommendation {
+  getFacilities(): Facilities[] {
+    return this.facilities || [];
+  }
+
+  static fromResponse(
+    response: RoomRecommendationResponse,
+  ): RoomRecommendation {
+    const facilities =
+      response.facilities?.map((facility) => Facilities.fromResponse(facility)) ||
+      [];
     return new RoomRecommendation({
       id: response.id,
       title_ind: response.title_ind,
@@ -58,7 +67,7 @@ export default class RoomRecommendation {
       spacious_room: response.spacious_room,
       slug: response.slug,
       imagebanner: response.imagebanner,
-      facilities: (response.facilities || []) as Facilities[]
+      facilities: facilities,
     });
   }
 }

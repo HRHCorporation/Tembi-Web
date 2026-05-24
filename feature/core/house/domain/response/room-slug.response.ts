@@ -20,6 +20,6 @@ export type RoomSlugResponse = {
   imagebanner?: string;
   facilities?: FacilitiesResponse[];
   galleries?: AllGalleryResponse[];
-  policies?: PoliciesResponse[];
+  policies?: PoliciesResponse;
   house_rules?: HouseRulesResponse[];
 }

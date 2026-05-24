@@ -1,75 +1,75 @@
 "use client";
 
-import React, { use } from "react";
+import React, { use, useEffect } from "react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useHouseContext } from "@/app/context/HouseContext";
 
-const formatRupiah = (price: number) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 2,
-  }).format(price);
-};
+// const formatRupiah = (price: number) => {
+//   return new Intl.NumberFormat("id-ID", {
+//     style: "currency",
+//     currency: "IDR",
+//     minimumFractionDigits: 2,
+//   }).format(price);
+// };
 
-const getAmenityIcon = (amenity: string) => {
-  const lower = amenity.toLowerCase();
+// const getAmenityIcon = (amenity: string) => {
+//   const lower = amenity.toLowerCase();
 
-  let iconPath = "/images/icons/star.png";
+//   let iconPath = "/images/icons/star.png";
 
-  if (lower.includes("wifi")) iconPath = "/images/icons/wifi-green.png";
-  else if (lower.includes("air") || lower.includes("snow"))
-    iconPath = "/images/icons/snow-green.png";
-  else if (lower.includes("bath") || lower.includes("mandi"))
-    iconPath = "/images/icons/bathub-green.png";
-  else if (
-    lower.includes("rice") ||
-    lower.includes("taman") ||
-    lower.includes("garden") ||
-    lower.includes("sawah")
-  )
-    iconPath = "/images/icons/leaf-green.png";
-  else if (lower.includes("bar") || lower.includes("mini"))
-    iconPath = "/images/icons/minibar-green.png";
-  else if (lower.includes("terrace") || lower.includes("teras"))
-    iconPath = "/images/icons/terrace-green.png";
-  else if (lower.includes("pool") || lower.includes("kolam"))
-    iconPath = "/images/icons/swim-green.png";
+//   if (lower.includes("wifi")) iconPath = "/images/icons/wifi-green.png";
+//   else if (lower.includes("air") || lower.includes("snow"))
+//     iconPath = "/images/icons/snow-green.png";
+//   else if (lower.includes("bath") || lower.includes("mandi"))
+//     iconPath = "/images/icons/bathub-green.png";
+//   else if (
+//     lower.includes("rice") ||
+//     lower.includes("taman") ||
+//     lower.includes("garden") ||
+//     lower.includes("sawah")
+//   )
+//     iconPath = "/images/icons/leaf-green.png";
+//   else if (lower.includes("bar") || lower.includes("mini"))
+//     iconPath = "/images/icons/minibar-green.png";
+//   else if (lower.includes("terrace") || lower.includes("teras"))
+//     iconPath = "/images/icons/terrace-green.png";
+//   else if (lower.includes("pool") || lower.includes("kolam"))
+//     iconPath = "/images/icons/swim-green.png";
 
-  return (
-    <Image
-      src={iconPath}
-      alt={amenity}
-      width={20}
-      height={20}
-      className="object-contain"
-    />
-  );
-};
+//   return (
+//     <Image
+//       src={iconPath}
+//       alt={amenity}
+//       width={20}
+//       height={20}
+//       className="object-contain"
+//     />
+//   );
+// };
 
-export default function RoomDetail({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { t } = useLanguage();
-  const { slug } = use(params);
+export default function RoomDetail() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const { houseSlug, houseSlugLoading, houseSlugError, refreshHouseSlug } =
+    useHouseContext();
+  const { t, language } = useLanguage();
 
-  const room = t.house.item.find((v) => v.slug === slug);
-
-  if (!room) {
-    return notFound();
-  }
+  useEffect(() => {
+    if (slug) {
+      refreshHouseSlug(slug);
+    }
+  }, [slug, refreshHouseSlug]);
 
   return (
     <main className="bg-[#F8F9FA] min-h-screen pb-20">
       <section className="relative h-[60vh] min-h-125 w-full">
         <Image
-          src={room.imageUrl}
-          alt={room.name}
+          src={houseSlug?.imagebanner || "/images/homepage/content3.webp"}
+          alt={houseSlug?.getTitle(language) || "House Banner"}
           fill
           className="object-cover"
           priority
@@ -94,10 +94,10 @@ export default function RoomDetail({
             </div>
 
             <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-2 drop-shadow-md">
-              {room.name}
+              {houseSlug?.getTitle(language) || "House Name"}
             </h1>
             <p className="text-gray-300 text-lg font-light tracking-wide">
-              {room.tagline}
+              {houseSlug?.getSubtitle(language) || "House Tagline"}
             </p>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function RoomDetail({
           <div className="flex flex-col md:flex-row justify-between items-start mb-8">
             <div>
               <h2 className="text-3xl font-serif font-bold text-gray-800 mb-4">
-                {room.name}
+                {houseSlug?.getTitle(language) || "House Name"}
               </h2>
 
               <div className="flex items-center gap-6 text-gray-500 text-sm font-medium">
@@ -121,7 +121,7 @@ export default function RoomDetail({
                       className="object-contain"
                     />
                   </div>
-                  <span>{room.details.bed}</span>
+                  <span>{houseSlug?.mattress_name}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function RoomDetail({
                     />
                   </div>
                   <span>
-                    {room.details.guests} {t.houseDetail.guest}
+                    {houseSlug?.number_guest} {t.houseDetail.guest}
                   </span>
                 </div>
 
@@ -147,14 +147,14 @@ export default function RoomDetail({
                       className="object-contain"
                     />
                   </div>
-                  <span>{room.details.size}</span>
+                  <span>{houseSlug?.spacious_room}</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-6 md:mt-0 text-left md:text-right">
               <div className="text-3xl font-bold text-[#8B9D68]">
-                {formatRupiah(room.price)}
+                {houseSlug?.getFormattedPrice()}
               </div>
               <p className="text-gray-400 text-sm mt-1">
                 {t.houseDetail.night}
@@ -175,16 +175,16 @@ export default function RoomDetail({
               {t.houseDetail.facilities}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {room.amenities.map((amenity, index) => (
+              {houseSlug?.facilities.map((amenity, index) => (
                 <div
                   key={index}
                   className="flex items-center gap-3 p-4 bg-[#F8F9FA] rounded-lg"
                 >
                   <div className="text-[#8B9D68] opacity-80">
-                    {getAmenityIcon(amenity)}
+                    {amenity.getIcon()}
                   </div>
                   <span className="text-gray-600 text-sm font-medium">
-                    {amenity}
+                    {amenity.getName(language)}
                   </span>
                 </div>
               ))}
@@ -203,7 +203,7 @@ export default function RoomDetail({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-            {room.galleryImages?.map((imageSrc, index) => {
+            {houseSlug?.galleries?.map((imageSrc, index) => {
               const isFirst = index === 0;
 
               return (
@@ -214,8 +214,8 @@ export default function RoomDetail({
                   `}
                 >
                   <Image
-                    src={imageSrc}
-                    alt={`${room.name} room ${index + 1}`}
+                    src={imageSrc.image || "/images/homepage/content3.webp"}
+                    alt={`${houseSlug?.getTitle(language)} room ${index + 1}`}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -247,7 +247,12 @@ export default function RoomDetail({
                       className="object-contain"
                     />
                   </div>
-                  <span>Check-in: {room.policies.checkIn}</span>
+                  <span>
+                    Check-in:{" "}
+                    {houseSlug?.policies.CHECKIN_CHECKOUT.map((policy) =>
+                      policy.getName(language),
+                    ).join(", ")}
+                  </span>
                 </li>
                 <li className="flex items-center gap-3">
                   <div className="relative w-4 h-4 opacity-70">
