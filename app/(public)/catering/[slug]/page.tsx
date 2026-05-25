@@ -27,14 +27,33 @@ export default function CateringDetailPage() {
 		<main className="min-h-screen w-full bg-white overflow-x-hidden">
 			<section className="relative h-screen w-full overflow-hidden">
 				<div className="absolute inset-0">
-					<Image
+					{/* <Image
 						src="/images/foods/buffet-bg.webp"
 						alt="Buffet Catering Background"
 						fill
 						priority
 						className="object-cover object-center"
 						quality={90}
-					/>
+					/> */}
+					{foodSlug?.image ? (
+						<Image
+							src={foodSlug.image}
+							alt="Buffet Catering Background"
+							fill
+							priority
+							className="object-cover object-center"
+							quality={90}
+						/>
+					) : (
+						<Image
+							src="/images/foods/buffet-bg.webp"
+							alt="Buffet Catering Background"
+							fill
+							priority
+							className="object-cover object-center"
+							quality={90}
+						/>
+					)}
 					<div className="absolute inset-0 bg-black/50 z-10" />
 				</div>
 				<div className="relative z-20 flex h-full flex-col justify-center px-6 md:px-12 lg:px-24">

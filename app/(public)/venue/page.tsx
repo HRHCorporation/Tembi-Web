@@ -103,19 +103,19 @@ const VenuePage = () => {
 						<span className="text-white">{titleParts.firstPart}</span> <br />
 						<span className="text-[#96A66D]">{titleParts.secondPart}</span>
 					</h1>
-
 					<p className="text-white text-xl sm:text-2xl mb-2 font-light tracking-wide">
 						{venueBanner?.getSubtitle(language) || t.venue.hero.subtitle}
 					</p>
-
-					<p className="text-[#96A66D] text-lg sm:text-xl mb-8 font-medium">
-						{venueBanner?.getDescription(language) || t.venue.hero.quote}
-					</p>
-
+					<p
+						className="text-[#96A66D] text-lg sm:text-xl mb-8 font-medium"
+						dangerouslySetInnerHTML={{
+							__html:
+								venueBanner?.getDescription(language) || t.venue.hero.quote,
+						}}
+					/>
 					<div className="max-w-3xl text-gray-200 text-base sm:text-lg leading-relaxed mb-10">
 						<p>{t.venue.hero.desc}</p>
 					</div>
-
 					<div>
 						<button className="flex items-center gap-3 bg-[#8F9F6A] hover:bg-[#7d8c5c] text-white px-8 py-3.5 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
 							<div className="relative w-5 h-5">

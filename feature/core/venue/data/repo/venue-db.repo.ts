@@ -10,6 +10,7 @@ import { VenueFetchFailure } from "../../domain/failure/venue-failure";
 import { ApiResponse } from "@/types/api-response.types";
 import { VenueResponse } from "../../domain/response/venue-list.response";
 import * as TE from "fp-ts/lib/TaskEither";
+import VenueGallery from "../../domain/entity/venue-gallery.entity";
 
 
 export default class VenueDbRepo implements VenueRepo {
@@ -41,7 +42,7 @@ export default class VenueDbRepo implements VenueRepo {
       map((venues) => venues.map((venue) => new Venue(venue)))
     );
   }
-  fetchGalleryVenueList(): ApiTask<string[]> {
+  fetchGalleryVenueList(): ApiTask<VenueGallery> {
     return pipe(
       this.fetchHandler.fetchWithoutAuthWithRepsonseStatus({
         endpoint: this.endpoint.galleryVenue,
@@ -58,7 +59,8 @@ export default class VenueDbRepo implements VenueRepo {
         Array.isArray(result.data)
           ? TE.right(result.data)
           : TE.left(new VenueFetchFailure("gallery venue list", "Expected array but got different type"))
-      )
+      ),
+      map((images) => VenueGallery.fromResponse(images))
     );
   }
   fetchVenueBySlug(slug: string): ApiTask<VenueBySlug | null> {

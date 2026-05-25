@@ -4,10 +4,11 @@ import VenueBySlug from "@/feature/core/venue/domain/entity/venue-by-slug.entity
 import Venue from "@/feature/core/venue/domain/entity/venue-list.entity";
 import { pipe } from "fp-ts/lib/function";
 import { fold } from "fp-ts/lib/Either";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import fetchVenueUsecase from "@/feature/core/venue/domain/usecase/fetch-venue-list.usecase";
 import fetchVenueBySlugUsecase from "@/feature/core/venue/domain/usecase/fetch-venue-by-slug.usecase";
 import fetchGalleryVenueListUsecase from "@/feature/core/venue/domain/usecase/fetch-gallery-venue-list.usecase";
+import VenueGallery from "@/feature/core/venue/domain/entity/venue-gallery.entity";
 
 interface VenueContextType {
 	venueBanner: Banner | null;
@@ -22,7 +23,7 @@ interface VenueContextType {
 	venueSlugLoading: boolean;
 	venueSlugError: string | null;
 
-	venuGallery: string[] | null;
+	venuGallery: VenueGallery | null;
 	venuGalleryLoading: boolean;
 	venuGalleryError: string | null;
 
@@ -47,11 +48,11 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 	const [venueSlugLoading, setVenueSlugLoading] = useState(true);
 	const [venueSlugError, setVenueSlugError] = useState<string | null>(null);
 
-	const [venuGallery, setVenuGallery] = useState<string[] | null>(null);
+	const [venuGallery, setVenuGallery] = useState<VenueGallery | null>(null);
 	const [venuGalleryLoading, setVenuGalleryLoading] = useState(true);
 	const [venuGalleryError, setVenuGalleryError] = useState<string | null>(null);
 
-	const loadBanner = async () => {
+	const loadBanner = useCallback(async () => {
 		setVenueBannerLoading(true);
 		setVenueBanner(null);
 		setVenueBannerError(null);
@@ -71,9 +72,9 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
-	const loadVenueList = async () => {
+	const loadVenueList = useCallback(async () => {
 		setVenueListLoading(true);
 		setVenueList(null);
 		setVenueListError(null);
@@ -93,9 +94,9 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
-	const loadVenueGallery = async () => {
+	const loadVenueGallery = useCallback(async () => {
 		setVenuGalleryLoading(true);
 		setVenuGallery(null);
 		setVenuGalleryError(null);
@@ -105,19 +106,19 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 		pipe(
 			result,
 			fold(
-				(error) => {
-					setVenuGalleryError(error.message);
+				(failure) => {
+					setVenuGalleryError(failure.message);
 					setVenuGalleryLoading(false);
 				},
-				(galleryList) => {
-					setVenuGallery(galleryList);
+				(gallery) => {
+					setVenuGallery(gallery);
 					setVenuGalleryLoading(false);
 				},
 			),
 		);
-	};
+	}, []);
 
-	const loadVenueSlug = async (slug: string) => {
+	const loadVenueSlug = useCallback(async (slug: string) => {
 		if (!slug) {
 			console.warn("Slug is empty, skipping fetchVenueBySlug");
 		}
@@ -140,7 +141,7 @@ export function VenueProvider({ children }: { children: React.ReactNode }) {
 				},
 			),
 		);
-	};
+	}, []);
 
 	useEffect(() => {
 		loadBanner();

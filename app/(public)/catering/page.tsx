@@ -75,14 +75,15 @@ export default function FoodPage() {
 						<h1 className="font-serif text-6xl font-bold text-white mb-6 leading-none drop-shadow-lg">
 							{title || t.foods.hero.title[0]}
 						</h1>
-
 						<p className="font-serif italic text-lg text-gray-200 mb-6 tracking-wide">
 							{subtitle || t.foods.hero.subtitle}
 						</p>
-
-						<p className="text-base text-gray-300 leading-relaxed max-w-xl">
-							{description || t.foods.hero.desc}
-						</p>
+						<p
+							className="text-base text-gray-300 leading-relaxed max-w-xl"
+							dangerouslySetInnerHTML={{
+								__html: description || t.foods.hero.desc,
+							}}
+						/>
 					</div>
 
 					<div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
