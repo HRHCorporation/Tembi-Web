@@ -8,6 +8,7 @@ import { VenueProvider } from "./VenueContext";
 import { MainProvider } from "./MainContext";
 import { CollectionProvider } from "./CollectionContext";
 import { HouseProvider } from "./HouseContext";
+import { HistoryProvider } from "./HistoryContext";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
 	// return (
@@ -29,7 +30,9 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 						<EventProvider>
 							<FoodProvider>
 								<HouseProvider>
-									<VenueProvider>{children}</VenueProvider>
+									<VenueProvider>
+										<HistoryProvider>{children}</HistoryProvider>
+									</VenueProvider>
 								</HouseProvider>
 							</FoodProvider>
 						</EventProvider>
