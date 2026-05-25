@@ -4,6 +4,9 @@ const pool = mysql.createPool({
     uri: process.env.DATABASE_URL_WEB,
     waitForConnections: true,
     connectionLimit: 10,
+    ssl: {
+        rejectUnauthorized: true,
+    }
 });
 
 export default pool;
