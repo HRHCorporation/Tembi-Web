@@ -1,5 +1,6 @@
 import serverConfigs from "@/bootstrap/configs/server-configs";
 import Endpoint from "../endpoint";
+import publicConfigs from "@/bootstrap/configs/public-configs";
 
 export default class BackendEndpoint extends Endpoint {
   private loginEndpoint: string;
@@ -10,8 +11,7 @@ export default class BackendEndpoint extends Endpoint {
 
   constructor() {
     super({
-      apiVersion: "v1",
-      baseUrl: serverConfigs.env.backendApi.url,
+      baseUrl: publicConfigs.api.baseUrl,
     });
     this.loginEndpoint = "auth/login";
   }

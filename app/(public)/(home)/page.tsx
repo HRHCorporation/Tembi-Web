@@ -8,9 +8,19 @@ import { useLanguage } from "../../context/LanguageContext";
 import HeroImage from "./components/HeroImage";
 import Introduction from "./components/Introduction";
 import Accomodation from "./components/Accomodation";
+import { useMainContext } from "@/app/context/MainContext";
 
 export default function HomePage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const {
+    collection,
+    collectionLoading,
+    carouselError,
+    venue,
+    venueLoading,
+    venueError,
+  } = useMainContext();
 
   const heritageFeatures = [
     {
@@ -213,176 +223,218 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        <section className="py-24 bg-white border-t border-gray-50">
-          <div className="container mx-auto px-6">
-            <ScrollReveal animation="fadeUp" duration={800}>
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <h4 className="text-xs font-bold tracking-[0.2em] text-[#8B9B6D] uppercase mb-3">
-                  {t.homepage.venue.head}
-                </h4>
-                <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mb-6">
-                  {t.homepage.venue.title}
-                </h2>
-                <p className="text-gray-600 leading-relaxed">
-                  {t.homepage.venue.desc}
-                </p>
-              </div>
-            </ScrollReveal>
-            <div className="grid md:grid-cols-2 gap-10">
-              {eventPackages.map((evt, index) => (
-                <ScrollReveal
-                  key={index}
-                  animation="fadeUp"
-                  delay={index * 200}
-                  duration={800}
-                >
-                  <div className="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div className="relative h-72 w-full overflow-hidden">
-                      <Image
-                        src={evt.image}
-                        alt={evt.title}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-700"
-                      />
-                    </div>
-                    <div className="p-8 md:p-10 flex flex-col grow">
-                      <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">
-                        {evt.title}
-                      </h3>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-8 grow">
-                        {evt.description}
-                      </p>
-                      <div className="space-y-4 mb-8">
-                        {evt.features.map((feature, idx) => (
-                          <div key={idx} className="flex items-center gap-3">
-                            <div className="relative w-4 h-4 shrink-0 opacity-60">
-                              <Image
-                                src={feature.icon}
-                                alt="icon"
-                                fill
-                                className="object-contain"
-                              />
-                            </div>
-                            <span className="text-sm text-gray-600 font-medium">
-                              {feature.text}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                      <div>
-                        <Link
-                          href="/venue"
-                          className="bg-tembi hover:bg-darktembi text-white text-sm font-medium py-3 px-8 rounded-sm transition-colors w-full md:w-auto"
-                        >
-                          {evt.buttonText}
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section className="py-20 bg-white border-t border-gray-50">
-          <div className="container mx-auto px-6 md:px-12">
-            <ScrollReveal animation="fadeUp" duration={800}>
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6">
-                  {t.homepage.collection.title}
-                </h2>
-                <p className="text-gray-500 leading-relaxed text-lg">
-                  {t.homepage.collection.desc}
-                </p>
-              </div>
-            </ScrollReveal>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {collections.map((item, index) => (
+        {/* // sini mas */}
+        {!venueLoading && !venueError && venue.length > 0 && (
+          <section className="py-24 bg-white border-t border-gray-50">
+            <div className="container mx-auto px-6">
+              <ScrollReveal animation="fadeUp" duration={800}>
+                <div className="text-center max-w-3xl mx-auto mb-16">
+                  <h4 className="text-xs font-bold tracking-[0.2em] text-[#8B9B6D] uppercase mb-3">
+                    {t.homepage.venue.head}
+                  </h4>
+                  <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mb-6">
+                    {t.homepage.venue.title}
+                  </h2>
+                  <p className="text-gray-600 leading-relaxed">
+                    {t.homepage.venue.desc}
+                  </p>
+                </div>
+              </ScrollReveal>
+              <div className="grid md:grid-cols-2 gap-10">
+                {eventPackages.map((evt, index) => (
                   <ScrollReveal
                     key={index}
                     animation="fadeUp"
-                    delay={index * 150}
-                    duration={700}
+                    delay={index * 200}
+                    duration={800}
                   >
-                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
-                      <div className="relative w-full aspect-4/3 bg-slate-50 p-6 flex items-center justify-center">
-                        <div className="relative w-full h-full">
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            className="object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
-                          />
-                        </div>
+                    <div className="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                      <div className="relative h-72 w-full overflow-hidden">
+                        <Image
+                          src={evt.image}
+                          alt={evt.title}
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-700"
+                        />
                       </div>
-                      <div className="p-5 grow border-t border-gray-50">
-                        <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">
-                          {item.title}
+                      <div className="p-8 md:p-10 flex flex-col grow">
+                        <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">
+                          {evt.title}
                         </h3>
-                        <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                          {item.desc}
+                        <p className="text-gray-500 text-sm leading-relaxed mb-8 grow">
+                          {evt.description}
                         </p>
+                        <div className="space-y-4 mb-8">
+                          {evt.features.map((feature, idx) => (
+                            <div key={idx} className="flex items-center gap-3">
+                              <div className="relative w-4 h-4 shrink-0 opacity-60">
+                                <Image
+                                  src={feature.icon}
+                                  alt="icon"
+                                  fill
+                                  className="object-contain"
+                                />
+                              </div>
+                              <span className="text-sm text-gray-600 font-medium">
+                                {feature.text}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div>
+                          <Link
+                            href="/venue"
+                            className="bg-tembi hover:bg-darktembi text-white text-sm font-medium py-3 px-8 rounded-sm transition-colors w-full md:w-auto"
+                          >
+                            {evt.buttonText}
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </ScrollReveal>
                 ))}
               </div>
-              <div className="flex flex-col gap-6 h-full min-h-125">
-                <ScrollReveal animation="slideRight" duration={800}>
-                  <div className="relative w-full h-3/5 min-h-75 rounded-xl overflow-hidden shadow-sm">
-                    <Image
-                      src="/images/homepage/content4.webp"
-                      alt="Main Hall"
-                      fill
-                      className="object-cover hover:scale-105 transition-transform duration-700"
-                    />
+            </div>
+          </section>
+        )}
+        {!collectionLoading && !carouselError && collection.length > 0 && (
+          <section className="py-20 bg-white border-t border-gray-50">
+            <div className="container mx-auto px-6 md:px-12">
+              <ScrollReveal animation="fadeUp" duration={800}>
+                <div className="text-center max-w-3xl mx-auto mb-16">
+                  <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6">
+                    {t.homepage.collection.title}
+                  </h2>
+                  <p className="text-gray-500 leading-relaxed text-lg">
+                    {t.homepage.collection.desc}
+                  </p>
+                </div>
+              </ScrollReveal>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* {collections.map((item, index) => (
+										<ScrollReveal
+											key={index}
+											animation="fadeUp"
+											delay={index * 150}
+											duration={700}
+										>
+											<div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
+												<div className="relative w-full aspect-4/3 bg-slate-50 p-6 flex items-center justify-center">
+													<div className="relative w-full h-full">
+														<Image
+															src={item.image}
+															alt={item.title}
+															fill
+															className="object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
+														/>
+													</div>
+												</div>
+												<div className="p-5 grow border-t border-gray-50">
+													<h3 className="text-xl font-serif font-bold text-gray-900 mb-2">
+														{item.title}
+													</h3>
+													<p className="text-sm text-gray-600 leading-relaxed font-medium">
+														{item.desc}
+													</p>
+												</div>
+											</div>
+										</ScrollReveal>
+									))} */}
+                  {collection.map((item, index) => (
+                    <ScrollReveal
+                      key={index}
+                      animation="fadeUp"
+                      delay={index * 150}
+                      duration={700}
+                    >
+                      <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
+                        <div className="relative w-full aspect-4/3 bg-slate-50 p-6 flex items-center justify-center">
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={
+                                item.image || "/images/homepage/content3.webp"
+                              }
+                              alt={
+                                item.getName(language === "id" ? "id" : "en") ??
+                                ""
+                              }
+                              fill
+                              className="object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="p-5 grow border-t border-gray-50">
+                          <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">
+                            {item.getName(language === "id" ? "id" : "en") ??
+                              ""}
+                          </h3>
+                          <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                            {item.getDescription(
+                              language === "id" ? "id" : "en",
+                            ) ?? ""}
+                          </p>
+                        </div>
+                      </div>
+                    </ScrollReveal>
+                  ))}
+                </div>
+                <div className="flex flex-col gap-6 h-full min-h-125">
+                  <ScrollReveal animation="slideRight" duration={800}>
+                    <div className="relative w-full h-3/5 min-h-75 rounded-xl overflow-hidden shadow-sm">
+                      <Image
+                        src="/images/homepage/content4.webp"
+                        alt="Main Hall"
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-700"
+                      />
+                    </div>
+                  </ScrollReveal>
+                  <div className="grid grid-cols-2 gap-6 h-2/5 min-h-50">
+                    <ScrollReveal
+                      animation="slideLeft"
+                      duration={800}
+                      delay={100}
+                    >
+                      <div className="relative w-full h-full rounded-xl overflow-hidden shadow-sm">
+                        <Image
+                          src="/images/homepage/content5.webp"
+                          alt="Instruments"
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                    </ScrollReveal>
+                    <ScrollReveal
+                      animation="slideRight"
+                      duration={800}
+                      delay={100}
+                    >
+                      <div className="relative w-full h-full rounded-xl overflow-hidden shadow-sm">
+                        <Image
+                          src="/images/homepage/content6.webp"
+                          alt="Artifact Display"
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                    </ScrollReveal>
                   </div>
-                </ScrollReveal>
-                <div className="grid grid-cols-2 gap-6 h-2/5 min-h-50">
-                  <ScrollReveal
-                    animation="slideLeft"
-                    duration={800}
-                    delay={100}
-                  >
-                    <div className="relative w-full h-full rounded-xl overflow-hidden shadow-sm">
-                      <Image
-                        src="/images/homepage/content5.webp"
-                        alt="Instruments"
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-700"
-                      />
-                    </div>
-                  </ScrollReveal>
-                  <ScrollReveal
-                    animation="slideRight"
-                    duration={800}
-                    delay={100}
-                  >
-                    <div className="relative w-full h-full rounded-xl overflow-hidden shadow-sm">
-                      <Image
-                        src="/images/homepage/content6.webp"
-                        alt="Artifact Display"
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-700"
-                      />
-                    </div>
-                  </ScrollReveal>
                 </div>
               </div>
+              <ScrollReveal animation="fadeUp" duration={800}>
+                <div className="flex justify-center mt-12">
+                  <Link
+                    href="/collections"
+                    className="bg-tembi hover:bg-darktembi text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 shadow-md"
+                  >
+                    {t.homepage.collection.button}
+                  </Link>
+                </div>
+              </ScrollReveal>
             </div>
-            <ScrollReveal animation="fadeUp" duration={800}>
-              <div className="flex justify-center mt-12">
-                <Link
-                  href="/collections"
-                  className="bg-tembi hover:bg-darktembi text-white px-8 py-3 rounded-full font-medium transition-colors duration-300 shadow-md"
-                >
-                  {t.homepage.collection.button}
-                </Link>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
+          </section>
+        )}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-6">
             <ScrollReveal animation="fadeUp" duration={800}>

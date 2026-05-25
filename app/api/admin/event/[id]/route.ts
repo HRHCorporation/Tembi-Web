@@ -15,18 +15,18 @@ interface ErrorResponse {
     [key: string]: string;
 }
 
-// ✅ GET - Fetch blog by ID
+// ✅ GET - Fetch event by ID
 export async function GET(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
-    const evenId = Number(id);
+    const eventId = Number(id);
 
     try {
         const [event] = await dbWeb.query(
             "SELECT * FROM event WHERE id = ?",
-            [evenId]
+            [eventId]
         );
 
         if (!Array.isArray(event) || event.length === 0) {
@@ -41,7 +41,7 @@ export async function GET(
             data: event[0] as Record<string, unknown>,
         });
     } catch (error) {
-        console.error("[GET_BLOG_ERROR]", error);
+        console.error("[GET_EVENT_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Gagal mengambil data" },
             { status: 500 }
@@ -49,13 +49,13 @@ export async function GET(
     }
 }
 
-// ✅ PUT - Update blog
+// ✅ PUT - Update event
 export async function PUT(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
-    const evenId = Number(id);
+    const eventId = Number(id);
 
     try {
         const cookieStore = await cookies();
@@ -127,10 +127,10 @@ export async function PUT(
         // Get old thumbnail path before updating
         const [oldData] = await dbWeb.query(
             "SELECT thumbnail FROM event WHERE id = ?",
-            [evenId]
+            [eventId]
         );
 
-        // ✅ Update blog
+        // ✅ Update event
         if (newThumbnailPath) {
             await dbWeb.query(
                 `
@@ -152,7 +152,7 @@ export async function PUT(
                     hosted_by,
                     date_event,
                     time_event,
-                    evenId
+                    eventId
                 ]
             );
         } else {
@@ -175,7 +175,7 @@ export async function PUT(
                     hosted_by,
                     date_event,
                     time_event,
-                    evenId
+                    eventId
                 ]
             );
         }
@@ -198,10 +198,10 @@ export async function PUT(
         return NextResponse.json({
             success: true,
             message: "Event berhasil diperbarui",
-            data: { id: evenId },
+            data: { id: eventId },
         });
     } catch (error) {
-        console.error("[UPDATE_BLOG_ERROR]", error);
+        console.error("[UPDATE_EVENT_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }
@@ -209,25 +209,25 @@ export async function PUT(
     }
 }
 
-// ✅ DELETE - Delete blog with thumbnail cleanup
+// ✅ DELETE - Delete event with thumbnail cleanup
 export async function DELETE(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
-    const evenId = Number(id);
+    const eventId = Number(id);
 
     try {
         // Get thumbnail path before deleting
         const [oldData] = await dbWeb.query(
             "SELECT thumbnail FROM event WHERE id = ?",
-            [evenId]
+            [eventId]
         );
 
-        // Delete blog
+        // Delete event
         const [result] = await dbWeb.query(
             "DELETE FROM event WHERE id = ?",
-            [evenId]
+            [eventId]
         );
 
         const deletedResult = result as unknown as { affectedRows: number };
@@ -258,9 +258,9 @@ export async function DELETE(
             message: "Event berhasil dihapus",
         });
     } catch (error) {
-        console.error("[DELETE_BLOG_ERROR]", error);
+        console.error("[DELETE_EVENT_ERROR]", error);
         return NextResponse.json(
-            { success: false, message: "Gagal menghapus blog" },
+            { success: false, message: "Gagal menghapus event" },
             { status: 500 }
         );
     }
