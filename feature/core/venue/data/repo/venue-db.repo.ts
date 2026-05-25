@@ -11,6 +11,7 @@ import { ApiResponse } from "@/types/api-response.types";
 import { VenueResponse } from "../../domain/response/venue-list.response";
 import * as TE from "fp-ts/lib/TaskEither";
 import VenueGallery from "../../domain/entity/venue-gallery.entity";
+import { VenueSlugResponse } from "../../domain/response/venue-by-slug.response";
 
 
 export default class VenueDbRepo implements VenueRepo {
@@ -72,11 +73,11 @@ export default class VenueDbRepo implements VenueRepo {
       mapLeft((error) => new VenueFetchFailure(`venue with slug ${slug}`, error.message)),
       chain((response) =>
         TE.tryCatch(
-          () => response.json() as Promise<ApiResponse<VenueBySlug>>,
+          () => response.json() as Promise<ApiResponse<VenueSlugResponse>>,
           () => new VenueFetchFailure(`venue with slug ${slug}`, "Failed to parse JSON response")
         )
       ),
-      map((result) => (result.data ? new VenueBySlug(result.data) : null))
+      map((result) => (result.data ? VenueBySlug.fromResponse(result.data) : null))
     );
   }
 }

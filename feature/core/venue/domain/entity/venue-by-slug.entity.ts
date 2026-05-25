@@ -67,6 +67,11 @@ export default class VenueBySlug {
   }
 
   static fromResponse(response: VenueSlugResponse): VenueBySlug {
+    const keys = response.keys?.map((keyResponse) => Keys.fromResponse(keyResponse));
+    const facilities = response.facilities?.map((facilityResponse) => Facilities.fromResponse(facilityResponse));
+    const facilityAddOns = response.facility_add_ons?.map((addOnResponse) => FacilityAddOns.fromResponse(addOnResponse));
+    const previewImages = response.preview_images?.map((previewImageResponse) => PreviewImage.fromResponse(previewImageResponse));
+    const allGalleries = response.all_galleries?.map((galleryResponse) => AllGaleries.fromResponse(galleryResponse));
     return new VenueBySlug({
       id: response.id,
       name_eng: response.name_eng,
@@ -75,11 +80,11 @@ export default class VenueBySlug {
       description_ind: response.description_ind,
       slug: response.slug,
       imagebanner: response.imagebanner,
-      keys: response.keys ? response.keys.map((keyResponse) => (Keys as any).fromResponse ? (Keys as any).fromResponse(keyResponse) : (keyResponse as any)) : undefined,
-      facilities: response.facilities ? response.facilities.map((facilityResponse) => (Facilities as any).fromResponse ? (Facilities as any).fromResponse(facilityResponse) : (facilityResponse as any)) : undefined,
-      facility_add_ons: response.facility_add_ons ? response.facility_add_ons.map((addOnResponse) => (FacilityAddOns as any).fromResponse ? (FacilityAddOns as any).fromResponse(addOnResponse) : (addOnResponse as any)) : undefined,
-      preview_images: response.preview_images ? response.preview_images.map((previewImageResponse) => (PreviewImage as any).fromResponse ? (PreviewImage as any).fromResponse(previewImageResponse) : (previewImageResponse as any)) : undefined,
-      all_galleries: response.all_galleries ? response.all_galleries.map((galleryResponse) => (AllGaleries as any).fromResponse ? (AllGaleries as any).fromResponse(galleryResponse) : (galleryResponse as any)) : undefined
+      keys: keys,
+      facilities: facilities,
+      facility_add_ons: facilityAddOns,
+      preview_images: previewImages,
+      all_galleries: allGalleries
     });
   }
 }

@@ -18,8 +18,8 @@ export default class Facilities {
   }: {
     id: number;
     icon?: string;
-    name_eng: string;
-    name_ind: string;
+    name_eng?: string;
+    name_ind?: string;
     description_eng?: string;
     description_ind?: string;
   }) {
@@ -57,10 +57,10 @@ export default class Facilities {
     return new Facilities({
       id: response.id,
       icon: response.icon,
-      name_eng: response.name_eng ?? "",
-      name_ind: response.name_ind ?? "",
-      description_eng: response.description_eng ?? "",
-      description_ind: response.description_ind ?? "",
+      name_eng: response.name_eng || "",
+      name_ind: response.name_ind || "",
+      description_eng: response.description_eng || undefined,
+      description_ind: response.description_ind || undefined,
     });
   }
 }

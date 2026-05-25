@@ -23,12 +23,6 @@ export default function VenueDetailPage() {
 		}
 	}, [slug, refreshVenueSlug]);
 
-	const venue = t.venue.items.find((v) => v.slug === slug);
-
-	if (!venue) {
-		notFound();
-	}
-
 	const facilityIcons = [
 		"/images/icons/build-green.png",
 		"/images/icons/chair-green.png",
@@ -62,8 +56,8 @@ export default function VenueDetailPage() {
 				) : (
 					<>
 						<Image
-							src={venueSlug?.imagebanner || venue.heroImage}
-							alt={venueSlug?.getName(language) || venue.title}
+							src={venueSlug?.imagebanner || ""}
+							alt={venueSlug?.getName(language) || ""}
 							fill
 							className="object-cover"
 							priority
@@ -76,21 +70,26 @@ export default function VenueDetailPage() {
 				<div className="absolute bottom-16 left-0 w-full p-6 md:p-12 text-white">
 					<div className="container mx-auto">
 						<h1 className="text-4xl md:text-6xl font-serif mb-4">
-							{venueSlug?.getName(language) || venue.title}
+							{venueSlug?.getName(language) || ""}
 						</h1>
 
 						<div className="max-w-3xl mb-8">
-							{venue.heroDescription.map((paragraph, index) => (
+							{/* {venue.heroDescription.map((paragraph, index) => (
 								<p
 									key={index}
 									className="text-gray-200 text-lg md:text-xl leading-relaxed mb-2 last:mb-0"
 								>
 									{paragraph}
 								</p>
-							))}
+							))} */}
+							{venueSlug?.getDescription(language) ? (
+								<p className="text-gray-200 text-lg md:text-xl leading-relaxed mb-2 last:mb-0">
+									{venueSlug.getDescription(language)}
+								</p>
+							) : null}
 						</div>
 
-						<div className="flex flex-wrap gap-6 text-sm md:text-base font-medium text-[#A4AC86]">
+						{/* <div className="flex flex-wrap gap-6 text-sm md:text-base font-medium text-[#A4AC86]">
 							<div className="flex items-center gap-2">
 								<div className="relative w-5 h-5">
 									<Image
@@ -100,8 +99,31 @@ export default function VenueDetailPage() {
 										className="object-contain"
 									/>
 								</div>
-								<span>{venue.capacity}</span>
+								<span>{venueSlug?.keys.}</span>
 							</div>
+						</div> */}
+						<div className="flex flex-wrap gap-6 text-sm md:text-base font-medium text-[#A4AC86]">
+							{venueSlug?.keys
+								?.filter(
+									(key) =>
+										key.label_eng.toLowerCase().includes("capacity") ||
+										key.label_ind.toLowerCase().includes("kapasitas"),
+								)
+								.map((key, index) => (
+									<div key={index} className="flex items-center gap-2">
+										<div className="relative w-5 h-5">
+											<Image
+												src={`/images/icons/${key.icon}`}
+												alt={key.label_eng}
+												fill
+												className="object-contain"
+											/>
+										</div>
+										<span>
+											{language === "id" ? key.value_ind : key.value_eng}
+										</span>
+									</div>
+								))}
 						</div>
 					</div>
 				</div>
@@ -111,30 +133,52 @@ export default function VenueDetailPage() {
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
 					<div className="lg:col-span-5 flex flex-col gap-4">
 						<div className="grid grid-cols-2 gap-4">
-							<div className="relative h-48 rounded-xl overflow-hidden">
-								<Image
-									src={venue.galleryImages[0] || venue.heroImage}
-									alt="Detail 1"
-									fill
-									className="object-cover hover:scale-105 transition duration-500"
-								/>
-							</div>
-							<div className="relative h-48 rounded-xl overflow-hidden">
-								<Image
-									src={venue.galleryImages[1] || venue.heroImage}
-									alt="Detail 2"
-									fill
-									className="object-cover hover:scale-105 transition duration-500"
-								/>
-							</div>
-							<div className="relative h-64 col-span-2 rounded-xl overflow-hidden">
-								<Image
-									src={venue.galleryImages[2] || venue.heroImage}
-									alt="Wide Detail"
-									fill
-									className="object-cover hover:scale-105 transition duration-500"
-								/>
-							</div>
+							{venueSlug?.preview_images?.slice(0, 3).map((preview, index) => (
+								<div
+									key={preview.id || index}
+									className={`relative rounded-xl overflow-hidden ${
+										index === 2 ? "h-64 col-span-2" : "h-48"
+									}`}
+								>
+									<Image
+										src={preview.image || venueSlug?.imagebanner || ""}
+										alt={`${venueSlug?.getName(language)} Preview ${index + 1}`}
+										fill
+										className="object-cover hover:scale-105 transition duration-500"
+									/>
+								</div>
+							))}
+
+							{/* Fallback jika preview_images kosong atau kurang dari 3 */}
+							{(!venueSlug?.preview_images ||
+								venueSlug.preview_images.length === 0) && (
+								<>
+									<div className="relative h-48 rounded-xl overflow-hidden">
+										<Image
+											src={venueSlug?.imagebanner || "/images/venue/venue1.jpg"}
+											alt="Detail 1"
+											fill
+											className="object-cover hover:scale-105 transition duration-500"
+										/>
+									</div>
+									<div className="relative h-48 rounded-xl overflow-hidden">
+										<Image
+											src={venueSlug?.imagebanner || "/images/venue/venue1.jpg"}
+											alt="Detail 2"
+											fill
+											className="object-cover hover:scale-105 transition duration-500"
+										/>
+									</div>
+									<div className="relative h-64 col-span-2 rounded-xl overflow-hidden">
+										<Image
+											src={venueSlug?.imagebanner || "/images/venue/venue1.jpg"}
+											alt="Wide Detail"
+											fill
+											className="object-cover hover:scale-105 transition duration-500"
+										/>
+									</div>
+								</>
+							)}
 						</div>
 					</div>
 
@@ -144,9 +188,14 @@ export default function VenueDetailPage() {
 								{t.detailVenue.intro.title}
 							</h2>
 							<div className="text-[#5C5C5C] space-y-4 leading-relaxed">
-								{venue.longDescription.map((paragraph, index) => (
+								{/* {venue.longDescription.map((paragraph, index) => (
 									<p key={index}>{paragraph}</p>
-								))}
+								))} */}
+								{venueSlug?.getDescription(language) ? (
+									<p className="text-gray-200 text-lg md:text-xl leading-relaxed mb-2 last:mb-0">
+										{venueSlug.getDescription(language)}
+									</p>
+								) : null}
 							</div>
 						</div>
 
@@ -156,7 +205,7 @@ export default function VenueDetailPage() {
 							</h3>
 
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-4">
-								<div className="flex gap-4">
+								{/* <div className="flex gap-4">
 									<div className="mt-1 relative w-6 h-6 shrink-0">
 										<Image
 											src="/images/icons/group-green.png"
@@ -188,81 +237,137 @@ export default function VenueDetailPage() {
 										</p>
 										<p className="text-[#5C5C5C] text-sm">{venue.bestFor}</p>
 									</div>
-								</div>
+								</div> */}
+								{venueSlug?.keys?.map((key, index) => (
+									<div key={index} className="flex gap-4">
+										<div className="mt-1 relative w-6 h-6 shrink-0">
+											<Image
+												src={`/images/icons/${key.icon}`}
+												alt={key.label_eng}
+												fill
+												className="object-contain"
+											/>
+										</div>
+										{/* <span>
+                      {language === "id" ? key.value_ind : key.value_eng}
+                    </span> */}
+										<div>
+											<p className="font-bold text-[#2C2420] text-sm">
+												{venueSlug?.keys
+													? language === "id"
+														? key.label_ind
+														: key.label_eng
+													: key.label_eng}
+											</p>
+											<p className="text-[#5C5C5C] text-sm">
+												{venueSlug?.keys
+													? language === "id"
+														? key.value_ind
+														: key.value_eng
+													: key.value_eng}
+											</p>
+										</div>
+									</div>
+								))}
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-
-			<section className="py-20 bg-[#F9F9F0]">
-				<div className="container mx-auto px-6">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
-							{t.detailVenue.features.title}
-						</h2>
-						<p className="text-[#5C5C5C]">{t.detailVenue.features.subtitle}</p>
-					</div>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-						{t.detailVenue.features.item.map((item, idx) => (
-							<FacilityCard
-								key={idx}
-								iconSrc={facilityIcons[idx] || "/images/icons/check-green.png"}
-								title={item.title}
-								description={item.desc}
-							/>
-						))}
-					</div>
-
-					<div className="bg-white rounded-xl p-8 md:p-10 shadow-sm border border-[#EBEBE0]">
-						<h3 className="text-2xl font-serif text-[#2C2420] mb-8 font-semibold">
-							{t.detailVenue.features.addons.title}
-						</h3>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-							{t.detailVenue.features.addons.item.map((addon, idx) => (
-								<AddOnItem
+			{venueSlug?.facilities && venueSlug.facilities.length > 0 ? (
+				<section className="py-20 bg-[#F9F9F0]">
+					<div className="container mx-auto px-6">
+						<div className="text-center mb-12">
+							<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
+								{t.detailVenue.features.title}
+							</h2>
+							<p className="text-[#5C5C5C]">
+								{t.detailVenue.features.subtitle}
+							</p>
+						</div>
+						<div className="flex flex-wrap justify-center gap-6 mb-16">
+							{venueSlug?.facilities?.map((facility, idx) => (
+								<div
 									key={idx}
-									iconSrc={addonIcons[idx] || "/images/icons/check-green.png"}
-									label={addon}
-								/>
+									className="w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+								>
+									<FacilityCard
+										iconSrc={
+											facilityIcons[idx] || "/images/icons/check-green.png"
+										}
+										title={facility.getName(language)}
+										description={facility.getDescription(language) || ""}
+									/>
+								</div>
 							))}
 						</div>
-					</div>
-				</div>
-			</section>
-
-			<section className="py-20 bg-white">
-				<div className="container mx-auto px-6">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
-							{t.detailVenue.gallery.title}
-						</h2>
-						<p className="text-[#5C5C5C]">
-							{t.detailVenue.gallery.subtitle} {venue.title}
-						</p>
-					</div>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{venue.eventGalleryImages?.map((imageSrc, index) => (
-							<div
-								key={index}
-								className="relative h-64 md:h-72 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300"
-							>
-								<Image
-									src={imageSrc}
-									alt={`Event at ${venue.title} ${index + 1}`}
-									fill
-									className="object-cover transition-transform duration-700 group-hover:scale-110"
-								/>
-								<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+						{venueSlug?.facility_add_ons &&
+						venueSlug.facility_add_ons.length > 0 ? (
+							<div className="bg-white rounded-xl p-8 md:p-10 shadow-sm border border-[#EBEBE0]">
+								<h3 className="text-2xl font-serif text-[#2C2420] mb-8 font-semibold">
+									{t.detailVenue.features.addons.title}
+								</h3>
+								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+									{venueSlug.facility_add_ons.map((addon, idx) => (
+										<AddOnItem
+											key={idx}
+											iconSrc={addon.getIcon()}
+											label={addon.getName(language) || ""}
+										/>
+									))}
+								</div>
 							</div>
-						))}
+						) : null}
 					</div>
-				</div>
-			</section>
-
+				</section>
+			) : null}
+			{venueSlug?.all_galleries && venueSlug.all_galleries.length > 0 ? (
+				<section className="py-20 bg-white">
+					<div className="container mx-auto px-6">
+						<div className="text-center mb-12">
+							<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
+								{t.detailVenue.gallery.title}
+							</h2>
+							<p className="text-[#5C5C5C]">
+								{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
+							</p>
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+							{venueSlug?.all_galleries?.map((imageSrc, index) => {
+								const gallerySrc =
+									typeof imageSrc === "string"
+										? imageSrc
+										: (
+												imageSrc as {
+													getImage?: () => string;
+													image?: string;
+													image_url?: string;
+													url?: string;
+												}
+											).getImage?.() ||
+											(imageSrc as { image?: string }).image ||
+											(imageSrc as { image_url?: string }).image_url ||
+											(imageSrc as { url?: string }).url ||
+											"";
+								return (
+									<div
+										key={index}
+										className="relative h-64 md:h-72 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300"
+									>
+										<Image
+											src={gallerySrc}
+											alt={`Event at ${venueSlug?.getName(language)} ${index + 1}`}
+											fill
+											className="object-cover transition-transform duration-700 group-hover:scale-110"
+										/>
+										<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</section>
+			) : null}
 			<section className="py-20 bg-[#F9F9F0]">
 				<div className="container mx-auto px-6">
 					<div className="text-center mb-12">
