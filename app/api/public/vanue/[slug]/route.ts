@@ -22,6 +22,7 @@ interface VenueFacility {
 
 interface VenueFacilityAddOn {
     id: number;
+    icon: string;
     name_ind: string;
     name_eng: string;
     description_ind: string;
@@ -130,6 +131,7 @@ export async function GET(
                     JSON_ARRAYAGG(
                         JSON_OBJECT(
                             'id', mvf.id,
+                            'icon', mvf.icon,
                             'name_ind', mvf.name_ind,
                             'name_eng', mvf.name_eng,
                             'description_ind', mvf.description_ind,

@@ -1,8 +1,26 @@
-import { DependencyContainer } from "tsyringe";
-import { iHomeRepoKey } from "../core/homes/domain/i-repo/home.i-repo";
+import { DependencyContainer, InjectionToken } from "tsyringe";
+import { bannerModuleKey } from "../core/banner/banner.module-key";
+import globalModule from "./data/global.module";
+import getBannerDi from "../core/banner/data/module/banner.di";
+import di from "@/bootstrap/di/init-di";
+import { foodModuleKey } from "../core/food/food.module-key";
+import getFoodDi from "../core/food/data/module/food.di";
+import { collectionModuleKey } from "../core/collection/collection.module-key";
+import getCollectionDi from "../core/collection/data/module/collection.di";
+import { houseModuleKey } from "../core/house/house.module-key";
+import getHouseDi from "../core/house/data/module/house.di";
+import { mainModuleKey } from "../core/main/main.module-key";
+import getMainDi from "../core/main/data/module/main.di";
+import { venueModuleKey } from "../core/venue/venue.module-key";
+import getVenueDi from "../core/venue/data/module/venue.di";
 
 const moduleKeyToDi: Record<string, (di: DependencyContainer) => DependencyContainer> = {
-  // [iHomeRepoKey]: getHomeRepoDi,
+  [bannerModuleKey]: getBannerDi,
+  [collectionModuleKey]: getCollectionDi,
+  [foodModuleKey]: getFoodDi,
+  [houseModuleKey]: getHouseDi,
+  [mainModuleKey]: getMainDi,
+  [venueModuleKey]: getVenueDi
 }
 
 const memoizedDis: Record<string, DependencyContainer> = {};

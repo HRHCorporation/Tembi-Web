@@ -17,10 +17,14 @@ const VenueCard: React.FC<VenueProps> = ({
   capacity,
   facilities,
 }) => {
+  const imageUrl =
+    imageSrc && imageSrc.trim() !== ""
+      ? imageSrc
+      : "/images/homepage/content3.webp";
   return (
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
       <div className="relative h-64 w-full">
-        <Image src={imageSrc} alt={title} fill className="object-cover" />
+        <Image src={imageUrl} alt={title} fill className="object-cover" />
 
         {capacity && (
           <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-md flex items-center gap-2 text-sm font-medium">

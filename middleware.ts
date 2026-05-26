@@ -1,32 +1,60 @@
-// middleware.ts
+
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
-  // BYPASS AUTH SAAT DEVELOPMENT
+
+
+
+  if (path.startsWith('/api')) {
+
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Max-Age': '86400',
+        },
+      });
+    }
+
+
+    const response = NextResponse.next();
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    return response;
+  }
+
+
+
+
+
+
   if (process.env.DISABLE_ADMIN_AUTH === "true") {
     return NextResponse.next();
   }
 
-  // Ambil path yang sedang diakses
-  const path = request.nextUrl.pathname;
 
-  // Tentukan path yang harus diproteksi
   const isProtectedRoute = path.startsWith('/admin');
   const isLoginPage = path === '/admin/login';
 
-  // Ambil cookie sesi admin
+
   const adminSession = request.cookies.get(
     process.env.COOKIE_NAME || 'admin_session_tembi'
   );
 
-  // SKENARIO 1: Belum login
+
   if (isProtectedRoute && !isLoginPage && !adminSession) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // SKENARIO 2: Sudah login tapi buka login lagi
+
   if (isLoginPage && adminSession) {
     return NextResponse.redirect(
       new URL('/admin/invoices', request.url)
@@ -37,5 +65,8 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/api/:path*',
+  ],
 };

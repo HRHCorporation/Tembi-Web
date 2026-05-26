@@ -1,15 +1,11 @@
 export default class Endpoint {
   protected baseUrl: string;
-  protected apiVersion: string;
 
   constructor({
     baseUrl,
-    apiVersion,
   }: {
     baseUrl: string;
-    apiVersion: string;
   }) {
-    this.apiVersion = apiVersion;
     this.baseUrl = baseUrl;
   }
 
@@ -19,7 +15,7 @@ export default class Endpoint {
 
   protected buildEndpoint(endpoint: string) {
     return Endpoint.sanitizeURL(
-      `${this.baseUrl}/${this.apiVersion}/${endpoint}`,
+      `${this.baseUrl}/${endpoint}`,
     );
   }
 

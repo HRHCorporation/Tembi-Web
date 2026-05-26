@@ -12,8 +12,7 @@ export interface FeaturedRoomCardProps {
   imageUrl: string;
   size: string;
   guests: number;
-  view: string;
-  detailsIcon: string;
+  facilities: Array<{ name: string; icon: string }>;
   recommendationText: string;
 }
 
@@ -24,11 +23,16 @@ const FeaturedRoomCard: React.FC<FeaturedRoomCardProps> = ({
   imageUrl,
   size,
   guests,
-  view,
-  detailsIcon,
+  facilities,
   recommendationText,
 }) => {
   const { t } = useLanguage();
+
+  const imageSource =
+    imageUrl && imageUrl.trim() !== ""
+      ? imageUrl
+      : "/images/placeholder-room.jpg";
+
   return (
     <Link href={`/rooms/${slug}`} className="block group">
       <div className="flex flex-col md:flex-row bg-tembi rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
@@ -46,14 +50,14 @@ const FeaturedRoomCard: React.FC<FeaturedRoomCardProps> = ({
               {recommendationText}
             </span>
           </div>
-
           <h2 className="text-4xl font-serif font-bold mb-4 tracking-wide">
             {name}
           </h2>
 
-          <p className="text-gray-100/90 mb-8 text-sm leading-relaxed font-light opacity-90">
-            {description}
-          </p>
+          <div
+            className="text-gray-100/90 mb-8 text-sm leading-relaxed font-light opacity-90 line-clamp-4 prose prose-sm prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
 
           <div className="flex flex-wrap items-center gap-6 mb-10 text-sm font-medium text-gray-100">
             <div className="flex items-center gap-2">
@@ -78,24 +82,25 @@ const FeaturedRoomCard: React.FC<FeaturedRoomCardProps> = ({
                 />
               </div>
               <span>
-                {t.house.featuredCard.features.guest[0]} {guests}
+                {t.house.featuredCard.features.guest[0]} {guests}{" "}
                 {t.house.featuredCard.features.guest[1]}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="relative w-4 h-4 opacity-80">
-                <Image
-                  src={detailsIcon}
-                  alt="View"
-                  fill
-                  className="object-contain"
-                />
+            {facilities.slice(0, 2).map((facility, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <div className="relative w-4 h-4 opacity-80">
+                  <Image
+                    src={`/images/icons/${facility.icon}`}
+                    alt={facility.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <span>{facility.name}</span>
               </div>
-              <span>{view}</span>
-            </div>
+            ))}
           </div>
-
           <div className="bg-white text-tembi font-bold py-3 px-8 rounded hover:bg-gray-100 transition-colors w-fit text-sm tracking-wide">
             {t.house.featuredCard.buttonText}
           </div>
@@ -103,7 +108,7 @@ const FeaturedRoomCard: React.FC<FeaturedRoomCardProps> = ({
 
         <div className="md:w-1/2 h-87.5 md:h-auto relative">
           <Image
-            src={imageUrl}
+            src={imageSource}
             alt={`View of ${name}`}
             fill
             className="object-cover"

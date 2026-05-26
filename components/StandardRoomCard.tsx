@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
+
 export interface StandardRoomCardProps {
   slug: string;
   imageUrl: string;
@@ -12,8 +13,8 @@ export interface StandardRoomCardProps {
   description: string;
   size: string;
   guests: number;
-  view: string;
-  detailsIcon: string;
+  facilities: Array<{ name: string; icon: string }>;
+  galleryCount?: number;
 }
 
 const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
@@ -24,24 +25,28 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
   description,
   size,
   guests,
-  view,
-  detailsIcon,
+  facilities,
+  galleryCount = 6,
 }) => {
   const { t } = useLanguage();
+
+  const imageSource =
+    imageUrl && imageUrl.trim() !== ""
+      ? imageUrl
+      : "/images/placeholder-room.jpg";
+
   return (
     <Link href={`/rooms/${slug}`} className="block group h-full">
       <div className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full relative">
         <div className="relative h-64 w-full overflow-hidden">
           <Image
-            src={imageUrl}
+            src={imageSource}
             alt={`View of ${name}`}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          <div
-            className={`absolute top-4 left-4 bg-tembi text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm`}
-          >
+          <div className="absolute top-4 left-4 bg-tembi text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
             {badge}
           </div>
 
@@ -54,7 +59,7 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
                 className="object-contain invert brightness-0 filter"
               />
             </div>
-            <span>6 photos</span>
+            <span>{galleryCount} photos</span>
           </div>
         </div>
 
@@ -64,11 +69,10 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
               {name}
             </h3>
           </div>
-
-          <p className="text-gray-500 text-sm mb-6 line-clamp-3 leading-relaxed">
-            {description}
-          </p>
-
+          <div
+            className="text-gray-500 text-sm mb-6 line-clamp-3 leading-relaxed prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
           <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm text-gray-600 mb-8">
             <div className="flex items-center gap-2">
               <div className="relative w-4 h-4 opacity-80">
@@ -81,7 +85,6 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
               </div>
               <span>{size || "45 m²"}</span>
             </div>
-
             <div className="flex items-center gap-2">
               <div className="relative w-4 h-4 opacity-80">
                 <Image
@@ -95,32 +98,20 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
                 {guests} {t.house.standardCard.features.guest}
               </span>
             </div>
-
-            <div className="flex items-center gap-2">
-              <div className="relative w-4 h-4 opacity-80">
-                <Image
-                  src={detailsIcon}
-                  alt="view"
-                  fill
-                  className="object-contain"
-                />
+            {facilities.slice(0, 2).map((facility, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <div className="relative w-4 h-4 opacity-80">
+                  <Image
+                    src={`/images/icons/${facility.icon}`}
+                    alt={facility.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <span>{facility.name}</span>
               </div>
-              <span>{view}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="relative w-4 h-4 opacity-80">
-                <Image
-                  src="/images/icons/wifi-green.png"
-                  alt="wifi"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <span>{t.house.standardCard.features.wifi}</span>
-            </div>
+            ))}
           </div>
-
           <div className="mt-auto pt-6 border-t border-gray-100">
             <button className="w-full bg-[#8B9D68] hover:bg-[#738354] text-white font-semibold py-2.5 px-4 rounded transition-colors duration-300 text-sm tracking-wide shadow-sm hover:shadow-md">
               {t.house.standardCard.buttonText}
