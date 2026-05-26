@@ -818,3 +818,104 @@ input[type="search"]::-webkit-search-cancel-button {
 .custom-gradient-1 {
   background-image: linear-gradient(145deg, #eef 0%, #fff8fc 100%);
 }
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  /* Hide everything except invoice */
+  body * {
+    visibility: hidden;
+  }
+  
+  #invoice-content,
+  #invoice-content * {
+    visibility: visible;
+  }
+  
+  #invoice-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  /* Hide specific elements */
+  .no-print,
+  nav,
+  aside,
+  header,
+  footer,
+  .sidebar,
+  button:not(.print-allowed),
+  .admin-sidebar,
+  .admin-header {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Remove page margins */
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+  
+  /* Remove backgrounds for print */
+  body {
+    background: white !important;
+  }
+  
+  .bg-gray-50,
+  .bg-gray-100 {
+    background: white !important;
+  }
+  
+  /* Keep dark backgrounds for headers */
+  .bg-gray-900 {
+    background: #1a1a1a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Keep status badge colors */
+  .bg-green-500,
+  .bg-yellow-500,
+  .bg-red-500,
+  .bg-gray-500 {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Remove shadows */
+  .shadow-lg,
+  .shadow-sm,
+  .shadow-md,
+  .shadow-xl {
+    box-shadow: none !important;
+  }
+  
+  /* Ensure borders are visible */
+  .border {
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  /* Page break control */
+  .print-break {
+    page-break-inside: avoid;
+  }
+  
+  /* Force rounded corners to print */
+  .rounded-2xl,
+  .rounded-xl,
+  .rounded-lg {
+    border-radius: 8px !important;
+  }
+  
+  /* Ensure proper sizing */
+  #invoice-content {
+    max-width: 100% !important;
+  }
+}

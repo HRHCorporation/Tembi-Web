@@ -122,6 +122,8 @@ export async function POST(request: NextRequest) {
         const subtitle_menu_eng = formData.get("subtitle_menu_eng") as string || "";
         const slug = formData.get("slug") as string;
         const image = formData.get("image") as File;
+        const description_menu_highlight_ind = formData.get("description_menu_highlight_ind") as string;
+        const description_menu_highlight_eng = formData.get("description_menu_highlight_eng") as string;
 
         const foodPackagesPrimaryJson = formData.get("food_packages_primary") as string;
         const foodPackagesPrimary = JSON.parse(foodPackagesPrimaryJson) as FoodPackagePrimary[];
@@ -171,6 +173,12 @@ export async function POST(request: NextRequest) {
         if (!subtitle_menu_eng?.trim()) {
             errors.subtitle_menu_eng = "Subtitle menu English wajib diisi";
         }
+        if (!description_menu_highlight_ind?.trim()) {
+            errors.description_menu_highlight_ind = "Deskripsi menu highlight Indonesia wajib diisi";
+        }
+        if (!description_menu_highlight_eng?.trim()) {
+            errors.description_menu_highlight_eng = "Deskripsi menu highlight English wajib diisi";
+        }
 
         if (Object.keys(errors).length > 0) {
             connection.release();
@@ -215,8 +223,8 @@ export async function POST(request: NextRequest) {
                 (type_catering_service_id, name_ind, name_eng, description_ind, description_eng, 
                  minimum_pax, hours_service_min, hours_service_max, title_menu_ind, title_menu_eng,
                  description_menu_ind, description_menu_eng, description_card_ind, description_card_eng,
-                 slug, created_by, created_at, subtitle_menu_ind, subtitle_menu_eng, image)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)
+                 slug, created_by, created_at, subtitle_menu_ind, subtitle_menu_eng, image, description_menu_highlight_ind, description_menu_highlight_eng)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?)
                 `,
                 [
                     parseInt(type_catering_service_id),
@@ -237,7 +245,9 @@ export async function POST(request: NextRequest) {
                     createdBy,
                     subtitle_menu_ind,
                     subtitle_menu_eng,
-                    `/images/upload/catering/${filename}`
+                    `/images/upload/catering/${filename}`,
+                    description_menu_highlight_ind,
+                    description_menu_highlight_eng
                 ]
             );
 
