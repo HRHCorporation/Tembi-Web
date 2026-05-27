@@ -30,6 +30,9 @@ interface ErrorState {
     subtitle_menu_eng?: string;
     image?: string;
     croppedBlob?: Blob | null;
+    description_menu_highlight_ind?: string;
+    description_menu_highlight_eng?: string;
+
 }
 
 export function useCreateCatering() {
@@ -52,6 +55,8 @@ export function useCreateCatering() {
     const [description_card_eng, setDescriptionCardEng] = useState("");
     const [subtitle_menu_ind, setSubtitleMenuInd] = useState("");
     const [subtitle_menu_eng, setSubtitleMenuEng] = useState("");
+    const [description_menu_highlight_ind, setDescriptionMenuHighlightInd] = useState("");
+    const [description_menu_highlight_eng, setDescriptionMenuHighlightEng] = useState("");
 
     // ✅ Food packages primary (tags)
     const [foodPackagesPrimary, setFoodPackagesPrimary] = useState<FoodPackagePrimary[]>([]);
@@ -152,9 +157,19 @@ export function useCreateCatering() {
             newErrors.subtitle_menu_eng = "Subtitle menu (English) wajib diisi";
             hasError = true;
         }
-        
+
         if (!croppedBlob) {
             newErrors.image = "Image wajib diisi";
+            hasError = true;
+        }
+
+        if (!description_menu_highlight_ind?.trim()) {
+            newErrors.description_menu_highlight_ind = "Description menu highlight (Indonesia) wajib diisi";
+            hasError = true;
+        }
+
+        if (!description_menu_highlight_eng?.trim()) {
+            newErrors.description_menu_highlight_eng = "Description menu highlight (English) wajib diisi";
             hasError = true;
         }
 
@@ -183,6 +198,8 @@ export function useCreateCatering() {
         setErrors({});
         setImage(null);
         setCroppedBlob(null);
+        setDescriptionMenuHighlightInd("");
+        setDescriptionMenuHighlightEng("");
     }
 
     async function handleSubmit() {
@@ -223,6 +240,8 @@ export function useCreateCatering() {
                 subtitle_menu_ind,
                 subtitle_menu_eng,
                 image: croppedBlob!,
+                description_menu_highlight_ind,
+                description_menu_highlight_eng
             });
 
             if (result.success) {
@@ -287,5 +306,9 @@ export function useCreateCatering() {
         setImage,
         setCroppedBlob,
         handleSubmit,
+        description_menu_highlight_ind,
+        description_menu_highlight_eng,
+        setDescriptionMenuHighlightInd,
+        setDescriptionMenuHighlightEng
     };
 }

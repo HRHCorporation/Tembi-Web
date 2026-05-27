@@ -18,6 +18,8 @@ export async function createCatering(payload: {
     subtitle_menu_eng: string;
     food_packages_primary: Array<{ name_ind: string; name_eng: string }>;
     image: Blob;
+    description_menu_highlight_ind: string;
+    description_menu_highlight_eng: string;
 }) {
     const formData = new FormData();
     formData.append("type_catering_service_id", payload.type_catering_service_id);
@@ -39,6 +41,8 @@ export async function createCatering(payload: {
     formData.append("image", payload.image);
     formData.append("subtitle_menu_ind", payload.subtitle_menu_ind);
     formData.append("subtitle_menu_eng", payload.subtitle_menu_eng);
+    formData.append("description_menu_highlight_ind", payload.description_menu_highlight_ind);
+    formData.append("description_menu_highlight_eng", payload.description_menu_highlight_eng);
     const res = await fetch("/api/admin/food/catering", {
         method: "POST",
         body: formData,
@@ -74,6 +78,8 @@ export async function updateCatering(
         food_packages_primary: Array<{ name_ind: string; name_eng: string; id?: number }>;
         deleted_primary_ids: number[];
         image: Blob | null;
+        description_menu_highlight_ind: string;
+        description_menu_highlight_eng: string;
     }
 ) {
     const formData = new FormData();
@@ -94,6 +100,8 @@ export async function updateCatering(
     formData.append("description_card_ind", payload.description_card_ind);
     formData.append("description_card_eng", payload.description_card_eng);
     formData.append("slug", payload.slug);
+    formData.append("description_menu_highlight_ind", payload.description_menu_highlight_ind);
+    formData.append("description_menu_highlight_eng", payload.description_menu_highlight_eng);
 
     // ✅ Append image only if new image selected
     if (payload.image) {

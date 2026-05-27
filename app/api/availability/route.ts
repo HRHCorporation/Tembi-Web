@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // Update Prisma v7: Import dari lib
+import dbWeb from '@/lib/db-web';
+import { RowDataPacket } from 'mysql2';
 
 export async function GET(request: Request) {
   try {
@@ -20,32 +21,24 @@ export async function GET(request: Request) {
     const PAYMENT_WINDOW_MINUTES = 30;
     const expiryThreshold = new Date(Date.now() - PAYMENT_WINDOW_MINUTES * 60 * 1000);
 
-    const conflictingBooking = await prisma.booking.findFirst({
-      where: {
-        roomSlug: roomSlug,
-        // Cek tanggal bentrok (Overlap Logic)
-        AND: [
-          { checkInDate: { lt: checkOutDate } },
-          { checkOutDate: { gt: checkInDate } },
-          {
-            // Cek Status Booking
-            OR: [
-              // 1. Jika sudah PAID, pasti bentrok (kamar tidak tersedia)
-              { status: 'PAID' },
-              
-              // 2. Jika PENDING, cek apakah masih dalam "masa tunggu bayar" (Soft Booking)
-              // Hanya anggap bentrok jika booking dibuat SETELAH expiryThreshold (artinya masih baru)
-              { 
-                status: 'PENDING',
-                createdAt: { gt: expiryThreshold } 
-              }
-            ]
-          }
-        ]
-      },
-    });
+    // Query MySQL untuk cek bentrok
+    const [rows] = await dbWeb.query<RowDataPacket[]>(
+      `SELECT id, status, createdAt 
+       FROM booking 
+       WHERE roomSlug = ? 
+       AND checkInDate < ? 
+       AND checkOutDate > ? 
+       AND (
+         status = 'PAID' 
+         OR (status = 'PENDING' AND createdAt > ?)
+       )
+       LIMIT 1`,
+      [roomSlug, checkOutDate, checkInDate, expiryThreshold]
+    );
 
-    if (conflictingBooking) {
+    if (rows.length > 0) {
+      const conflictingBooking = rows[0];
+      
       // Custom message tergantung status
       const msg = conflictingBooking.status === 'PAID' 
         ? 'Kamar sudah terisi pada tanggal tersebut.' 
