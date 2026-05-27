@@ -14,6 +14,19 @@ interface BlogDetailRow extends RowDataPacket {
     updated_at: string;
 }
 
+const stripHtml = (html: string): string => {
+    if (!html) return '';
+    return html
+        .replace(/<[^>]*>/g, '') // Strip HTML tags
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\s+/g, ' ')
+        .trim();
+};
+
 const getFirstSentence = (text: string): string => {
     if (!text) return "";
     const match = text.match(/^[^.!?]+[.!?]/);
@@ -101,8 +114,8 @@ export async function GET(
             id: r.id,
             title_ind: r.title_ind,
             title_eng: r.title_eng,
-            description_ind: getFirstSentence(r.description_ind),
-            description_eng: getFirstSentence(r.description_eng),
+            description_ind: getFirstSentence(stripHtml(r.description_ind)),
+            description_eng: getFirstSentence(stripHtml(r.description_eng)),
             thumbnail: r.thumbnail || "",
             slug: r.slug,
             created_at: r.created_at,

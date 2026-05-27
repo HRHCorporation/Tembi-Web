@@ -16,6 +16,16 @@ export default function EventPage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const stripHtml = (html: string): string => {
+    if (typeof window === 'undefined') return html.replace(/<[^>]*>/g, '').trim();
+    try {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+    } catch {
+      return html.replace(/<[^>]*>/g, '').trim();
+    }
+  };
+
   const filteredEvents = events.filter(event => {
     const eventDate = new Date(event.date_event);
     eventDate.setHours(0, 0, 0, 0);
@@ -158,12 +168,10 @@ export default function EventPage() {
                       id: event.id,
                       slug: event.slug,
                       title: language === 'id' ? event.title_ind : event.title_eng,
-                      shortDesc: language === 'id' ? event.about_ind : event.about_eng,
+                      shortDesc: stripHtml(language === 'id' ? event.about_ind : event.about_eng),
                       imageUrl: event.thumbnail,
                       date: event.date_event,
                       location: event.hosted_by,
-                      capacity: 0,
-                      category: '' // Category removed as per previous update
                     }}
                   />
                 </ScrollReveal>

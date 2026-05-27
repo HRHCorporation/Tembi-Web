@@ -4,6 +4,7 @@ import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Calendar, MapPin, Share2, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { toast } from 'sonner';
 
 interface EventDetail {
   id: number;
@@ -429,15 +430,46 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                   </div>
                   <div>
                     <p className="font-semibold text-[#2d3436]">Tembi Cultural House</p>
-                    <p className="text-sm text-gray-600">{event.hosted_by}</p>
+                    <p className="text-sm text-gray-600">Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188</p>
                   </div>
                 </div>
               </div>
 
               {/* Share Button */}
               <div className="flex gap-3 mt-4 pt-4 border-t border-gray-200">
-                <button className="text-gray-500 hover:text-[#8da077] transition-colors">
+                <button
+                  onClick={async () => {
+                    const url = window.location.href;
+                    if (navigator.share) {
+                      try {
+                        await navigator.share({ title: eventName, url });
+                      } catch (err) {
+                        if ((err as Error).name !== 'AbortError') {
+                          console.error('Error sharing:', err);
+                        }
+                      }
+                    } else {
+                      try {
+                        await navigator.clipboard.writeText(url);
+                        toast.success(
+                          language === 'id'
+                            ? 'Tautan acara berhasil disalin!'
+                            : 'Event link successfully copied!'
+                        );
+                      } catch (err) {
+                        console.error('Failed to copy:', err);
+                        toast.error(
+                          language === 'id'
+                            ? 'Gagal menyalin tautan'
+                            : 'Failed to copy link'
+                        );
+                      }
+                    }
+                  }}
+                  className="flex items-center gap-2 text-gray-500 hover:text-[#8da077] transition-colors text-sm"
+                >
                   <Share2 size={18} />
+                  <span>{language === 'id' ? 'Bagikan' : 'Share'}</span>
                 </button>
               </div>
             </div>
