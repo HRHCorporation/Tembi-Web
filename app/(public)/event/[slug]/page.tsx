@@ -20,11 +20,6 @@ interface EventDetail {
   updated_at?: string;
 }
 
-interface EventDetailResponse {
-  detail: EventDetail;
-  upcoming: EventDetail[];
-}
-
 // Fallback static data for development
 const fallbackEventsData = [
   {
@@ -458,7 +453,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
             </div>
 
             {/* About Event */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg mb-8">
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg" style={{ marginBottom: '20px' }}>
               <h2 className="text-2xl font-bold font-serif mb-4 text-[#2d3436]">
                 {language === 'id' ? 'Tentang Acara' : 'About Event'}
               </h2>
@@ -476,9 +471,30 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               />
             </div>
 
+            {/* Maps Section */}
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg" style={{ marginBottom: '20px' }}>
+              <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
+                📍 {language === 'id' ? 'Lokasi Tembi Cultural House' : 'Tembi Cultural House Location'}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
+              </p>
+              <div className="w-full h-96 bg-gray-100 rounded-xl overflow-hidden">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.238503224582!2d110.35133468479795!3d-7.870093194318616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a560cf1551d0b%3A0x1db36094db031949!2sTembi%20-%20Historical%20Home!5e0!3m2!1sen!2sid!4v1650000000000!5m2!1sen!2sid"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </div>
+
             {/* Related Events */}
             {relatedEvents.length > 0 && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+              <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg mb-8">
                 <h3 className="text-xl font-bold font-serif mb-6 text-[#2d3436]">
                   {language === 'id' ? 'Event Lainnya' : 'Other Events'}
                 </h3>
@@ -517,34 +533,6 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </div>
-
-      {/* Maps Section - Inside Grid Layout */}
-      <div className="container mx-auto px-6 pb-20" style={{ marginTop: '-10rem' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
-          <div className="lg:col-span-4"></div>
-          <div className="lg:col-span-8">
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-              <h3 className="text-xl font-bold font-serif mb-4 text-[#2d3436]">
-                📍 {language === 'id' ? 'Lokasi Tembi Cultural House' : 'Tembi Cultural House Location'}
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188
-              </p>
-              <div className="w-full h-96 bg-gray-100 rounded-xl overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.238503224582!2d110.35133468479795!3d-7.870093194318616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a560cf1551d0b%3A0x1db36094db031949!2sTembi%20-%20Historical%20Home!5e0!3m2!1sen!2sid!4v1650000000000!5m2!1sen!2sid"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen={true}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
-            </div>
           </div>
         </div>
       </div>
