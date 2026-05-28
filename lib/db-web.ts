@@ -10,9 +10,6 @@ const pool =
         uri: process.env.DATABASE_URL_WEB,
         waitForConnections: true,
         connectionLimit: 10,
-        ssl: {
-            rejectUnauthorized: false,
-        },
     });
 
 if (process.env.NODE_ENV !== "production") {
