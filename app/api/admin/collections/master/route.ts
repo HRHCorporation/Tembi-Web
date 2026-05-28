@@ -24,6 +24,8 @@ interface SessionUser {
     GET DATA
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const searchParams = request.nextUrl.searchParams;
         const page = Number(searchParams.get("page") || 1);
@@ -32,44 +34,44 @@ export async function GET(request: NextRequest) {
         const offset = (page - 1) * limit;
         const sortBy = searchParams.get("sortBy") || "id";
         const sortOrder = searchParams.get("sortOrder") || "DESC";
-        const [rows] = await dbWeb.query<CollectionRow[]>(  // ← ganti any
-            `
-            SELECT id, name_ind, name_eng
+
+        const [rows] = await connection.query<CollectionRow[]>(
+            `SELECT id, name_ind, name_eng
             FROM mstr_collection
             WHERE name_ind LIKE ? OR name_eng LIKE ?
             ORDER BY ${sortBy} ${sortOrder}
-            LIMIT ? OFFSET ?
-            `,
+            LIMIT ? OFFSET ?`,
             [`%${search}%`, `%${search}%`, limit, offset]
         );
-        const [totalRows] = await dbWeb.query<CountRow[]>(  // ← ganti any
-            `
-            SELECT COUNT(*) as total
+
+        const [totalRows] = await connection.query<CountRow[]>(
+            `SELECT COUNT(*) as total
             FROM mstr_collection
-            WHERE name_ind LIKE ? OR name_eng LIKE ?
-            `,
+            WHERE name_ind LIKE ? OR name_eng LIKE ?`,
             [`%${search}%`, `%${search}%`]
         );
+
         const total = totalRows[0].total;
-        const totalPages = Math.ceil(total / limit);
+
         return NextResponse.json({
             success: true,
             data: rows,
-            pagination: {
-                total,
-                totalPages,
-            },
+            pagination: { total, totalPages: Math.ceil(total / limit) },
         });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Failed to fetch data" }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: "Failed to fetch data" },
+            { status: 500 }
+        );
+    } finally {
+        connection.release();
     }
 }
 
-/* ======================================================
-    CREATE DATA
-====================================================== */
 export async function POST(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const cookieStore = await cookies();
         const session = cookieStore.get(
@@ -77,26 +79,37 @@ export async function POST(request: NextRequest) {
         );
 
         let createdBy = "system";
-
         if (session?.value) {
-            const user = JSON.parse(session.value) as SessionUser;  // ← ganti any
+            const user = JSON.parse(session.value) as SessionUser;
             createdBy = user.name;
         }
-        
+
         const formData = await request.formData();
         const name_ind = formData.get("name_ind") as string;
         const name_eng = formData.get("name_eng") as string;
 
-        await dbWeb.query(
-            `
-            INSERT INTO mstr_collection (name_ind, name_eng, created_by, created_at)
-            VALUES (?, ?, ?, NOW())
-            `,
+        await connection.beginTransaction();
+
+        await connection.query(
+            `INSERT INTO mstr_collection (name_ind, name_eng, created_by, created_at)
+            VALUES (?, ?, ?, NOW())`,
             [name_ind, name_eng, createdBy]
         );
-        return NextResponse.json({ success: true, message: "Fasilitas berhasil ditambahkan" });
+
+        await connection.commit();
+
+        return NextResponse.json({
+            success: true,
+            message: "Collection berhasil ditambahkan",
+        });
     } catch (error) {
+        await connection.rollback();
         console.error(error);
-        return NextResponse.json({ success: false, message: "Failed to create Collection" }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: "Failed to create Collection" },
+            { status: 500 }
+        );
+    } finally {
+        connection.release();
     }
 }

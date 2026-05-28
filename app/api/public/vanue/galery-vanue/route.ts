@@ -12,6 +12,7 @@ interface GalleryRow extends RowDataPacket {
     GET DATA - Fetch venue galleries (max 6, min 1 per venue)
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<GalleryRow[]>(query, params);
+        const [rows] = await connection.query<GalleryRow[]>(query, params);
 
         // Extract only images
         const images = rows.map(row => row.image);
@@ -78,5 +79,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

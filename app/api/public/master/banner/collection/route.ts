@@ -17,6 +17,7 @@ interface BannerRow extends RowDataPacket {
     GET DATA - Fetch all carousels
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         let query = `
             SELECT 
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
 
         query += ' ORDER BY created_at DESC';
 
-        const [rows] = await dbWeb.query<BannerRow[]>(query, params);
+        const [rows] = await connection.query<BannerRow[]>(query, params);
 
         return NextResponse.json({
             success: true,
@@ -46,12 +47,14 @@ export async function GET(request: NextRequest) {
     } catch (error) {
         console.error('Error fetching carousels:', error);
         return NextResponse.json(
-            { 
-                success: false, 
+            {
+                success: false,
                 message: "Failed to fetch data",
                 error: error instanceof Error ? error.message : 'Unknown error'
-            }, 
+            },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

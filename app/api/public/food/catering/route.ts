@@ -26,6 +26,7 @@ interface FoodPackageRow extends RowDataPacket {
     GET DATA - Fetch all food packages with primary foods
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT 
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<FoodPackageRow[]>(query, params);
+        const [rows] = await connection.query<FoodPackageRow[]>(query, params);
 
         // Parse JSON primary_foods untuk setiap row
         const processedRows = rows.map(row => {
@@ -119,5 +120,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

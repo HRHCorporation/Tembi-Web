@@ -28,6 +28,7 @@ interface RoomRow extends RowDataPacket {
     GET DATA - Fetch recommended rooms
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT
@@ -112,12 +113,12 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<RoomRow[]>(query, params);
+        const [rows] = await connection.query<RoomRow[]>(query, params);
 
         // Parse JSON facilities untuk setiap row
         const processedRows = rows.map(row => {
             let facilities: RoomFacility[] = [];
-            
+
             if (row.facilities) {
                 // Cek apakah sudah object atau masih string
                 if (typeof row.facilities === 'string') {
@@ -129,13 +130,13 @@ export async function GET(request: NextRequest) {
                 } else {
                     facilities = row.facilities as RoomFacility[];
                 }
-                
+
                 // Filter null values
                 if (Array.isArray(facilities)) {
                     facilities = facilities.filter(f => f && f.id !== null);
                 }
             }
-            
+
             return {
                 id: row.id,
                 title_ind: row.title_ind,
@@ -160,12 +161,14 @@ export async function GET(request: NextRequest) {
     } catch (error) {
         console.error('Error fetching recommended rooms:', error);
         return NextResponse.json(
-            { 
-                success: false, 
+            {
+                success: false,
                 message: "Failed to fetch data",
                 error: error instanceof Error ? error.message : 'Unknown error'
-            }, 
+            },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

@@ -20,10 +20,10 @@ export async function GET(
 ) {
     const { id } = await params;
     const packageId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
-        // ✅ Fetch banner
-        const [banner] = await dbWeb.query(
+        const [banner] = await connection.query(
             "SELECT * FROM room_page_meta WHERE id = ?",
             [packageId]
         );
@@ -37,9 +37,7 @@ export async function GET(
 
         return NextResponse.json({
             success: true,
-            data: {
-                ...(banner[0] as Record<string, unknown>),
-            },
+            data: { ...(banner[0] as Record<string, unknown>) },
         });
     } catch (error) {
         console.error("[GET_FOOD_PACKAGE_ERROR]", error);
@@ -47,6 +45,8 @@ export async function GET(
             { success: false, message: "Gagal mengambil data" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
 
@@ -72,7 +72,7 @@ export async function PUT(
 
         const formData = await req.formData();
 
-        // Extract form data
+
         const type_catering_service_id = formData.get("type_catering_service_id") as string;
         const title_ind = formData.get("title_ind") as string;
         const title_eng = formData.get("title_eng") as string;
@@ -83,7 +83,7 @@ export async function PUT(
 
         const imageFile = formData.get("image") as File | null;
 
-        // Validation
+
         const errors: ErrorResponse = {};
 
         if (!title_ind?.trim()) errors.name_ind = "Title Indonesia wajib diisi";
@@ -99,21 +99,21 @@ export async function PUT(
             );
         }
 
-        // ✅ Process new image if uploaded
+
         let dbPath: string | null = null;
 
         if (imageFile) {
             const buffer = await imageFile.arrayBuffer();
 
-            // ✅ Convert ke WebP pakai sharp
+
             const webpBuffer = await sharp(Buffer.from(buffer))
                 .webp({ quality: 80 })
                 .toBuffer();
 
-            // ✅ Filename dengan slug
+
             const filename = `banner-${Date.now()}-${Math.random()
-            .toString(36)
-            .substring(2, 8)}.webp`;
+                .toString(36)
+                .substring(2, 8)}.webp`;
             const filepath = join(process.cwd(), `public/images/upload/banner/${filename}`);
             dbPath = `/images/upload/banner/${filename}`;
 
@@ -124,7 +124,7 @@ export async function PUT(
         await connection.beginTransaction();
 
         try {
-            // ✅ Build UPDATE query dinamis
+
             let updateQuery = `
                 UPDATE room_page_meta SET
                     title_ind = ?, title_eng = ?,
@@ -141,7 +141,7 @@ export async function PUT(
                 subtitle_eng
             ];
 
-            // ✅ Add image to UPDATE if new image uploaded
+
             if (dbPath) {
                 updateQuery += `, image = ?`;
                 updateParams.push(dbPath);
@@ -167,10 +167,13 @@ export async function PUT(
             throw transactionError;
         }
     } catch (error) {
+        await connection.rollback();
         console.error("[UPDATE_FOOD_PACKAGE_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

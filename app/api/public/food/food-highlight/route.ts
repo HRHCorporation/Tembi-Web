@@ -21,6 +21,7 @@ interface FoodPackageHighlightRow extends RowDataPacket {
     GET DATA - Fetch food packages with menu highlights
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT 
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<FoodPackageHighlightRow[]>(query, params);
+        const [rows] = await connection.query<FoodPackageHighlightRow[]>(query, params);
 
         // Parse JSON menu_foods untuk setiap row
         const processedRows = rows.map(row => {
@@ -102,5 +103,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

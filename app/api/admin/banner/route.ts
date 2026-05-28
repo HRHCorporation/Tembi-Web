@@ -23,6 +23,8 @@ interface CountRow extends RowDataPacket {
     GET DATA
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const searchParams = request.nextUrl.searchParams;
         const page = Number(searchParams.get("page") || 1);
@@ -31,7 +33,8 @@ export async function GET(request: NextRequest) {
         const offset = (page - 1) * limit;
         const sortBy = searchParams.get("sortBy") || "id";
         const sortOrder = searchParams.get("sortOrder") || "DESC";
-        const [rows] = await dbWeb.query<BannerRow[]>(  // ← ganti any
+
+        const [rows] = await connection.query<BannerRow[]>(
             `
             SELECT room_page_meta.id, room_page_meta.title_ind, room_page_meta.title_eng, mstr_page.name as name_page
             FROM room_page_meta
@@ -42,7 +45,8 @@ export async function GET(request: NextRequest) {
             `,
             [`%${search}%`, `%${search}%`, limit, offset]
         );
-        const [totalRows] = await dbWeb.query<CountRow[]>(  // ← ganti any
+
+        const [totalRows] = await connection.query<CountRow[]>(
             `
             SELECT COUNT(*) as total
             FROM room_page_meta
@@ -50,18 +54,22 @@ export async function GET(request: NextRequest) {
             `,
             [`%${search}%`, `%${search}%`]
         );
+
         const total = totalRows[0].total;
         const totalPages = Math.ceil(total / limit);
+
         return NextResponse.json({
             success: true,
             data: rows,
-            pagination: {
-                total,
-                totalPages,
-            },
+            pagination: { total, totalPages },
         });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Failed to fetch data" }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: "Failed to fetch data" },
+            { status: 500 }
+        );
+    } finally {
+        connection.release();
     }
 }

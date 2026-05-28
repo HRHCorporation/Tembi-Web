@@ -8,22 +8,23 @@ interface CollectionRow extends RowDataPacket {
 }
 
 export async function GET() {
+    const connection = await dbWeb.getConnection();
+
     try {
-        const [rows] = await dbWeb.query<CollectionRow[]>(
-            `
-            SELECT id AS value, name_ind AS label
+        const [rows] = await connection.query<CollectionRow[]>(
+            `SELECT id AS value, name_ind AS label
             FROM mstr_collection
-            ORDER BY name_ind ASC
-            `
+            ORDER BY name_ind ASC`
         );
 
         return NextResponse.json({ success: true, data: rows });
-
     } catch (error) {
         console.error(error);
         return NextResponse.json(
             { success: false, message: "Failed to fetch options" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

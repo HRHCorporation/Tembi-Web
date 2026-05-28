@@ -29,6 +29,7 @@ export async function GET(
     request: NextRequest,
     context: { params: Promise<{ slug: string }> }
 ) {
+    const connection = await dbWeb.getConnection();
     try {
         const { slug } = await context.params;
 
@@ -77,8 +78,8 @@ export async function GET(
             [detailRows],
             [upcomingRows]
         ] = await Promise.all([
-            dbWeb.query<EventDetailRow[]>(detailQuery, [slug]),
-            dbWeb.query<EventDetailRow[]>(upcomingQuery, [slug]),
+            connection.query<EventDetailRow[]>(detailQuery, [slug]),
+            connection.query<EventDetailRow[]>(upcomingQuery, [slug]),
         ]);
 
         if (detailRows.length === 0) {
@@ -139,5 +140,7 @@ export async function GET(
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
