@@ -16,6 +16,7 @@ interface EventRow extends RowDataPacket {
 }
 
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const { searchParams } = new URL(request.url);
         const status = searchParams.get("status"); // "upcoming" | "past" | null
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
             ${orderClause}
         `;
 
-        const [rows] = await dbWeb.query<EventRow[]>(query);
+        const [rows] = await connection.query<EventRow[]>(query);
 
         const getFirstSentence = (text: string): string => {
             if (!text) return "";
@@ -99,5 +100,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

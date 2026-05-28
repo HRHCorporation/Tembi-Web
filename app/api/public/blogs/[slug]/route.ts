@@ -26,59 +26,32 @@ export async function GET(
     request: NextRequest,
     context: { params: Promise<{ slug: string }> }
 ) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const { slug } = await context.params;
 
-        // Query 1: detail blog by slug
         const detailQuery = `
-            SELECT 
-                id,
-                title_ind,
-                title_eng,
-                description_ind,
-                description_eng,
-                thumbnail,
-                slug,
-                created_at,
-                updated_at
-            FROM blogs
-            WHERE slug = ?
-            LIMIT 1
+            SELECT id, title_ind, title_eng, description_ind, description_eng,
+                thumbnail, slug, created_at, updated_at
+            FROM blogs WHERE slug = ? LIMIT 1
         `;
 
-        // Query 2: blog terbaru (exclude yang sedang dibuka)
         const latestQuery = `
-            SELECT 
-                id,
-                title_ind,
-                title_eng,
-                description_ind,
-                description_eng,
-                thumbnail,
-                slug,
-                created_at,
-                updated_at
-            FROM blogs
-            WHERE slug != ?
-            ORDER BY created_at DESC
-            LIMIT 4
+            SELECT id, title_ind, title_eng, description_ind, description_eng,
+                thumbnail, slug, created_at, updated_at
+            FROM blogs WHERE slug != ?
+            ORDER BY created_at DESC LIMIT 4
         `;
 
-        // Jalankan paralel
-        const [
-            [detailRows],
-            [latestRows]
-        ] = await Promise.all([
-            dbWeb.query<BlogDetailRow[]>(detailQuery, [slug]),
-            dbWeb.query<BlogDetailRow[]>(latestQuery, [slug]),
+        const [[detailRows], [latestRows]] = await Promise.all([
+            connection.query<BlogDetailRow[]>(detailQuery, [slug]),
+            connection.query<BlogDetailRow[]>(latestQuery, [slug]),
         ]);
 
         if (detailRows.length === 0) {
             return NextResponse.json(
-                {
-                    success: false,
-                    message: "Blog not found",
-                },
+                { success: false, message: "Blog not found" },
                 { status: 404 }
             );
         }
@@ -111,12 +84,8 @@ export async function GET(
 
         return NextResponse.json({
             success: true,
-            data: {
-                detail,
-                latest,
-            },
+            data: { detail, latest },
         });
-
     } catch (error) {
         console.error("Error fetching blog detail:", error);
         return NextResponse.json(
@@ -127,5 +96,7 @@ export async function GET(
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

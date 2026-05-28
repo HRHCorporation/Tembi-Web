@@ -15,16 +15,16 @@ interface ErrorResponse {
     [key: string]: string;
 }
 
-// ✅ GET - Fetch blog by ID
 export async function GET(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
     const blogId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
-        const [blogs] = await dbWeb.query(
+        const [blogs] = await connection.query(
             "SELECT * FROM blogs WHERE id = ?",
             [blogId]
         );
@@ -46,16 +46,18 @@ export async function GET(
             { success: false, message: "Gagal mengambil data" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
 
-// ✅ PUT - Update blog
 export async function PUT(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
     const blogId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
         const cookieStore = await cookies();
@@ -70,8 +72,6 @@ export async function PUT(
         }
 
         const formData = await req.formData();
-
-        // Extract form data
         const title_ind = formData.get("title_ind") as string;
         const title_eng = formData.get("title_eng") as string;
         const description_ind = formData.get("description_ind") as string;
@@ -79,9 +79,7 @@ export async function PUT(
         const slug = formData.get("slug") as string;
         const thumbnailFile = formData.get("thumbnail") as File | null;
 
-        // Validation
         const errors: ErrorResponse = {};
-
         if (!title_ind?.trim()) errors.title_ind = "Judul Indonesia wajib diisi";
         if (!title_eng?.trim()) errors.title_eng = "Judul English wajib diisi";
         if (!description_ind?.trim()) errors.description_ind = "Deskripsi Indonesia wajib diisi";
@@ -97,78 +95,51 @@ export async function PUT(
 
         let newThumbnailPath: string | null = null;
 
-        // ✅ Process new thumbnail if provided
         if (thumbnailFile) {
             const bytes = await thumbnailFile.arrayBuffer();
             const buffer = Buffer.from(bytes);
             const filename = `blog-${Date.now()}-${Math.random()
                 .toString(36)
                 .substring(2, 8)}.webp`;
-
             const uploadDir = path.join(process.cwd(), "public/images/upload/blogs");
-
             await mkdir(uploadDir, { recursive: true });
-
-            const filePath = path.join(uploadDir, filename);
-
-            await sharp(buffer)
-                .webp({ quality: 80 })
-                .toFile(filePath);
-
+            await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, filename));
             newThumbnailPath = `/images/upload/blogs/${filename}`;
         }
 
-        // Get old thumbnail path before updating
-        const [oldData] = await dbWeb.query(
+
+        const [oldData] = await connection.query(
             "SELECT thumbnail FROM blogs WHERE id = ?",
             [blogId]
         );
 
-        // ✅ Update blog
+        await connection.beginTransaction();
+
         if (newThumbnailPath) {
-            await dbWeb.query(
-                `
-                UPDATE blogs SET
+            await connection.query(
+                `UPDATE blogs SET
                     title_ind = ?, title_eng = ?,
                     description_ind = ?, description_eng = ?,
                     slug = ?, thumbnail = ?,
                     updated_by = ?, updated_at = NOW()
-                WHERE id = ?
-                `,
-                [
-                    title_ind,
-                    title_eng,
-                    description_ind,
-                    description_eng,
-                    slug,
-                    newThumbnailPath,
-                    updatedBy,
-                    blogId,
-                ]
+                WHERE id = ?`,
+                [title_ind, title_eng, description_ind, description_eng, slug, newThumbnailPath, updatedBy, blogId]
             );
         } else {
-            await dbWeb.query(
-                `
-                UPDATE blogs SET
+            await connection.query(
+                `UPDATE blogs SET
                     title_ind = ?, title_eng = ?,
                     description_ind = ?, description_eng = ?,
                     slug = ?,
                     updated_by = ?, updated_at = NOW()
-                WHERE id = ?
-                `,
-                [
-                    title_ind,
-                    title_eng,
-                    description_ind,
-                    description_eng,
-                    slug,
-                    updatedBy,
-                    blogId,
-                ]
+                WHERE id = ?`,
+                [title_ind, title_eng, description_ind, description_eng, slug, updatedBy, blogId]
             );
         }
 
-        // ✅ Delete old thumbnail if new thumbnail was uploaded
+        await connection.commit();
+
+
         if (newThumbnailPath && Array.isArray(oldData) && oldData.length > 0) {
             const oldThumbnail = (oldData[0] as Record<string, unknown>).thumbnail as string;
             if (oldThumbnail) {
@@ -189,44 +160,49 @@ export async function PUT(
             data: { id: blogId },
         });
     } catch (error) {
+        await connection.rollback();
         console.error("[UPDATE_BLOG_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
 
-// ✅ DELETE - Delete blog with thumbnail cleanup
 export async function DELETE(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
     const blogId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
-        // Get thumbnail path before deleting
-        const [oldData] = await dbWeb.query(
+        const [oldData] = await connection.query(
             "SELECT thumbnail FROM blogs WHERE id = ?",
             [blogId]
         );
 
-        // Delete blog
-        const [result] = await dbWeb.query(
+        await connection.beginTransaction();
+
+        const [result] = await connection.query(
             "DELETE FROM blogs WHERE id = ?",
             [blogId]
         );
 
         const deletedResult = result as unknown as { affectedRows: number };
         if (deletedResult.affectedRows === 0) {
+            await connection.rollback();
             return NextResponse.json(
                 { success: false, message: "Data tidak ditemukan" },
                 { status: 404 }
             );
         }
 
-        // ✅ Delete thumbnail file
+        await connection.commit();
+
         if (Array.isArray(oldData) && oldData.length > 0) {
             const oldThumbnail = (oldData[0] as Record<string, unknown>).thumbnail as string;
             if (oldThumbnail) {
@@ -246,10 +222,13 @@ export async function DELETE(
             message: "Blog berhasil dihapus",
         });
     } catch (error) {
+        await connection.rollback();
         console.error("[DELETE_BLOG_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Gagal menghapus blog" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

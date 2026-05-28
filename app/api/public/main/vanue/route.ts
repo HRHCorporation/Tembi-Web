@@ -24,6 +24,7 @@ interface VanueRow extends RowDataPacket {
     GET DATA - Fetch all venues with facilities
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT 
@@ -63,12 +64,12 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<VanueRow[]>(query, params);
+        const [rows] = await connection.query<VanueRow[]>(query, params);
 
         // Parse JSON facilities untuk setiap row
         const processedRows = rows.map(row => {
             let facilities: VanueFacility[] = [];
-            
+
             if (row.facilities) {
                 // Cek apakah sudah object atau masih string
                 if (typeof row.facilities === 'string') {
@@ -76,11 +77,11 @@ export async function GET(request: NextRequest) {
                 } else {
                     facilities = row.facilities as VanueFacility[];
                 }
-                
+
                 // Filter null values (jika LEFT JOIN tidak match)
                 facilities = facilities.filter(f => f.id !== null);
             }
-            
+
             return {
                 id: row.id,
                 name_ind: row.name_ind,
@@ -108,5 +109,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
