@@ -33,6 +33,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'staging-compro.tembihistoricalhome.com',
+        port: '3000',
+        pathname: '/**',
+      }
     ],
   },
 };
