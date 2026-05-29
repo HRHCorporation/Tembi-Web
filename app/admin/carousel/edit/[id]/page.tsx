@@ -106,7 +106,7 @@ export default function EditCarouselPage() {
                         {!image && previewImage && (
                             <div className="mb-4">
                                 <Image
-                                    src={"/public/" + previewImage}
+                                    src={previewImage}
                                     alt="Preview"
                                     width={400}
                                     height={200}
