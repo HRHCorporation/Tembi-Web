@@ -5,7 +5,6 @@ import { RowDataPacket } from "mysql2";
 import path from "path/win32";
 import fs from "fs";
 import sharp from "sharp";
-import { join } from "path";
 
 // ← tipe untuk data fasilitas
 interface CateringRow extends RowDataPacket {
@@ -199,18 +198,18 @@ export async function POST(request: NextRequest) {
             .toString(36)
             .substring(2, 8)}.webp`;
 
-        const uploadDir = join(process.cwd(), "public", "images", "upload", "catering");
+        const uploadDir = path.join(process.cwd(), "public/images/upload/catering");
 
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
 
-        const filePath = path.join(uploadDir, filename);
+        // const filePath = path.join(uploadDir, filename);
 
         await sharp(buffer)
             .resize(1920, 1080)
             .webp({ quality: 80 })
-            .toFile(filePath);
+            .toFile(path.join(uploadDir, filename));
 
 
         // Start transaction
