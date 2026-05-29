@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbWeb from "@/lib/db-web";
 import { cookies } from "next/headers";
 import { RowDataPacket } from "mysql2";
-import path from "path/win32";
+import path from "path";
 import fs from "fs";
 import sharp from "sharp";
 
