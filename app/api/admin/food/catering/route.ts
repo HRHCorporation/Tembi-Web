@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
             .toString(36)
             .substring(2, 8)}.webp`;
 
-        const uploadDir = `${process.cwd()}/public/images/upload/catering`;
+        const uploadDir = path.join(process.cwd(), "public/images/upload/catering");
 
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
