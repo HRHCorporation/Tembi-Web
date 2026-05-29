@@ -5,6 +5,7 @@ import { RowDataPacket } from "mysql2";
 import path from "path/win32";
 import fs from "fs";
 import sharp from "sharp";
+import { join } from "path";
 
 // ← tipe untuk data fasilitas
 interface CateringRow extends RowDataPacket {
@@ -198,7 +199,7 @@ export async function POST(request: NextRequest) {
             .toString(36)
             .substring(2, 8)}.webp`;
 
-        const uploadDir = path.join(process.cwd(), "public/images/upload/catering");
+        const uploadDir = join(process.cwd(), "public", "images", "upload", "catering");
 
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
