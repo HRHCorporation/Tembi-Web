@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, Calendar, Share2, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/app/context/LanguageContext';
+import { toast } from 'sonner';
 
 interface Blog {
   id: number;
@@ -85,6 +86,40 @@ export default function BlogDetailPage() {
     year: 'numeric'
   });
 
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = title || 'Tembi Blog';
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          url: shareUrl,
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success(
+          language === 'id' 
+            ? 'Tautan artikel berhasil disalin!' 
+            : 'Article link successfully copied!'
+        );
+      } catch (err) {
+        console.error('Failed to copy to clipboard:', err);
+        toast.error(
+          language === 'id'
+            ? 'Gagal menyalin tautan'
+            : 'Failed to copy link'
+        );
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#fdfcf7] text-[#2d3436] pb-20 font-sans">
       
@@ -127,7 +162,10 @@ export default function BlogDetailPage() {
               <Calendar size={14} className="text-[#8da077]" />
               {language === 'id' ? 'Diterbitkan:' : 'Published:'} {formattedDate}
             </div>
-            <button className="flex items-center gap-2 text-[#8da077] text-[10px] font-bold uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">
+            <button 
+              onClick={handleShare}
+              className="flex items-center gap-2 text-[#8da077] text-[10px] font-bold uppercase tracking-[0.2em] hover:opacity-70 transition-opacity"
+            >
               <Share2 size={14} /> {language === 'id' ? 'Bagikan' : 'Share'}
             </button>
           </div>

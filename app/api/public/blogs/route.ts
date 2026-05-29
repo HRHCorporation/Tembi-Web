@@ -28,6 +28,21 @@ export async function GET(request: NextRequest) {
         );
 
         const processedRows = rows.map(row => {
+            // Function to strip HTML tags and decode basic HTML entities
+            const stripHtml = (html: string): string => {
+                if (!html) return '';
+                return html
+                    .replace(/<[^>]*>/g, '') // Strip HTML tags
+                    .replace(/&nbsp;/g, ' ')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            };
+
+            // Function to get first sentence
             const getFirstSentence = (text: string): string => {
                 if (!text) return '';
 
@@ -48,8 +63,8 @@ export async function GET(request: NextRequest) {
                 id: row.id,
                 title_ind: row.title_ind,
                 title_eng: row.title_eng,
-                description_ind: getFirstSentence(row.description_ind),
-                description_eng: getFirstSentence(row.description_eng),
+                description_ind: getFirstSentence(stripHtml(row.description_ind)),
+                description_eng: getFirstSentence(stripHtml(row.description_eng)),
                 thumbnail: row.thumbnail || '',
                 slug: row.slug,
                 created_at: row.created_at

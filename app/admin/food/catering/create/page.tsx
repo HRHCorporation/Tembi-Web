@@ -50,6 +50,10 @@ export default function CreateCateringPage() {
         image,
         setImage,
         setCroppedBlob,
+        description_menu_highlight_ind,
+        description_menu_highlight_eng,
+        setDescriptionMenuHighlightInd,
+        setDescriptionMenuHighlightEng
     } = useCreateCatering();
 
     return (
@@ -366,6 +370,40 @@ export default function CreateCateringPage() {
                     />
                     {errors.description_card_eng && (
                         <p className="mt-1 text-sm text-red-600">{errors.description_card_eng}</p>
+                    )}
+                </div>
+
+                {/* Description Menu Highlight Indonesia */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Deskripsi Menu Highlight (Indonesia)
+                    </label>
+                    <input
+                        type="text"
+                        value={description_menu_highlight_ind}
+                        onChange={(e) => setDescriptionMenuHighlightInd(e.target.value)}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter description menu highlight"
+                    />
+                    {errors.description_menu_highlight_ind && (
+                        <p className="mt-1 text-sm text-red-600">{errors.description_menu_highlight_ind}</p>
+                    )}
+                </div>
+
+                {/* Description Menu Highlight English */}
+                <div>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                        Deskripsi Menu Highlight (English)
+                    </label>
+                    <input
+                        type="text"
+                        value={description_menu_highlight_eng}
+                        onChange={(e) => setDescriptionMenuHighlightEng(e.target.value)}
+                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter description menu highlight"
+                    />
+                    {errors.description_menu_highlight_eng && (
+                        <p className="mt-1 text-sm text-red-600">{errors.description_menu_highlight_eng}</p>
                     )}
                 </div>
 

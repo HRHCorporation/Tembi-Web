@@ -30,6 +30,8 @@ interface ErrorState {
     description_card_eng?: string;
     food_packages_primary?: string;
     image?: string;
+    description_menu_highlight_ind?: string;
+    description_menu_highlight_eng?: string;
 }
 
 export function useEditCateringRoom(id: string) {
@@ -52,6 +54,8 @@ export function useEditCateringRoom(id: string) {
     const [description_menu_eng, setDescriptionMenuEng] = useState("");
     const [description_card_ind, setDescriptionCardInd] = useState("");
     const [description_card_eng, setDescriptionCardEng] = useState("");
+    const [description_menu_highlight_ind, setDescriptionMenuHighlightInd] = useState("");
+    const [description_menu_highlight_eng, setDescriptionMenuHighlightEng] = useState("");
 
     // ✅ Food packages primary (tags)
     const [foodPackagesPrimary, setFoodPackagesPrimary] = useState<FoodPackagePrimary[]>([]);
@@ -91,11 +95,12 @@ export function useEditCateringRoom(id: string) {
                 setDescriptionMenuEng((data.description_menu_eng as string) || "");
                 setDescriptionCardInd((data.description_card_ind as string) || "");
                 setDescriptionCardEng((data.description_card_eng as string) || "");
-                
+                setDescriptionMenuHighlightInd((data.description_menu_highlight_ind as string) || "");
+                setDescriptionMenuHighlightEng((data.description_menu_highlight_eng as string) || "");
                 // ✅ Set food packages primary
                 const primaryData = data.food_packages_primary as FoodPackagePrimary[] || [];
                 setFoodPackagesPrimary(primaryData);
-                
+
                 // ✅ Set existing image
                 const imageUrl = data.image as string;
                 if (imageUrl) {
@@ -209,6 +214,17 @@ export function useEditCateringRoom(id: string) {
             hasError = true;
         }
 
+        if (!description_menu_highlight_ind?.trim()) {
+            newErrors.description_menu_highlight_ind = "Description menu highlight (Indonesia) wajib diisi";
+            hasError = true;
+        }
+
+
+        if (!description_menu_highlight_eng?.trim()) {
+            newErrors.description_menu_highlight_eng = "Description menu highlight (English) wajib diisi";
+            hasError = true;
+        }
+
         setErrors(newErrors);
         return !hasError;
     }
@@ -218,12 +234,12 @@ export function useEditCateringRoom(id: string) {
     ===================================== */
     function handleDeletePrimary(index: number) {
         const primary = foodPackagesPrimary[index];
-        
+
         // Track deleted ID if existing
         if (primary.id) {
             setDeletedPrimaryIds([...deletedPrimaryIds, primary.id]);
         }
-        
+
         // Remove dari array
         setFoodPackagesPrimary(foodPackagesPrimary.filter((_, i) => i !== index));
     }
@@ -271,6 +287,8 @@ export function useEditCateringRoom(id: string) {
                 food_packages_primary: foodPackagesPrimary,
                 deleted_primary_ids: deletedPrimaryIds,
                 image: croppedBlob,
+                description_menu_highlight_ind,
+                description_menu_highlight_eng
             });
 
             if (result.success) {
@@ -337,5 +355,9 @@ export function useEditCateringRoom(id: string) {
         setCroppedBlob,
         handleSubmit,
         handleDeletePrimary,
+        description_menu_highlight_ind,
+        description_menu_highlight_eng,
+        setDescriptionMenuHighlightInd,
+        setDescriptionMenuHighlightEng
     };
 }

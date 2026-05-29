@@ -27,6 +27,17 @@ export default function BlogPage() {
   const { t, language } = useLanguage();
   const { blogs, blogsLoading, blogsError } = useBlogContext();
 
+  const stripHtml = (html: string): string => {
+    if (!html) return '';
+    if (typeof window === 'undefined') return html.replace(/<[^>]*>/g, '').trim();
+    try {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+    } catch {
+      return html.replace(/<[^>]*>/g, '').trim();
+    }
+  };
+
   const fallbackBlogPosts: BlogPost[] = [
     {
       id: "1",
@@ -161,8 +172,8 @@ export default function BlogPage() {
                   post={{
                     id: post.id.toString(),
                     slug: post.slug,
-                    title: language === 'id' ? post.title_ind : post.title_eng,
-                    excerpt: language === 'id' ? post.description_ind : post.description_eng,
+                    title: language === 'id' ? post.title_ind || '' : post.title_eng || '',
+                    excerpt: stripHtml((language === 'id' ? post.description_ind : post.description_eng) || ''),
                     category: 'Article',
                     date: new Date(post.created_at).toLocaleDateString('id-ID', {
                       day: '2-digit',

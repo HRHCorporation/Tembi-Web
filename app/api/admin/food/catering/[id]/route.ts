@@ -103,6 +103,8 @@ export async function PUT(
         const description_card_ind = formData.get("description_card_ind") as string;
         const description_card_eng = formData.get("description_card_eng") as string;
         const slug = formData.get("slug") as string;
+        const description_menu_highlight_ind = formData.get("description_menu_highlight_ind") as string;
+        const description_menu_highlight_eng = formData.get("description_menu_highlight_eng") as string;
 
         const imageFile = formData.get("image") as File | null;
         const foodPackagesPrimaryJson = formData.get("food_packages_primary") as string;
@@ -120,6 +122,7 @@ export async function PUT(
         if (!description_eng?.trim()) errors.description_eng = "Deskripsi English wajib diisi";
         if (!subtitle_menu_ind?.trim()) errors.subtitle_menu_ind = "Subtitle menu Indonesia wajib diisi";
         if (!subtitle_menu_eng?.trim()) errors.subtitle_menu_eng = "Subtitle menu English wajib diisi";
+    
 
         if (Object.keys(errors).length > 0) {
             connection.release();
@@ -160,7 +163,8 @@ export async function PUT(
                     hours_service_min = ?, hours_service_max = ?, title_menu_ind = ?,
                     title_menu_eng = ?, subtitle_menu_ind = ?, subtitle_menu_eng = ?,
                     description_menu_ind = ?, description_menu_eng = ?,
-                    description_card_ind = ?, description_card_eng = ?, slug = ?
+                    description_card_ind = ?, description_card_eng = ?, slug = ?, 
+                    description_menu_highlight_ind = ?, description_menu_highlight_eng = ?
             `;
 
             const updateParams: unknown[] = [
@@ -181,6 +185,8 @@ export async function PUT(
                 description_card_ind,
                 description_card_eng,
                 slug,
+                description_menu_highlight_ind,
+                description_menu_highlight_eng
             ];
 
             // ✅ Add image to UPDATE if new image uploaded

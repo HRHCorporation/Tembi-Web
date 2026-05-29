@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, MapPin, Users } from 'lucide-react';
-import { formatCurrency } from '@/lib/format-currency';
+import { Calendar, MapPin } from 'lucide-react';
 
 interface Event {
   id: number;
@@ -11,8 +10,6 @@ interface Event {
   imageUrl: string;
   date: string;
   location: string;
-  capacity: number;
-  category: string;
 }
 
 interface EventCardProps {
@@ -62,14 +59,12 @@ export default function EventCard({ event }: EventCardProps) {
               <span>{formatDate(event.date)}</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-[#8B9D68]" />
-              <span>{event.location}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Users size={16} className="text-[#8B9D68]" />
-              <span>Max {event.capacity} participants</span>
+            <div className="flex items-start gap-2">
+              <MapPin size={16} className="text-[#8B9D68] mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium text-gray-700">Tembi Cultural House</p>
+                <p className="text-xs text-gray-400">Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188</p>
+              </div>
             </div>
           </div>
 
