@@ -48,9 +48,10 @@ export default function EventCard({ event }: EventCardProps) {
             {event.title}
           </h3>
 
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-1">
-            {event.shortDesc}
-          </p>
+          <div
+            className="text-gray-600 text-sm mb-4 line-clamp-2 flex-1"
+            dangerouslySetInnerHTML={{ __html: event.shortDesc }}
+          />
 
           {/* Event Details */}
           <div className="space-y-2 text-sm text-gray-500">
