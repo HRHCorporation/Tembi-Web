@@ -10,8 +10,8 @@ export default function CreateTierPage() {
 
     return (
         <FormPage
-            title="Tambah Tier Kamar"
-            description="Tambahkan data tier kamar baru"
+            title="Add Room Tiers"
+            description="Add new room tiers"
         >
             <form
                 className="space-y-5"
@@ -23,7 +23,7 @@ export default function CreateTierPage() {
                 {/* NAME ID */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Tier
+                        Name Tiers
                     </label>
                     <input
                         type="text"
@@ -33,7 +33,7 @@ export default function CreateTierPage() {
                             bg-white text-gray-900
                             dark:bg-gray-700 dark:text-white dark:border-gray-600
                             focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama tier kamar"
+                        placeholder="Enter Level Name"
                     />
                     {errors.name_id && (
                         <p className="mt-1 text-sm text-red-600">

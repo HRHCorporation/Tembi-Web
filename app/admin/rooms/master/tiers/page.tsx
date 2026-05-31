@@ -10,11 +10,11 @@ export default function TiersPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Tiers Room
+                        Room Tiers
                     </h1>
 
                     <p className="text-gray-500">
-                        Data tiers room
+                        Data Room Tiers
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function TiersPage() {
                     href="/admin/rooms/master/tiers/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Tiers Room
+                    + Add Room Tiers
                 </Link>
 
             </div>

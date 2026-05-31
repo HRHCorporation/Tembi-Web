@@ -30,8 +30,8 @@ export default function EditFasilitiesPage() {
 
     return (
         <FormPage
-            title="Edit Fasilitas"
-            description="Update data fasilitas"
+            title="Edit Facilities"
+            description="Update facility data"
         >
 
             {/* FORM */}
@@ -42,7 +42,7 @@ export default function EditFasilitiesPage() {
                 {/* NAME (Indonesia) */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Fasilitas (Indonesia)
+                        Facility Name (Indonesia)
                     </label>
                     <input
                         type="text"
@@ -52,6 +52,7 @@ export default function EditFasilitiesPage() {
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter a facility name"
                     />
                 </div>
                 {errors.name_ind && (
@@ -62,7 +63,7 @@ export default function EditFasilitiesPage() {
                 {/* NAME (English) */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Fasilitas (English)
+                        Facility Name (English)
                     </label>
                     <input
                         type="text"
@@ -72,6 +73,7 @@ export default function EditFasilitiesPage() {
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter a facility name"
                     />
                 </div>
                 {errors.name_eng && (

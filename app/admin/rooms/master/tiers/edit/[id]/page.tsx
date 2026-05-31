@@ -20,8 +20,8 @@ export default function EditTierPage() {
 
     return (
         <FormPage
-            title="Edit Tier Kamar"
-            description="Update data tier kamar"
+            title="Edit Room Tiers"
+            description="Update data room tiers"
         >
 
             {/* FORM */}
@@ -32,7 +32,7 @@ export default function EditTierPage() {
                 {/* NAME ID */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Tier
+                        Tiers Name
                     </label>
                     <input
                         type="text"
@@ -42,6 +42,7 @@ export default function EditTierPage() {
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter Level Name"
                     />
                 </div>
                 {errors.name_id && (

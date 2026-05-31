@@ -10,11 +10,11 @@ export default function HomeRulesPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Home Rules
+                        Rules
                     </h1>
 
                     <p className="text-gray-500">
-                        Data home rules
+                        Data Rules
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function HomeRulesPage() {
                     href="/admin/rooms/master/homerules/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Home Rule
+                    + Add Rules
                 </Link>
 
             </div>

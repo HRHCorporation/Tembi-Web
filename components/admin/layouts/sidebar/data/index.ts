@@ -11,7 +11,7 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Carousel",
+        title: "Home Carousel",
         url: "/admin/carousel",
         icon: Icons.FourCircle,
         items: [],
@@ -21,37 +21,37 @@ export const NAV_DATA = [
         icon: Icons.RoomIcon,
         items: [
           {
-            title: "Master",
+            title: "Room Setup",
             items: [
               {
-                title: "Tiers Room",
+                title: "Room Tiers",
                 url: "/admin/rooms/master/tiers",
               },
               {
-                title: "Mattress Room",
+                title: "Mattress",
                 url: "/admin/rooms/master/mattress",
               },
               {
-                title: "Fasilities",
+                title: "Facilities",
                 url: "/admin/rooms/master/fasilities",
               },
               {
-                title: "Home Rules",
+                title: "Rules",
                 url: "/admin/rooms/master/homerules",
               },
               {
                 title: "Policies",
                 url: "/admin/rooms/master/policies",
               },
+              {
+                title: "Amenities",
+                url: "/admin/rooms/amenties",
+              },
             ],
           },
           {
             title: "Main",
             url: "/admin/rooms/main",
-          },
-          {
-            title: "Amenties",
-            url: "/admin/rooms/amenties",
           },
         ],
       },

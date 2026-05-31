@@ -20,8 +20,8 @@ export default function EditMattressPage() {
 
     return (
         <FormPage
-            title="Edit Kasur"
-            description="Update data kasur"
+            title="Update Mattress"
+            description="Update data mattress"
         >
 
             {/* FORM */}
@@ -32,7 +32,7 @@ export default function EditMattressPage() {
                 {/* NAME */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Kasur
+                        Mattress Name
                     </label>
                     <input
                         type="text"
@@ -42,6 +42,7 @@ export default function EditMattressPage() {
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter the name of the mattress"
                     />
                 </div>
                 {errors.name && (

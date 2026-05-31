@@ -25,7 +25,7 @@ export function getColumns(
         },
         {
             accessorKey: "name_id",
-            header: "Nama Tiers Room",
+            header: "Name Room Tiers",
         },
         {
             id: "actions",

@@ -29,11 +29,11 @@ export default function CreateCarouselPage() {
             {/* HEADER */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Tambah Carousel
+                    Add Carousel
                 </h1>
 
                 <p className="text-gray-500 dark:text-gray-400">
-                    Tambahkan data carousel baru
+                    Add new carousel
                 </p>
             </div>
 
@@ -48,54 +48,55 @@ export default function CreateCarouselPage() {
                     }}
                 >
 
-                    {/* TITLE IND */}
-                    <div>
-                        <label className="mb-2 block font-medium  text-gray-700 dark:text-gray-300">
-                            Title Indonesia
-                        </label>
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* TITLE IND */}
+                        <div>
+                            <label className="mb-2 block font-medium  text-gray-700 dark:text-gray-300">
+                                Title Indonesia
+                            </label>
 
-                        <input
-                            type="text"
-                            value={titleInd}
-                            onChange={(e) => setTitleInd(e.target.value)}
-                            className="w-full rounded border p-3
+                            <input
+                                type="text"
+                                value={titleInd}
+                                onChange={(e) => setTitleInd(e.target.value)}
+                                className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan title dalam bahasa Indonesia"
-                        />
+                                placeholder="Enter the title in Indonesian"
+                            />
 
-                        {errors.title_ind && (
-                            <p className="mt-1 text-sm text-red-500">
-                                {errors.title_ind}
-                            </p>
-                        )}
-                    </div>
+                            {errors.title_ind && (
+                                <p className="mt-1 text-sm text-red-500">
+                                    {errors.title_ind}
+                                </p>
+                            )}
+                        </div>
 
-                    {/* TITLE ENG */}
-                    <div>
-                        <label className="mb-2 block font-medium  text-gray-700 dark:text-gray-300">
-                            Title English
-                        </label>
+                        {/* TITLE ENG */}
+                        <div>
+                            <label className="mb-2 block font-medium  text-gray-700 dark:text-gray-300">
+                                Title English
+                            </label>
 
-                        <input
-                            type="text"
-                            value={titleEng}
-                            onChange={(e) => setTitleEng(e.target.value)}
-                            className="w-full rounded border p-3
+                            <input
+                                type="text"
+                                value={titleEng}
+                                onChange={(e) => setTitleEng(e.target.value)}
+                                className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Masukkan title dalam bahasa Inggris"
-                        />
+                                placeholder="Enter the title in English"
+                            />
 
-                        {errors.title_eng && (
-                            <p className="mt-1 text-sm text-red-500">
-                                {errors.title_eng}
-                            </p>
-                        )}
+                            {errors.title_eng && (
+                                <p className="mt-1 text-sm text-red-500">
+                                    {errors.title_eng}
+                                </p>
+                            )}
+                        </div>
                     </div>
-
                     {/* IMAGE */}
                     <div>
                         <label className="mb-2 block font-medium  text-gray-700 dark:text-gray-300">

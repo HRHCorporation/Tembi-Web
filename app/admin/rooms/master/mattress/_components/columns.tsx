@@ -25,7 +25,7 @@ export function getColumns(
         },
         {
             accessorKey: "name",
-            header: "Nama Mattress",
+            header: "Name Mattress",
         },
         {
             id: "actions",
