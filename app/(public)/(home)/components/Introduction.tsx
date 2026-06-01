@@ -1,5 +1,6 @@
 import ScrollReveal from "@/components/ScrollReveal";
 import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 
 export default function Introduction() {
@@ -34,6 +35,14 @@ export default function Introduction() {
                   {t.homepage.intro.stats.house}
                 </p>
               </div>
+            </div>
+            <div className="mt-8">
+              <Link
+                href="/sejarah"
+                className="inline-block bg-tembi hover:bg-darktembi text-white font-medium py-3 px-8 rounded-full transition-colors shadow-md"
+              >
+                {t.homepage.intro.button}
+              </Link>
             </div>
           </div>
         </ScrollReveal>

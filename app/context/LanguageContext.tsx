@@ -37,7 +37,8 @@ const translations = {
         title: 'Experience Javanese Historical Culture',
         p1: 'A place that brings calm and comfort so your mind feels lighter. The sound of nature welcomes you as soon as you step in. Fresh air helps your body relax. A well arranged space protects your rest so nothing interrupts your peace.',
         p2: 'Morning comes with a warm breakfast so the day feels kinder. Sitting on the terrace or taking a slow walk in the garden is enough to ease your heart. Energy returns slowly. A quiet peace appears on its own. Rest here is more than sleep, You have space to recover.',
-        stats: { founded: 'Founded', artifacts: 'Artifacts', house: 'House' }
+        stats: { founded: 'Founded', artifacts: 'Artifacts', house: 'House' },
+        button: 'Explore Our History'
       },
       accommodation: {
         label: 'Accommodation',
@@ -2048,7 +2049,8 @@ const translations = {
         title: 'Rasakan budaya sejarah Jawa',
         p1: 'Sebuah tempat yang memberikan ketenangan dan kenyamanan sehingga dapat membuat pikiran menjadi lebih ringan. Suara alam menenangkan sejak melangkah masuk lalu udara segar ikut membantu tubuh lebih rileks. Ruang yang tertata rapi membuat waktu istirahat terasa utuh karena tidak ada yang mengganggu.',
         p2: 'Pagi datang dengan sarapan hangat sehingga hari terasa lebih bersahabat. Setelah itu duduk sebentar di teras atau berjalan pelan di taman sudah cukup untuk membuat hati lebih tenang. Perlahan energi kembali dan rasa damai muncul tanpa perlu dicari. Di sini istirahat bukan hanya tidur. Ada ruang untuk merasa pulih.',
-        stats: { founded: 'Didirikan', artifacts: 'Artefak', house: 'Rumah' }
+        stats: { founded: 'Didirikan', artifacts: 'Artefak', house: 'Rumah' },
+        button: 'Jelajahi Sejarah Kami'
       },
       accommodation: {
         label: 'Akomodasi',
