@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Globe } from "lucide-react";
+import { Menu, X, Globe, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useMusic } from "@/app/context/MusicContext";
 
 export default function Header() {
 	const [isSidebarOpen, setSidebarOpen] = useState(false);
 	const [mounted, setMounted] = useState(false);
 	const { language, setLanguage, t } = useLanguage();
+	const { isMuted, toggleMute } = useMusic();
 
 	useEffect(() => {
 		setMounted(true);
@@ -106,6 +108,13 @@ export default function Header() {
 					</ul>
 				</nav>
 			</aside>
+			<button
+				onClick={toggleMute}
+				className="fixed bottom-24 right-6 z-50 bg-white hover:bg-gray-100 text-gray-700 p-3 rounded-full shadow-[0_4px_14px_0_rgba(0,0,0,0.25)] hover:scale-110 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
+				aria-label={isMuted ? "Unmute music" : "Mute music"}
+			>
+				{isMuted ? <VolumeX size={22} /> : <Volume2 size={22} />}
+			</button>
 			<Link
 				href="https://wa.me/6282225142729?text=Halo,%20saya%20tertarik%20untuk%20bertanya%20mengenai%20Tembi%20Historical%20Home"
 				target="_blank"
