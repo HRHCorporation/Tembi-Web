@@ -10,11 +10,11 @@ export default function MasteCollectionPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Master Collection
+                        Collection Category
                     </h1>
 
                     <p className="text-gray-500">
-                        Data Master Collection
+                        Data Collection Category
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function MasteCollectionPage() {
                     href="/admin/collections/master/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Collections
+                    + Add Collection Category
                 </Link>
 
             </div>

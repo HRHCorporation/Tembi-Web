@@ -14,7 +14,7 @@ export default function EventPage() {
                     </h1>
 
                     <p className="text-gray-500">
-                        Data Event room
+                        Data Event
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function EventPage() {
                     href="/admin/event/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Event
+                    + Add Event
                 </Link>
 
             </div>

@@ -64,7 +64,7 @@ export default function EditCelebratePage() {
     return (
         <FormPage
             title="Edit Celebrate Moment"
-            description="Perbarui data Celebrate Moment"
+            description="Update Celebrate Moment data"
         >
             <form
                 className="space-y-5"
@@ -73,73 +73,79 @@ export default function EditCelebratePage() {
                     handleSubmit(e);
                 }}
             >
-                {/* Nama Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setNameInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama celebrate moment"
-                    />
-                    {errors.name_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                    )}
+
+                <div className="grid grid-cols-2 gap-5">
+                    {/* Nama Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Celebrate Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setNameInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter celebrate moment name"
+                        />
+                        {errors.name_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Nama English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Celebrate Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setNameEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter celebrate moment name"
+                        />
+                        {errors.name_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                        )}
+                    </div>
+
+                    {/* Deskripsi Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Celebrate Description (Indonesia)
+                        </label>
+                        <textarea
+                            value={description_ind}
+                            onChange={(e) => setDescriptionInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter celebrate moment description"
+                            rows={4}
+                        />
+                        {errors.description_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Deskripsi English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Celebrate Description (English)
+                        </label>
+                        <textarea
+                            value={description_eng}
+                            onChange={(e) => setDescriptionEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter celebrate moment description"
+                            rows={4}
+                        />
+                        {errors.description_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* Nama English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setNameEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter celebrate moment name"
-                    />
-                    {errors.name_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                    )}
-                </div>
 
-                {/* Deskripsi Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (Indonesia)
-                    </label>
-                    <textarea
-                        value={description_ind}
-                        onChange={(e) => setDescriptionInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi celebrate moment"
-                        rows={4}
-                    />
-                    {errors.description_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
-                    )}
-                </div>
 
-                {/* Deskripsi English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (English)
-                    </label>
-                    <textarea
-                        value={description_eng}
-                        onChange={(e) => setDescriptionEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter celebrate moment description"
-                        rows={4}
-                    />
-                    {errors.description_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
-                    )}
-                </div>
 
                 {/* Existing Image Display */}
                 {existingImage && !imagePreview && (
@@ -196,7 +202,7 @@ export default function EditCelebratePage() {
                         value={celebrateMomentList}
                         onChange={setCelebrateMomentList}
                         onDelete={handleDeleteList}
-                        placeholderInd="Masukkan nama item (Indonesia) lalu Enter"
+                        placeholderInd="Enter item name (Indonesia) then Tab"
                         placeholderEng="Enter item name (English) then Tab"
                         error={errors.celebrate_moment_list}
                     />

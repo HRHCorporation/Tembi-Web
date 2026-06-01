@@ -99,14 +99,7 @@ export async function POST(request: NextRequest) {
         const hosted_by = formData.get("hosted_by") as string;
         const date_event = formData.get("date_event") as string;
         const time_event = formData.get("time_event") as string;
-
-        console.log("📝 [CREATE EVENT] Data received:");
-        console.log("- Title IND:", title_ind?.substring(0, 50));
-        console.log("- Title ENG:", title_eng?.substring(0, 50));
-        console.log("- Description IND length:", description_ind?.length);
-        console.log("- Description ENG length:", description_eng?.length);
-        console.log("- Has base64 images in IND:", description_ind?.includes("data:image"));
-        console.log("- Has base64 images in ENG:", description_eng?.includes("data:image"));
+        const location = formData.get("location") as string;
 
         const errors: ErrorResponse = {};
         if (!title_ind?.trim()) errors.title_ind = "Judul Indonesia wajib diisi";
@@ -118,6 +111,7 @@ export async function POST(request: NextRequest) {
         if (!hosted_by?.trim()) errors.hosted_by = "Hosted by wajib diisi";
         if (!date_event?.trim()) errors.date_event = "Tanggal wajib diisi";
         if (!time_event?.trim()) errors.time_event = "Waktu wajib diisi";
+        if (!location?.trim()) errors.location = "Lokasi wajib diisi";
 
         if (Object.keys(errors).length > 0) {
             return NextResponse.json(
@@ -129,11 +123,6 @@ export async function POST(request: NextRequest) {
         const descIndSize = new Blob([description_ind]).size;
         const descEngSize = new Blob([description_eng]).size;
 
-        console.log("📊 [SIZE CHECK]:");
-        console.log("- Description IND size:", (descIndSize / 1024).toFixed(2), "KB");
-        console.log("- Description ENG size:", (descEngSize / 1024).toFixed(2), "KB");
-        console.log("- Total size:", ((descIndSize + descEngSize) / 1024).toFixed(2), "KB");
-
         if (descIndSize > 5 * 1024 * 1024) console.warn("⚠️ Description IND sangat besar!");
         if (descEngSize > 5 * 1024 * 1024) console.warn("⚠️ Description ENG sangat besar!");
 
@@ -144,7 +133,6 @@ export async function POST(request: NextRequest) {
         await mkdir(uploadDir, { recursive: true });
         await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, filename));
 
-        console.log("[THUMBNAIL] Uploaded:", filename);
 
         await connection.beginTransaction();
 
@@ -153,9 +141,9 @@ export async function POST(request: NextRequest) {
                 title_ind, title_eng,
                 description_ind, description_eng,
                 thumbnail, slug, created_by, created_at,
-                hosted_by, date_event, time_event
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)`,
-            [title_ind, title_eng, description_ind, description_eng, `/images/upload/event/${filename}`, slug, createdBy, hosted_by, date_event, time_event]
+                hosted_by, date_event, time_event, location
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?,?)`,
+            [title_ind, title_eng, description_ind, description_eng, `/images/upload/event/${filename}`, slug, createdBy, hosted_by, date_event, time_event, location]
         );
 
         await connection.commit();

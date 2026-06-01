@@ -14,7 +14,7 @@ export default function BlogsPage() {
                     </h1>
 
                     <p className="text-gray-500">
-                        Data Blog room
+                        Data Blog
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function BlogsPage() {
                     href="/admin/blogs/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Blog
+                    + Add Blog
                 </Link>
 
             </div>

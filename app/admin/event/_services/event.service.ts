@@ -8,6 +8,7 @@ export async function createEvent(payload: {
     hosted_by: string;
     date_event: string;
     time_event: string;
+    location: string;
 }) {
     const formData = new FormData();
     formData.append("title_ind", payload.title_ind);
@@ -19,6 +20,7 @@ export async function createEvent(payload: {
     formData.append("hosted_by", payload.hosted_by);
     formData.append("date_event", payload.date_event);
     formData.append("time_event", payload.time_event);
+    formData.append("location", payload.location);
 
     const res = await fetch("/api/admin/event", {
         method: "POST",
@@ -44,6 +46,7 @@ export async function updateEvent(
         hosted_by: string;
         date_event: string;
         time_event: string;
+        location: string;
     }
 ) {
     const formData = new FormData();
@@ -55,6 +58,7 @@ export async function updateEvent(
     formData.append("hosted_by", payload.hosted_by);
     formData.append("date_event", payload.date_event);
     formData.append("time_event", payload.time_event);
+    formData.append("location", payload.location);
     if (payload.thumbnail) {
         formData.append("thumbnail", payload.thumbnail, "thumbnail.webp");
     }

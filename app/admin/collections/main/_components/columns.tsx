@@ -27,15 +27,15 @@ export function getColumns(
         },
         {
             accessorKey: "mstr_collection_name",
-            header: "Master Collection (Indonesia)",
+            header: "Collection Category (Indonesia)",
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Collection (Indonesia)",
+            header: "Collection Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Collection (English)",
+            header: "Collection Name (English)",
         },
         {
             id: "actions",

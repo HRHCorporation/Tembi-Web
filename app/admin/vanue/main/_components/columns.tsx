@@ -26,11 +26,11 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Vanue (Indonesia)",
+            header: "Venue Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Vanue (English)",
+            header: "Venue Name (English)",
         },
         {
             id: "actions",

@@ -43,8 +43,8 @@ export default function CreateCollectionPage() {
 
     return (
         <FormPage
-            title="Tambah Collection"
-            description="Tambahkan data Collection baru"
+            title="Add Collection"
+            description="Add new Collection data"
         >
             <form
                 className="space-y-6"
@@ -56,21 +56,22 @@ export default function CreateCollectionPage() {
                 {/* ===== BASIC INFORMATION ===== */}
                 <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        Informasi Dasar
+                        Basic Information
                     </h2>
 
                     <div className="space-y-4">
+
                         {/* Master Collection */}
                         <div>
                             <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Master Collection
+                                Collection Category
                             </label>
                             <select
                                 value={mstr_collection_id}
                                 onChange={(e) => setMstrCollectionId(e.target.value)}
                                 className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="">Pilih collection...</option>
+                                <option value="">Select collection category...</option>
                                 {collection.map((m) => (
                                     <option key={m.value} value={m.value}>
                                         {m.label}
@@ -83,77 +84,78 @@ export default function CreateCollectionPage() {
                                 </p>
                             )}
                         </div>
+                        <div className="grid grid-cols-2 gap-5">
+                            {/* Nama Indonesia */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Collection Name (Indonesia)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={name_ind}
+                                    onChange={(e) => setNameInd(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Masukkan nama collection"
+                                />
+                                {errors.name_ind && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                                )}
+                            </div>
 
-                        {/* Nama Indonesia */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Nama (Indonesia)
-                            </label>
-                            <input
-                                type="text"
-                                value={name_ind}
-                                onChange={(e) => setNameInd(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan nama collection"
-                            />
-                            {errors.name_ind && (
-                                <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                            )}
-                        </div>
+                            {/* Nama English */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Collection Name (English)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={name_eng}
+                                    onChange={(e) => setNameEng(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter collection name"
+                                />
+                                {errors.name_eng && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                                )}
+                            </div>
 
-                        {/* Nama English */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Nama (English)
-                            </label>
-                            <input
-                                type="text"
-                                value={name_eng}
-                                onChange={(e) => setNameEng(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter collection name"
-                            />
-                            {errors.name_eng && (
-                                <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                            )}
-                        </div>
+                            {/* Deskripsi Indonesia */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Collection Description (Indonesia)
+                                </label>
+                                <textarea
+                                    value={description_ind}
+                                    onChange={(e) => setDescriptionInd(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Masukkan deskripsi collection"
+                                    rows={4}
+                                />
+                                {errors.description_ind && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {errors.description_ind}
+                                    </p>
+                                )}
+                            </div>
 
-                        {/* Deskripsi Indonesia */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Deskripsi (Indonesia)
-                            </label>
-                            <textarea
-                                value={description_ind}
-                                onChange={(e) => setDescriptionInd(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan deskripsi collection"
-                                rows={4}
-                            />
-                            {errors.description_ind && (
-                                <p className="mt-1 text-sm text-red-600">
-                                    {errors.description_ind}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Deskripsi English */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Deskripsi (English)
-                            </label>
-                            <textarea
-                                value={description_eng}
-                                onChange={(e) => setDescriptionEng(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter collection description"
-                                rows={4}
-                            />
-                            {errors.description_eng && (
-                                <p className="mt-1 text-sm text-red-600">
-                                    {errors.description_eng}
-                                </p>
-                            )}
+                            {/* Deskripsi English */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Collection Description (English)
+                                </label>
+                                <textarea
+                                    value={description_eng}
+                                    onChange={(e) => setDescriptionEng(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter collection description"
+                                    rows={4}
+                                />
+                                {errors.description_eng && (
+                                    <p className="mt-1 text-sm text-red-600">
+                                        {errors.description_eng}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -161,14 +163,14 @@ export default function CreateCollectionPage() {
                 {/* ===== IMAGE ===== */}
                 <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        Gambar
+                        Collection Image
                     </h2>
 
                     <div className="space-y-4">
                         {/* File Input */}
                         <div>
                             <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Upload Gambar
+                                Upload Image
                             </label>
                             <input
                                 type="file"

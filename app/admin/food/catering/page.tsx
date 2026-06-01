@@ -10,11 +10,11 @@ export default function CateringPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Food Catering
+                        Catering
                     </h1>
 
                     <p className="text-gray-500">
-                        Data Food Catering
+                        Data Catering Page
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function CateringPage() {
                     href="/admin/food/catering/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Food Catering
+                    + Add Catering
                 </Link>
 
             </div>

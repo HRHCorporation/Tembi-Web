@@ -10,11 +10,11 @@ export default function VanuePage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Vanue
+                        Vanue Management
                     </h1>
 
                     <p className="text-gray-500">
-                        Data vanue
+                        Data vanue page
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function VanuePage() {
                     href="/admin/vanue/main/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Vanue
+                    + Add Vanue 
                 </Link>
 
             </div>

@@ -14,6 +14,7 @@ interface ErrorState {
     hosted_by?: string;
     date_event?: string;
     time_event?: string;
+    location?: string;
 }
 
 export function useEditEvent(id: string) {
@@ -25,6 +26,7 @@ export function useEditEvent(id: string) {
     const [description_ind, setDescriptionInd] = useState("");
     const [description_eng, setDescriptionEng] = useState("");
     const [slug, setSlug] = useState("");
+    const [location, setLocation] = useState("");
 
     // ✅ Other fields
     const [hosted_by, setHostedBy] = useState("");
@@ -59,6 +61,7 @@ export function useEditEvent(id: string) {
                 setHostedBy((data.hosted_by as string) || "");
                 setDateEvent((data.date_event as string) || "");
                 setTimeEvent((data.time_event as string) || "");
+                setLocation((data.location as string) || "");
             } else {
                 toast.error("Data tidak ditemukan");
                 router.push("/admin/event");
@@ -137,6 +140,11 @@ export function useEditEvent(id: string) {
             hasError = true;
         }
 
+        if (!location?.trim()) {
+            newErrors.location = "Location wajib diisi";
+            hasError = true;
+        }
+
         setErrors(newErrors);
         return !hasError;
     }
@@ -164,6 +172,7 @@ export function useEditEvent(id: string) {
                 hosted_by,
                 date_event,
                 time_event,
+                location,
             });
 
             if (result.success) {
@@ -214,5 +223,7 @@ export function useEditEvent(id: string) {
         setDateEvent,
         time_event,
         setTimeEvent,
+        location,
+        setLocation
     };
 }

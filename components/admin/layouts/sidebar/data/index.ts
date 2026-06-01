@@ -50,13 +50,13 @@ export const NAV_DATA = [
             ],
           },
           {
-            title: "Main",
+            title: "Room Management",
             url: "/admin/rooms/main",
           },
         ],
       },
       {
-        title: "Food Catering",
+        title: "Food",
         icon: Icons.FoodIcon,
         items: [
           {
@@ -75,24 +75,22 @@ export const NAV_DATA = [
             title: "Menu Highlight",
             url: "/admin/food/highlight",
           },
+          {
+            title: "Celebrate",
+            url: "/admin/celebrate",
+          }
         ],
-      },
-      {
-        title: "Celebrate",
-        url: "/admin/celebrate",
-        icon: Icons.BoxIcon,
-        items: [],
       },
       {
         title: "Vanue",
         icon: Icons.TagIcon,
         items: [
           {
-            title: "Master Fasilities",
+            title: "Venue Facilities",
             url: "/admin/vanue/facilities",
           },
           {
-            title: "Main Vanue",
+            title: "Venue Management",
             url: "/admin/vanue/main",
           }
         ],
@@ -102,11 +100,11 @@ export const NAV_DATA = [
         icon: Icons.CalendarIcon,
         items: [
           {
-            title: "Master Collections",
+            title: "Collection Category",
             url: "/admin/collections/master",
           },
           {
-            title: "Main Collections",
+            title: "Collection Management",
             url: "/admin/collections/main",
           }
         ],
@@ -124,7 +122,7 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Banner Setting",
+        title: "Page Banner",
         url: "/admin/banner",
         icon: Icons.SettingsIcon,
         items: [],

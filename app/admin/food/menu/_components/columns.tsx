@@ -48,11 +48,11 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Menu (Indonesia)",
+            header: "Menu Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Menu (English)",
+            header: "Menu Name (English)",
         },
         {
             accessorKey: "subname_ind",

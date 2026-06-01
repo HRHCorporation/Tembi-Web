@@ -13,6 +13,7 @@ interface EventRow extends RowDataPacket {
     hosted_by: string;
     date_event: string;
     time_event: string;
+    location: string;
 }
 
 export async function GET(request: NextRequest) {
@@ -55,7 +56,8 @@ export async function GET(request: NextRequest) {
                 slug,
                 hosted_by,
                 date_event,
-                time_event
+                time_event,
+                location
             FROM event
             ${whereClause}
             ${orderClause}
@@ -82,6 +84,7 @@ export async function GET(request: NextRequest) {
             hosted_by: row.hosted_by,
             date_event: row.date_event,
             time_event: row.time_event,
+            location: row.location,
         }));
 
         return NextResponse.json({

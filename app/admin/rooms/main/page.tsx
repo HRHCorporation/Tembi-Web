@@ -10,11 +10,11 @@ export default function RoomsPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Rooms
+                        Rooms Management
                     </h1>
 
                     <p className="text-gray-500">
-                        Data room
+                        Data Page Rooms
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function RoomsPage() {
                     href="/admin/rooms/main/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Room
+                    + Add Room
                 </Link>
 
             </div>

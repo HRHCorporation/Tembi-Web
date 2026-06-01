@@ -81,6 +81,7 @@ export async function PUT(
         const hosted_by = formData.get("hosted_by") as string;
         const date_event = formData.get("date_event") as string;
         const time_event = formData.get("time_event") as string;
+        const location = formData.get("location") as string;
 
         const errors: ErrorResponse = {};
         if (!title_ind?.trim()) errors.title_ind = "Judul Indonesia wajib diisi";
@@ -91,6 +92,7 @@ export async function PUT(
         if (!hosted_by?.trim()) errors.hosted_by = "Penyelenggara wajib diisi";
         if (!date_event?.trim()) errors.date_event = "Tanggal wajib diisi";
         if (!time_event?.trim()) errors.time_event = "Waktu wajib diisi";
+        if (!location?.trim()) errors.location = "Lokasi wajib diisi";
 
         if (Object.keys(errors).length > 0) {
             return NextResponse.json(
@@ -124,9 +126,9 @@ export async function PUT(
                     description_ind = ?, description_eng = ?,
                     slug = ?, thumbnail = ?,
                     updated_by = ?, updated_at = NOW(),
-                    hosted_by = ?, date_event = ?, time_event = ?
+                    hosted_by = ?, date_event = ?, time_event = ?, location = ?
                 WHERE id = ?`,
-                [title_ind, title_eng, description_ind, description_eng, slug, newThumbnailPath, updatedBy, hosted_by, date_event, time_event, eventId]
+                [title_ind, title_eng, description_ind, description_eng, slug, newThumbnailPath, updatedBy, hosted_by, date_event, time_event, location, eventId]
             );
         } else {
             await connection.query(
@@ -135,9 +137,9 @@ export async function PUT(
                     description_ind = ?, description_eng = ?,
                     slug = ?,
                     updated_by = ?, updated_at = NOW(),
-                    hosted_by = ?, date_event = ?, time_event = ?
+                    hosted_by = ?, date_event = ?, time_event = ?, location = ?
                 WHERE id = ?`,
-                [title_ind, title_eng, description_ind, description_eng, slug, updatedBy, hosted_by, date_event, time_event, eventId]
+                [title_ind, title_eng, description_ind, description_eng, slug, updatedBy, hosted_by, date_event, time_event, location, eventId]
             );
         }
 

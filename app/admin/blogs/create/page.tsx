@@ -41,8 +41,8 @@ export default function CreateBlogPage() {
 
     return (
         <FormPage
-            title="Tambah Blog"
-            description="Tambahkan artikel blog baru"
+            title="Add Blog"
+            description="Add a new blog article"
         >
             <form
                 className="space-y-6"
@@ -58,39 +58,42 @@ export default function CreateBlogPage() {
                     </h2>
 
                     <div className="space-y-4">
-                        {/* Judul Indonesia */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Judul (Indonesia)
-                            </label>
-                            <input
-                                type="text"
-                                value={title_ind}
-                                onChange={(e) => setTitleInd(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan judul blog"
-                            />
-                            {errors.title_ind && (
-                                <p className="mt-1 text-sm text-red-600">{errors.title_ind}</p>
-                            )}
+                        <div className="grid grid-cols-2 gap-5">
+                            {/* Judul Indonesia */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Judul (Indonesia)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={title_ind}
+                                    onChange={(e) => setTitleInd(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter blog title"
+                                />
+                                {errors.title_ind && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.title_ind}</p>
+                                )}
+                            </div>
+
+                            {/* Judul English */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Judul (English)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={title_eng}
+                                    onChange={(e) => handleTitleEngChange(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter blog title"
+                                />
+                                {errors.title_eng && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.title_eng}</p>
+                                )}
+                            </div>
                         </div>
 
-                        {/* Judul English */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Judul (English)
-                            </label>
-                            <input
-                                type="text"
-                                value={title_eng}
-                                onChange={(e) => handleTitleEngChange(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter blog title"
-                            />
-                            {errors.title_eng && (
-                                <p className="mt-1 text-sm text-red-600">{errors.title_eng}</p>
-                            )}
-                        </div>
 
                         {/* Slug (Auto-generated) */}
                         <div>

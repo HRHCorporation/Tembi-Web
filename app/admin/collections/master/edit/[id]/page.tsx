@@ -28,8 +28,8 @@ export default function EditFasilitiesPage() {
 
     return (
         <FormPage
-            title="Edit Fasilitas"
-            description="Update data fasilitas"
+            title="Edit Collection"
+            description="Update data collection"
         >
 
             {/* FORM */}
@@ -37,47 +37,50 @@ export default function EditFasilitiesPage() {
                 className="space-y-5"
                 onSubmit={handleSubmit}
             >
-                {/* NAME (Indonesia) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Fasilitas (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setName_ind(e.target.value)}
-                        className="w-full rounded border p-3
+                <div className="grid grid-cols-2 gap-5">
+                    {/* NAME (Indonesia) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Collection Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setName_ind(e.target.value)}
+                            className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
-                {errors.name_ind && (
-                    <p className="mt-1 text-sm text-red-600">
-                        {errors.name_ind}
-                    </p>
-                )}
-                {/* NAME (English) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Fasilitas (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setName_eng(e.target.value)}
-                        className="w-full rounded border p-3
+                        />
+                    </div>
+                    {errors.name_ind && (
+                        <p className="mt-1 text-sm text-red-600">
+                            {errors.name_ind}
+                        </p>
+                    )}
+                    {/* NAME (English) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Collection Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setName_eng(e.target.value)}
+                            className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                        />
+                    </div>
+                    {errors.name_eng && (
+                        <p className="mt-1 text-sm text-red-600">
+                            {errors.name_eng}
+                        </p>
+                    )}
                 </div>
-                {errors.name_eng && (
-                    <p className="mt-1 text-sm text-red-600">
-                        {errors.name_eng}
-                    </p>
-                )}
-                
+
+
                 {/* ACTIONS */}
                 <FormActions loading={loading} />
             </form>

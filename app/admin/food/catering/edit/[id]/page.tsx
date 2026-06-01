@@ -74,7 +74,7 @@ export default function EditCateringPage() {
     }
 
     return (
-        <FormPage title="Edit Food Package" description="Perbarui data Food Package">
+        <FormPage title="Edit Food" description="Update food data">
             <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); handleSubmit(e); }}>
 
                 {/* Image */}
@@ -116,14 +116,14 @@ export default function EditCateringPage() {
                 {/* Jenis Catering */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Jenis Catering
+                        Type of Catering
                     </label>
                     <select
                         value={type_catering_service_id}
                         onChange={(e) => setTypeCateringServiceId(e.target.value)}
                         className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="">Pilih jenis catering...</option>
+                        <option value="">Choose the type of catering...</option>
                         {type_catering_service.map((m) => (
                             <option key={m.value} value={m.value}>{m.label}</option>
                         ))}
@@ -133,72 +133,74 @@ export default function EditCateringPage() {
                     )}
                 </div>
 
-                {/* Nama Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Food Package (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setNameInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama food package"
-                    />
-                    {errors.name_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                    )}
-                </div>
+                <div className="grid grid-cols-2 gap-5">
+                    {/* Nama Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Catering Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setNameInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan nama food package"
+                        />
+                        {errors.name_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                        )}
+                    </div>
 
-                {/* Nama English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Food Package (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setNameEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter food package name"
-                    />
-                    {errors.name_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                    )}
-                </div>
+                    {/* Nama English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Catering Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setNameEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter food package name"
+                        />
+                        {errors.name_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                        )}
+                    </div>
 
-                {/* Deskripsi Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (Indonesia)
-                    </label>
-                    <textarea
-                        value={description_ind}
-                        onChange={(e) => setDescriptionInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi food package"
-                        rows={4}
-                    />
-                    {errors.description_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
-                    )}
-                </div>
+                    {/* Deskripsi Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Catering Description (Indonesia)
+                        </label>
+                        <textarea
+                            value={description_ind}
+                            onChange={(e) => setDescriptionInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan deskripsi food package"
+                            rows={4}
+                        />
+                        {errors.description_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
+                        )}
+                    </div>
 
-                {/* Deskripsi English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (English)
-                    </label>
-                    <textarea
-                        value={description_eng}
-                        onChange={(e) => setDescriptionEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter food package description"
-                        rows={4}
-                    />
-                    {errors.description_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
-                    )}
+                    {/* Deskripsi English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Catering Description (English)
+                        </label>
+                        <textarea
+                            value={description_eng}
+                            onChange={(e) => setDescriptionEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter food package description"
+                            rows={4}
+                        />
+                        {errors.description_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Minimum Pax */}
@@ -250,174 +252,178 @@ export default function EditCateringPage() {
                     )}
                 </div>
 
-                {/* Title Menu Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Title Menu (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={title_menu_ind}
-                        onChange={(e) => setTitleMenuInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan title menu"
-                    />
-                    {errors.title_menu_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.title_menu_ind}</p>
-                    )}
+                <div className="grid grid-cols-2 gap-5">
+                    {/* Title Menu Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Title Menu (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={title_menu_ind}
+                            onChange={(e) => setTitleMenuInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan title menu"
+                        />
+                        {errors.title_menu_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.title_menu_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Title Menu English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Title Menu (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={title_menu_eng}
+                            onChange={(e) => setTitleMenuEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter menu title"
+                        />
+                        {errors.title_menu_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.title_menu_eng}</p>
+                        )}
+                    </div>
+
+                    {/* Subtitle Menu Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Subtitle Menu (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={subtitle_menu_ind}
+                            onChange={(e) => setSubtitleMenuInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan subtitle menu"
+                        />
+                        {errors.subtitle_menu_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.subtitle_menu_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Subtitle Menu English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Subtitle Menu (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={subtitle_menu_eng}
+                            onChange={(e) => setSubtitleMenuEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter subtitle menu"
+                        />
+                        {errors.subtitle_menu_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.subtitle_menu_eng}</p>
+                        )}
+                    </div>
+
+                    {/* Description Menu Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Menu Description (Indonesia)
+                        </label>
+                        <textarea
+                            value={description_menu_ind}
+                            onChange={(e) => setDescriptionMenuInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan deskripsi menu"
+                            rows={4}
+                        />
+                        {errors.description_menu_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_menu_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Description Menu English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Menu Description (English)
+                        </label>
+                        <textarea
+                            value={description_menu_eng}
+                            onChange={(e) => setDescriptionMenuEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter menu description"
+                            rows={4}
+                        />
+                        {errors.description_menu_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_menu_eng}</p>
+                        )}
+                    </div>
+
+                    {/* Description Card Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Card Description (Indonesia)
+                        </label>
+                        <textarea
+                            value={description_card_ind}
+                            onChange={(e) => setDescriptionCardInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan deskripsi card"
+                            rows={4}
+                        />
+                        {errors.description_card_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_card_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Description Card English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Card Description (English)
+                        </label>
+                        <textarea
+                            value={description_card_eng}
+                            onChange={(e) => setDescriptionCardEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter card description"
+                            rows={4}
+                        />
+                        {errors.description_card_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_card_eng}</p>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Highlight Menu Description (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={description_menu_highlight_ind}
+                            onChange={(e) => setDescriptionMenuHighlightInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter description menu highlight"
+                        />
+                        {errors.description_menu_highlight_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_menu_highlight_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Description Menu Highlight English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Highlight Menu Description (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={description_menu_highlight_eng}
+                            onChange={(e) => setDescriptionMenuHighlightEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter description menu highlight"
+                        />
+                        {errors.description_menu_highlight_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_menu_highlight_eng}</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* Title Menu English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Title Menu (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={title_menu_eng}
-                        onChange={(e) => setTitleMenuEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter menu title"
-                    />
-                    {errors.title_menu_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.title_menu_eng}</p>
-                    )}
-                </div>
 
-                {/* Subtitle Menu Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Subtitle Menu (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={subtitle_menu_ind}
-                        onChange={(e) => setSubtitleMenuInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan subtitle menu"
-                    />
-                    {errors.subtitle_menu_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.subtitle_menu_ind}</p>
-                    )}
-                </div>
-
-                {/* Subtitle Menu English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Subtitle Menu (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={subtitle_menu_eng}
-                        onChange={(e) => setSubtitleMenuEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter subtitle menu"
-                    />
-                    {errors.subtitle_menu_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.subtitle_menu_eng}</p>
-                    )}
-                </div>
-
-                {/* Description Menu Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi Menu (Indonesia)
-                    </label>
-                    <textarea
-                        value={description_menu_ind}
-                        onChange={(e) => setDescriptionMenuInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi menu"
-                        rows={4}
-                    />
-                    {errors.description_menu_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_menu_ind}</p>
-                    )}
-                </div>
-
-                {/* Description Menu English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi Menu (English)
-                    </label>
-                    <textarea
-                        value={description_menu_eng}
-                        onChange={(e) => setDescriptionMenuEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter menu description"
-                        rows={4}
-                    />
-                    {errors.description_menu_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_menu_eng}</p>
-                    )}
-                </div>
-
-                {/* Description Card Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi Card (Indonesia)
-                    </label>
-                    <textarea
-                        value={description_card_ind}
-                        onChange={(e) => setDescriptionCardInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi card"
-                        rows={4}
-                    />
-                    {errors.description_card_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_card_ind}</p>
-                    )}
-                </div>
-
-                {/* Description Card English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi Card (English)
-                    </label>
-                    <textarea
-                        value={description_card_eng}
-                        onChange={(e) => setDescriptionCardEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter card description"
-                        rows={4}
-                    />
-                    {errors.description_card_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_card_eng}</p>
-                    )}
-                </div>
-
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi Menu Highlight (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={description_menu_highlight_ind}
-                        onChange={(e) => setDescriptionMenuHighlightInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter description menu highlight"
-                    />
-                    {errors.description_menu_highlight_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_menu_highlight_ind}</p>
-                    )}
-                </div>
-
-                {/* Description Menu Highlight English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi Menu Highlight (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={description_menu_highlight_eng}
-                        onChange={(e) => setDescriptionMenuHighlightEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter description menu highlight"
-                    />
-                    {errors.description_menu_highlight_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_menu_highlight_eng}</p>
-                    )}
-                </div>
 
                 {/* Food Package Primary Tags */}
                 <div>

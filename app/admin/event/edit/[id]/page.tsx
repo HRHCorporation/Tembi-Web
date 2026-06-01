@@ -38,6 +38,8 @@ export default function EditEventPage() {
         setDateEvent,
         time_event,
         setTimeEvent,
+        location,
+        setLocation
     } = useEditEvent(id);
 
     const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,43 +80,46 @@ export default function EditEventPage() {
                 {/* ===== BASIC INFORMATION ===== */}
                 <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        Informasi Dasar
+                        Basic Information
                     </h2>
 
                     <div className="space-y-4">
-                        {/* Judul Indonesia */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Judul (Indonesia)
-                            </label>
-                            <input
-                                type="text"
-                                value={title_ind}
-                                onChange={(e) => setTitleInd(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan judul event"
-                            />
-                            {errors.title_ind && (
-                                <p className="mt-1 text-sm text-red-600">{errors.title_ind}</p>
-                            )}
+                        <div className="grid grid-cols-2 gap-5">
+                            {/* Judul Indonesia */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Title (Indonesia)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={title_ind}
+                                    onChange={(e) => setTitleInd(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter the event title"
+                                />
+                                {errors.title_ind && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.title_ind}</p>
+                                )}
+                            </div>
+
+                            {/* Judul English */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Title (English)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={title_eng}
+                                    onChange={(e) => handleTitleEngChange(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter event title"
+                                />
+                                {errors.title_eng && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.title_eng}</p>
+                                )}
+                            </div>
                         </div>
 
-                        {/* Judul English */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Judul (English)
-                            </label>
-                            <input
-                                type="text"
-                                value={title_eng}
-                                onChange={(e) => handleTitleEngChange(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter event title"
-                            />
-                            {errors.title_eng && (
-                                <p className="mt-1 text-sm text-red-600">{errors.title_eng}</p>
-                            )}
-                        </div>
 
                         {/* Slug (Auto-generated) */}
                         <div>
@@ -176,6 +181,23 @@ export default function EditEventPage() {
                             />
                             {errors.time_event && (
                                 <p className="mt-1 text-sm text-red-600">{errors.time_event}</p>
+                            )}
+                        </div>
+
+                        {/* Hosted By */}
+                        <div>
+                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                Location
+                            </label>
+                            <input
+                                type="text"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter location"
+                            />
+                            {errors.location && (
+                                <p className="mt-1 text-sm text-red-600">{errors.location}</p>
                             )}
                         </div>
                     </div>

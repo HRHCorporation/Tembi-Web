@@ -40,8 +40,8 @@ export default function CreateVenuePage() {
 
     return (
         <FormPage
-            title="Tambah Venue"
-            description="Tambahkan data Venue baru"
+            title="Add Venue"
+            description="Add new Venue data"
         >
             <form
                 className="space-y-6"
@@ -53,46 +53,48 @@ export default function CreateVenuePage() {
                 {/* ===== BASIC INFORMATION ===== */}
                 <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        Informasi Dasar
+                        Basic Information
                     </h2>
 
-                    {/* Nama Indonesia */}
                     <div className="space-y-4">
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Nama (Indonesia)
-                            </label>
-                            <input
-                                type="text"
-                                value={name_ind}
-                                onChange={(e) => setNameInd(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan nama venue"
-                            />
-                            {errors.name_ind && (
-                                <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                            )}
-                        </div>
+                        <div className="grid grid-cols-2 gap-5">
+                            {/* Nama Indonesia */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Venue Name (Indonesia)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={name_ind}
+                                    onChange={(e) => setNameInd(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter venue name"
+                                />
+                                {errors.name_ind && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                                )}
+                            </div>
 
-                        {/* Nama English */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Nama (English)
-                            </label>
-                            <input
-                                type="text"
-                                value={name_eng}
-                                onChange={(e) => handleNameEngChange(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter venue name"
-                            />
-                            {errors.name_eng && (
-                                <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                            )}
+                            {/* Nama English */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Venue Name (English)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={name_eng}
+                                    onChange={(e) => handleNameEngChange(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter venue name"
+                                />
+                                {errors.name_eng && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                                )}
+                            </div>
                         </div>
 
                         {/* Slug (Auto-generated) */}
-                        <div>
+                        <div className="hidden">
                             <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
                                 Slug (Auto-generated)
                             </label>
@@ -105,54 +107,57 @@ export default function CreateVenuePage() {
                             />
                         </div>
 
-                        {/* Deskripsi Indonesia */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Deskripsi (Indonesia)
-                            </label>
-                            <textarea
-                                value={description_ind}
-                                onChange={(e) => setDescriptionInd(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Masukkan deskripsi venue"
-                                rows={4}
-                            />
-                            {errors.description_ind && (
-                                <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
-                            )}
-                        </div>
+                        <div className="grid grid-cols-2 gap-5">
+                            {/* Deskripsi Indonesia */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Venue Description (Indonesia)
+                                </label>
+                                <textarea
+                                    value={description_ind}
+                                    onChange={(e) => setDescriptionInd(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter venue description"
+                                    rows={4}
+                                />
+                                {errors.description_ind && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
+                                )}
+                            </div>
 
-                        {/* Deskripsi English */}
-                        <div>
-                            <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                                Deskripsi (English)
-                            </label>
-                            <textarea
-                                value={description_eng}
-                                onChange={(e) => setDescriptionEng(e.target.value)}
-                                className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter venue description"
-                                rows={4}
-                            />
-                            {errors.description_eng && (
-                                <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
-                            )}
+                            {/* Deskripsi English */}
+                            <div>
+                                <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                                    Venue Description (English)
+                                </label>
+                                <textarea
+                                    value={description_eng}
+                                    onChange={(e) => setDescriptionEng(e.target.value)}
+                                    className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter venue description"
+                                    rows={4}
+                                />
+                                {errors.description_eng && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
 
+
                 {/* ===== FACILITIES ===== */}
                 <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        Fasilitas
+                        Facility
                     </h2>
 
                     <div>
                         <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                            Pilih Fasilitas
+                            Select Facilities
                         </label>
                         <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
-                            Pilih fasilitas yang tersedia dan tandai mana yang merupakan fasilitas tambahan (add-ons)
+                            Select the available facilities and mark which ones are additional facilities (add-ons)
                         </p>
                         <FacilitySelector
                             facilities={facilities}
@@ -170,7 +175,7 @@ export default function CreateVenuePage() {
                     </h2>
 
                     <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-                        Upload foto venue. Klik Set Banner untuk menandai foto utama. Maksimal 6 foto @ 5 MB per foto.
+                        Upload a photo of the venue. Click Set Banner to highlight the main photo. Maximum of 6 photos, 5 MB each.
                     </p>
                     <ImageUploadVenue
                         value={images}
