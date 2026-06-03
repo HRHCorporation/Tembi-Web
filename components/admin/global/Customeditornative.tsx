@@ -50,7 +50,6 @@ export function CustomEditor({
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validasi
         if (!file.type.startsWith("image/")) {
             alert("File harus berupa gambar!");
             return;
@@ -73,7 +72,6 @@ export function CustomEditor({
             img.style.border = "2px solid #e5e7eb";
             img.className = "editor-image";
 
-            // Insert image at cursor
             const selection = window.getSelection();
             if (selection && selection.rangeCount > 0) {
                 const range = selection.getRangeAt(0);
@@ -87,31 +85,32 @@ export function CustomEditor({
         };
         reader.readAsDataURL(file);
 
-        // Reset input
         e.target.value = "";
     };
 
-    // Handle image click
+    // ✅ FIX: Handle image click — hanya proses jika gambar ada di dalam editor ini
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             if (target.tagName === "IMG" && target.classList.contains("editor-image")) {
-                setSelectedImage(target as HTMLImageElement);
-                
-                // Get current size
-                const currentWidth = target.style.width || "100%";
-                const sizePercent = parseInt(currentWidth) || 100;
-                setImageSize(sizePercent);
+                if (editorRef.current?.contains(target)) {
+                    setSelectedImage(target as HTMLImageElement);
 
-                // Get alignment
-                const align = target.style.display === "block" 
-                    ? target.style.marginLeft === "auto" && target.style.marginRight === "auto"
-                        ? "center"
-                        : target.style.marginLeft === "auto"
-                        ? "right"
-                        : "left"
-                    : "left";
-                setImageAlign(align);
+                    const currentWidth = target.style.width || "100%";
+                    const sizePercent = parseInt(currentWidth) || 100;
+                    setImageSize(sizePercent);
+
+                    const align =
+                        target.style.display === "block"
+                            ? target.style.marginLeft === "auto" &&
+                              target.style.marginRight === "auto"
+                                ? "center"
+                                : target.style.marginLeft === "auto"
+                                ? "right"
+                                : "left"
+                            : "left";
+                    setImageAlign(align);
+                }
             } else if (!target.closest(".image-toolbar")) {
                 setSelectedImage(null);
             }
@@ -147,211 +146,36 @@ export function CustomEditor({
         <div className="space-y-2 relative">
             {/* Toolbar */}
             <div className="flex gap-1 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 flex-wrap">
-                {/* Bold */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("bold")}
-                    className="px-3 py-1.5 rounded text-sm font-bold bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Bold (Ctrl+B)"
-                >
-                    B
-                </button>
-
-                {/* Italic */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("italic")}
-                    className="px-3 py-1.5 rounded text-sm italic bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Italic (Ctrl+I)"
-                >
-                    I
-                </button>
-
-                {/* Underline */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("underline")}
-                    className="px-3 py-1.5 rounded text-sm underline bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Underline (Ctrl+U)"
-                >
-                    U
-                </button>
-
-                {/* Strikethrough */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("strikeThrough")}
-                    className="px-3 py-1.5 rounded text-sm line-through bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Strikethrough"
-                >
-                    S
-                </button>
-
+                <button type="button" onClick={() => execCommand("bold")} className="px-3 py-1.5 rounded text-sm font-bold bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Bold (Ctrl+B)">B</button>
+                <button type="button" onClick={() => execCommand("italic")} className="px-3 py-1.5 rounded text-sm italic bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Italic (Ctrl+I)">I</button>
+                <button type="button" onClick={() => execCommand("underline")} className="px-3 py-1.5 rounded text-sm underline bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Underline (Ctrl+U)">U</button>
+                <button type="button" onClick={() => execCommand("strikeThrough")} className="px-3 py-1.5 rounded text-sm line-through bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Strikethrough">S</button>
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-                {/* Headings */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("formatBlock", "h1")}
-                    className="px-3 py-1.5 rounded text-sm font-bold bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Heading 1"
-                >
-                    H1
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("formatBlock", "h2")}
-                    className="px-3 py-1.5 rounded text-sm font-semibold bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Heading 2"
-                >
-                    H2
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("formatBlock", "h3")}
-                    className="px-3 py-1.5 rounded text-sm font-medium bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Heading 3"
-                >
-                    H3
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("formatBlock", "p")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Paragraph"
-                >
-                    P
-                </button>
-
+                <button type="button" onClick={() => execCommand("formatBlock", "h1")} className="px-3 py-1.5 rounded text-sm font-bold bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Heading 1">H1</button>
+                <button type="button" onClick={() => execCommand("formatBlock", "h2")} className="px-3 py-1.5 rounded text-sm font-semibold bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Heading 2">H2</button>
+                <button type="button" onClick={() => execCommand("formatBlock", "h3")} className="px-3 py-1.5 rounded text-sm font-medium bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Heading 3">H3</button>
+                <button type="button" onClick={() => execCommand("formatBlock", "p")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Paragraph">P</button>
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-                {/* Lists */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("insertUnorderedList")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Bullet List"
-                >
-                    • List
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("insertOrderedList")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Numbered List"
-                >
-                    1. List
-                </button>
-
+                <button type="button" onClick={() => execCommand("insertUnorderedList")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Bullet List">• List</button>
+                <button type="button" onClick={() => execCommand("insertOrderedList")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Numbered List">1. List</button>
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-                {/* Alignment */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("justifyLeft")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Align Left"
-                >
-                    ⬅️
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("justifyCenter")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Align Center"
-                >
-                    ⬌
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("justifyRight")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Align Right"
-                >
-                    ➡️
-                </button>
-
+                <button type="button" onClick={() => execCommand("justifyLeft")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Align Left">⬅️</button>
+                <button type="button" onClick={() => execCommand("justifyCenter")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Align Center">⬌</button>
+                <button type="button" onClick={() => execCommand("justifyRight")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Align Right">➡️</button>
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-                {/* Image */}
-                <button
-                    type="button"
-                    onClick={handleImageUpload}
-                    className="px-3 py-1.5 rounded text-sm font-medium bg-green-500 text-white hover:bg-green-600"
-                    title="Insert Image"
-                >
-                    🖼️ Image
-                </button>
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                />
-
+                <button type="button" onClick={handleImageUpload} className="px-3 py-1.5 rounded text-sm font-medium bg-green-500 text-white hover:bg-green-600" title="Insert Image">🖼️ Image</button>
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-                {/* Link */}
-                <button
-                    type="button"
-                    onClick={() => {
-                        const url = prompt("Masukkan URL:");
-                        if (url) execCommand("createLink", url);
-                    }}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Insert Link"
-                >
-                    🔗
-                </button>
-
-                {/* Horizontal Rule */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("insertHorizontalRule")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Horizontal Line"
-                >
-                    ―
-                </button>
-
-                {/* Clear Formatting */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("removeFormat")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Clear Formatting"
-                >
-                    ✕
-                </button>
-
+                <button type="button" onClick={() => { const url = prompt("Masukkan URL:"); if (url) execCommand("createLink", url); }} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Insert Link">🔗</button>
+                <button type="button" onClick={() => execCommand("insertHorizontalRule")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Horizontal Line">―</button>
+                <button type="button" onClick={() => execCommand("removeFormat")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Clear Formatting">✕</button>
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-
-                {/* Undo/Redo */}
-                <button
-                    type="button"
-                    onClick={() => execCommand("undo")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Undo"
-                >
-                    ↶
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("redo")}
-                    className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
-                    title="Redo"
-                >
-                    ↷
-                </button>
+                <button type="button" onClick={() => execCommand("undo")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Undo">↶</button>
+                <button type="button" onClick={() => execCommand("redo")} className="px-3 py-1.5 rounded text-sm bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500" title="Redo">↷</button>
             </div>
 
             {/* Editor */}
-            <div
-                className={`rounded-lg border bg-white dark:bg-gray-800 ${
-                    error ? "border-red-500" : "border-gray-300 dark:border-gray-600"
-                }`}
-            >
+            <div className={`rounded-lg border bg-white dark:bg-gray-800 ${error ? "border-red-500" : "border-gray-300 dark:border-gray-600"}`}>
                 <div
                     ref={editorRef}
                     contentEditable
@@ -386,74 +210,15 @@ export function CustomEditor({
                         />
                         <span className="text-sm w-12">{imageSize}%</span>
                     </div>
-
                     <div className="w-px h-8 bg-gray-300 dark:bg-gray-600"></div>
-
                     <div className="flex items-center gap-2">
                         <label className="text-sm font-medium">Posisi:</label>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setImageAlign("left");
-                                updateImageStyle(imageSize, "left");
-                            }}
-                            className={`px-3 py-1.5 rounded ${
-                                imageAlign === "left"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-200 dark:bg-gray-600"
-                            }`}
-                        >
-                            ⬅️
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setImageAlign("center");
-                                updateImageStyle(imageSize, "center");
-                            }}
-                            className={`px-3 py-1.5 rounded ${
-                                imageAlign === "center"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-200 dark:bg-gray-600"
-                            }`}
-                        >
-                            ⬌
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setImageAlign("right");
-                                updateImageStyle(imageSize, "right");
-                            }}
-                            className={`px-3 py-1.5 rounded ${
-                                imageAlign === "right"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-200 dark:bg-gray-600"
-                            }`}
-                        >
-                            ➡️
-                        </button>
+                        <button type="button" onClick={() => { setImageAlign("left"); updateImageStyle(imageSize, "left"); }} className={`px-3 py-1.5 rounded ${imageAlign === "left" ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-600"}`}>⬅️</button>
+                        <button type="button" onClick={() => { setImageAlign("center"); updateImageStyle(imageSize, "center"); }} className={`px-3 py-1.5 rounded ${imageAlign === "center" ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-600"}`}>⬌</button>
+                        <button type="button" onClick={() => { setImageAlign("right"); updateImageStyle(imageSize, "right"); }} className={`px-3 py-1.5 rounded ${imageAlign === "right" ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-600"}`}>➡️</button>
                     </div>
-
-                    <button
-                        type="button"
-                        onClick={() => {
-                            selectedImage.remove();
-                            setSelectedImage(null);
-                            handleInput();
-                        }}
-                        className="px-3 py-1.5 rounded bg-red-500 text-white hover:bg-red-600"
-                    >
-                        🗑️ Hapus
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => setSelectedImage(null)}
-                        className="px-3 py-1.5 rounded bg-gray-500 text-white hover:bg-gray-600"
-                    >
-                        ✕
-                    </button>
+                    <button type="button" onClick={() => { selectedImage.remove(); setSelectedImage(null); handleInput(); }} className="px-3 py-1.5 rounded bg-red-500 text-white hover:bg-red-600">🗑️ Hapus</button>
+                    <button type="button" onClick={() => setSelectedImage(null)} className="px-3 py-1.5 rounded bg-gray-500 text-white hover:bg-gray-600">✕</button>
                 </div>
             )}
 
@@ -463,12 +228,10 @@ export function CustomEditor({
                     color: #9ca3af;
                     pointer-events: none;
                 }
-
                 .editor-image:hover {
                     border-color: #3b82f6 !important;
                     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
                 }
-
                 .dark .editor-image {
                     border-color: #4b5563 !important;
                 }
