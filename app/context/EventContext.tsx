@@ -17,6 +17,7 @@ interface Event {
 	date_event: string;
 	hosted_by: string;
 	time_event: string;
+	location?: string;
 }
 
 interface EventContextType {

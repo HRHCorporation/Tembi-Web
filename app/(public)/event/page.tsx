@@ -171,7 +171,7 @@ export default function EventPage() {
                       shortDesc: stripHtml(language === 'id' ? event.about_ind : event.about_eng),
                       imageUrl: event.thumbnail,
                       date: event.date_event,
-                      location: event.hosted_by,
+                      location: event.location || 'Tembi Cultural House',
                     }}
                   />
                 </ScrollReveal>

@@ -19,6 +19,7 @@ interface EventDetail {
   time_event: string;
   created_at?: string;
   updated_at?: string;
+  location?: string;
 }
 
 // Fallback static data for development
@@ -284,7 +285,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               slug: fallbackEvent.slug,
               hosted_by: 'Tembi Cultural House',
               date_event: fallbackEvent.date,
-              time_event: fallbackEvent.time
+              time_event: fallbackEvent.time,
+              location: fallbackEvent.location
             });
           } else {
             setError(result.message || 'Event not found');
@@ -303,7 +305,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
             slug: fallbackEvent.slug,
             hosted_by: 'Tembi Cultural House',
             date_event: fallbackEvent.date,
-            time_event: fallbackEvent.time
+            time_event: fallbackEvent.time,
+            location: fallbackEvent.location
           });
         } else {
           setError('Failed to load event');
@@ -386,19 +389,18 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                 {language === 'id' ? 'Diselenggarakan oleh' : 'Hosted By'}
               </p>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  T
+                <div className="w-12 h-12 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-xl uppercase">
+                  {event.hosted_by?.[0] || 'T'}
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#2d3436]">Tembi Cultural House</h3>
-                  <p className="text-sm text-gray-600">{language === 'id' ? 'Rumah Budaya' : 'Cultural House'}</p>
+                  <h3 className="font-bold text-[#2d3436]">{event.hosted_by || 'Tembi Cultural House'}</h3>
+                  <p className="text-sm text-gray-600">
+                    {event.hosted_by && event.hosted_by !== 'Tembi Cultural House'
+                      ? (language === 'id' ? 'Penyelenggara' : 'Organizer')
+                      : (language === 'id' ? 'Rumah Budaya' : 'Cultural House')}
+                  </p>
                 </div>
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed mb-6">
-                {language === 'id'
-                  ? 'Melestarikan warisan budaya Jawa melalui pengalaman autentik dan pembelajaran tradisional.'
-                  : 'Preserving Javanese cultural heritage through authentic experiences and traditional learning.'}
-              </p>
 
               {/* Divider */}
               <div className="border-t border-gray-200 my-4"></div>
@@ -429,7 +431,7 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                     <MapPin size={24} />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#2d3436]">Tembi Cultural House</p>
+                    <p className="font-semibold text-[#2d3436]">{event.location || 'Tembi Cultural House'}</p>
                     <p className="text-sm text-gray-600">Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188</p>
                   </div>
                 </div>

@@ -63,7 +63,7 @@ export default function EventCard({ event }: EventCardProps) {
             <div className="flex items-start gap-2">
               <MapPin size={16} className="text-[#8B9D68] mt-0.5 shrink-0" />
               <div>
-                <p className="font-medium text-gray-700">Tembi Cultural House</p>
+                <p className="font-medium text-gray-700">{event.location}</p>
                 <p className="text-xs text-gray-400">Jl. Parangtritis Km 8.5, Sewon, Bantul, Yogyakarta 55188</p>
               </div>
             </div>
