@@ -13,9 +13,11 @@ interface EventRow extends RowDataPacket {
     hosted_by: string;
     date_event: string;
     time_event: string;
+    location: string;
 }
 
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const { searchParams } = new URL(request.url);
         const status = searchParams.get("status"); // "upcoming" | "past" | null
@@ -54,13 +56,14 @@ export async function GET(request: NextRequest) {
                 slug,
                 hosted_by,
                 date_event,
-                time_event
+                time_event,
+                location
             FROM event
             ${whereClause}
             ${orderClause}
         `;
 
-        const [rows] = await dbWeb.query<EventRow[]>(query);
+        const [rows] = await connection.query<EventRow[]>(query);
 
         const getFirstSentence = (text: string): string => {
             if (!text) return "";
@@ -81,6 +84,7 @@ export async function GET(request: NextRequest) {
             hosted_by: row.hosted_by,
             date_event: row.date_event,
             time_event: row.time_event,
+            location: row.location,
         }));
 
         return NextResponse.json({
@@ -99,5 +103,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

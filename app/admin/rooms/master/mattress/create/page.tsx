@@ -10,8 +10,8 @@ export default function CreateMattressPage() {
 
     return (
         <FormPage
-            title="Tambah Kasur"
-            description="Tambahkan data Kasur baru"
+            title="Add Mattress"
+            description="Add new mattress data"
         >
             <form
                 className="space-y-5"
@@ -23,7 +23,7 @@ export default function CreateMattressPage() {
                 {/* NAME */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama 
+                        Mattress Name
                     </label>
                     <input
                         type="text"
@@ -33,7 +33,7 @@ export default function CreateMattressPage() {
                             bg-white text-gray-900
                             dark:bg-gray-700 dark:text-white dark:border-gray-600
                             focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama kasur"
+                        placeholder="Enter the name of the mattress"
                     />
                     {errors.name && (
                         <p className="mt-1 text-sm text-red-600">

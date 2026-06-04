@@ -77,7 +77,8 @@ export default function HeroImage() {
 			<div className="absolute inset-0 bg-black/40 z-10"></div>
 			<div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-4">
 				<h2 className="text-5xl md:text-8xl font-serif font-semibold mb-8 leading-tight md:drop-shadow-2xl">
-					{t.homepage.hero.title[0]} <br /> {t.homepage.hero.title[1]}
+					{/* {t.homepage.hero.title[0]} <br /> {t.homepage.hero.title[1]} */}
+					{displayImages[currentImageIndex]?.title || t.homepage.hero.title[0]}
 				</h2>
 
 				<div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">

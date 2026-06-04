@@ -9,6 +9,7 @@ export type Policy = {
     name_ind: string;
     name_eng: string;
     type: string;
+    is_addition: number;
 }
 
 export function getColumns(
@@ -42,22 +43,18 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Fasilitas (Indonesia)",
+            header: "Amenities Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Fasilitas (English)",
+            header: "Amenities Name (English)",
         },
         {
             accessorKey: "is_addition",
             header: "Additional",
             cell: ({ row }) => {
-                const isAddition = row.original.type === "ADDITIONAL";
-                return (
-                    <span>
-                        {isAddition ? "Yes" : "No"}
-                    </span>
-                );
+                const isAddition = Boolean(row.original.is_addition); // ← pakai Boolean()
+                return <span>{isAddition ? "Yes" : "No"}</span>;
             }
         },
         {

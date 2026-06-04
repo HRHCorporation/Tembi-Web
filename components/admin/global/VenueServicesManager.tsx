@@ -62,7 +62,7 @@ export function VenueServicesManager({ value, onChange, onDelete, error }: Venue
                     onClick={handleAddService}
                     className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
                 >
-                    + Tambah Service
+                    + Add Service
                 </button>
             </div>
 
@@ -107,7 +107,7 @@ export function VenueServicesManager({ value, onChange, onDelete, error }: Venue
                                     {/* Name Indonesia */}
                                     <div>
                                         <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Nama Service (Indonesia)
+                                            Service Name (Indonesia)
                                         </label>
                                         <input
                                             type="text"
@@ -127,7 +127,7 @@ export function VenueServicesManager({ value, onChange, onDelete, error }: Venue
                                     {/* Name English */}
                                     <div>
                                         <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Nama Service (English)
+                                            Service Name (English)
                                         </label>
                                         <input
                                             type="text"
@@ -147,7 +147,7 @@ export function VenueServicesManager({ value, onChange, onDelete, error }: Venue
                                     {/* Description Indonesia */}
                                     <div>
                                         <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Deskripsi (Indonesia)
+                                            Deskripsi Service (Indonesia)
                                         </label>
                                         <textarea
                                             value={service.description_ind}
@@ -159,7 +159,7 @@ export function VenueServicesManager({ value, onChange, onDelete, error }: Venue
                                                 )
                                             }
                                             className="w-full rounded border p-2 text-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                                            placeholder="Deskripsikan service ini"
+                                            placeholder="Describe this service"
                                             rows={3}
                                         />
                                     </div>
@@ -167,7 +167,7 @@ export function VenueServicesManager({ value, onChange, onDelete, error }: Venue
                                     {/* Description English */}
                                     <div>
                                         <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Deskripsi (English)
+                                            Deskripsi Service (English)
                                         </label>
                                         <textarea
                                             value={service.description_eng}

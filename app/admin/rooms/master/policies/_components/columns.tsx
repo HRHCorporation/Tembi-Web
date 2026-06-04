@@ -42,15 +42,15 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Fasilitas (Indonesia)",
+            header: "Policy Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Fasilitas (English)",
+            header: "Policy Name (English)",
         },
         {
             accessorKey: "type",
-            header: "Tipe",
+            header: "Type",
         },
         {
             id: "actions",

@@ -23,6 +23,7 @@ interface HouseRow extends RowDataPacket {
     GET DATA - Fetch all rooms with galleries
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT 
@@ -57,12 +58,12 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<HouseRow[]>(query, params);
+        const [rows] = await connection.query<HouseRow[]>(query, params);
 
         // Parse JSON galleries untuk setiap row
         const processedRows = rows.map(row => {
             let galleries: RoomGallery[] = [];
-            
+
             if (row.galleries) {
                 // Cek apakah sudah object atau masih string
                 if (typeof row.galleries === 'string') {
@@ -70,11 +71,11 @@ export async function GET(request: NextRequest) {
                 } else {
                     galleries = row.galleries as RoomGallery[];
                 }
-                
+
                 // Filter null values (jika LEFT JOIN tidak match)
                 galleries = galleries.filter(g => g.id !== null);
             }
-            
+
             return {
                 id: row.id,
                 title_ind: row.title_ind,
@@ -102,5 +103,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

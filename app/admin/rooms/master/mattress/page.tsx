@@ -14,7 +14,7 @@ export default function MattressPage() {
                     </h1>
 
                     <p className="text-gray-500">
-                        Data tiers room
+                        Data Mattress
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function MattressPage() {
                     href="/admin/rooms/master/mattress/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Mattress
+                    + Add Mattress
                 </Link>
 
             </div>

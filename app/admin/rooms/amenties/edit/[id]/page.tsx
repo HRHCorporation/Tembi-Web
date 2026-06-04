@@ -10,7 +10,7 @@ import { TagInput } from "@/components/admin/global/TagInput";
 export default function EditAmentiesPage() {
     const params = useParams();
     const id = params.id as string;
-    
+
     const {
         name_ind,
         setName_ind,
@@ -30,7 +30,7 @@ export default function EditAmentiesPage() {
     } = useEditAmentiesRoom(id);
 
     const router = useRouter();
-    
+
     if (fetchLoading) {
         return (
             <div className="p-10 text-center text-gray-500 dark:text-gray-400">
@@ -40,40 +40,45 @@ export default function EditAmentiesPage() {
     }
 
     return (
-        <FormPage title="Edit Fasilitas" description="Update data fasilitas">
+        <FormPage title="Edit Amenities"
+            description="Edit amenities data">
             <form className="space-y-5" onSubmit={handleSubmit}>
-                
-                {/* NAME (Indonesia) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Fasilitas (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setName_ind(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.name_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                    )}
+
+                <div className="grid grid-cols-2 gap-5">
+                    {/* NAME (Indonesia) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Nama Fasilitas (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setName_ind(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {errors.name_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                        )}
+                    </div>
+
+                    {/* NAME (English) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Nama Fasilitas (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setName_eng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {errors.name_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* NAME (English) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Fasilitas (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setName_eng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.name_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                    )}
-                </div>
+
 
                 {/* IS ADDITIONAL */}
                 <div>
@@ -85,7 +90,7 @@ export default function EditAmentiesPage() {
                         onChange={(e) => setIsAddition(e.target.value)}
                         className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="">-- Pilih --</option>
+                        <option value="">-- Choose Additional --</option>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
@@ -115,8 +120,8 @@ export default function EditAmentiesPage() {
                         value={amenities}
                         onChange={setAmenities}
                         onDelete={handleDeleteAmenity}
-                        placeholderInd="Masukkan nama amenities (Indonesia) lalu Enter"
-                        placeholderEng="Enter amenities name (English) then Tab"
+                        placeholderInd="Enter amenities name (Indonesia) then Enter"
+                        placeholderEng="Enter amenities name (English) then Enter"
                         error={errors.amenities}
                     />
                 </div>

@@ -15,6 +15,7 @@ interface CollectionRow extends RowDataPacket {
     GET DATA - Fetch latest 4 collections
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT 
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
             LIMIT 4
         `;
 
-        const [rows] = await dbWeb.query<CollectionRow[]>(query);
+        const [rows] = await connection.query<CollectionRow[]>(query);
 
         return NextResponse.json({
             success: true,
@@ -46,5 +47,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

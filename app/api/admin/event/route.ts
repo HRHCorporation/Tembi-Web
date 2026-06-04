@@ -29,6 +29,8 @@ interface CountRow extends RowDataPacket {
     GET DATA
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const searchParams = request.nextUrl.searchParams;
         const page = Number(searchParams.get("page") || 1);
@@ -37,41 +39,44 @@ export async function GET(request: NextRequest) {
         const offset = (page - 1) * limit;
         const sortBy = searchParams.get("sortBy") || "id";
         const sortOrder = searchParams.get("sortOrder") || "DESC";
-        const [rows] = await dbWeb.query<EventRow[]>(  // ← ganti any
-            `
-            SELECT id, title_ind, title_eng
+
+        const [rows] = await connection.query<EventRow[]>(
+            `SELECT id, title_ind, title_eng
             FROM event
             WHERE title_ind LIKE ? OR title_eng LIKE ?
             ORDER BY ${sortBy} ${sortOrder}
-            LIMIT ? OFFSET ?
-            `,
+            LIMIT ? OFFSET ?`,
             [`%${search}%`, `%${search}%`, limit, offset]
         );
-        const [totalRows] = await dbWeb.query<CountRow[]>(  // ← ganti any
-            `
-            SELECT COUNT(*) as total
+
+        const [totalRows] = await connection.query<CountRow[]>(
+            `SELECT COUNT(*) as total
             FROM event
-            WHERE title_ind LIKE ? OR title_eng LIKE ?
-            `,
+            WHERE title_ind LIKE ? OR title_eng LIKE ?`,
             [`%${search}%`, `%${search}%`]
         );
+
         const total = totalRows[0].total;
-        const totalPages = Math.ceil(total / limit);
+
         return NextResponse.json({
             success: true,
             data: rows,
-            pagination: {
-                total,
-                totalPages,
-            },
+            pagination: { total, totalPages: Math.ceil(total / limit) },
         });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Failed to fetch data" }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: "Failed to fetch data" },
+            { status: 500 }
+        );
+    } finally {
+        connection.release();
     }
 }
 
 export async function POST(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const cookieStore = await cookies();
         const session = cookieStore.get(
@@ -85,8 +90,6 @@ export async function POST(request: NextRequest) {
         }
 
         const formData = await request.formData();
-
-        // Extract form data
         const title_ind = formData.get("title_ind") as string;
         const title_eng = formData.get("title_eng") as string;
         const description_ind = formData.get("description_ind") as string;
@@ -96,19 +99,9 @@ export async function POST(request: NextRequest) {
         const hosted_by = formData.get("hosted_by") as string;
         const date_event = formData.get("date_event") as string;
         const time_event = formData.get("time_event") as string;
+        const location = formData.get("location") as string;
 
-        // ✅ Log untuk debug
-        console.log("📝 [CREATE EVENT] Data received:");
-        console.log("- Title IND:", title_ind?.substring(0, 50));
-        console.log("- Title ENG:", title_eng?.substring(0, 50));
-        console.log("- Description IND length:", description_ind?.length);
-        console.log("- Description ENG length:", description_eng?.length);
-        console.log("- Has base64 images in IND:", description_ind?.includes("data:image"));
-        console.log("- Has base64 images in ENG:", description_eng?.includes("data:image"));
-
-        // Validation
         const errors: ErrorResponse = {};
-
         if (!title_ind?.trim()) errors.title_ind = "Judul Indonesia wajib diisi";
         if (!title_eng?.trim()) errors.title_eng = "Judul English wajib diisi";
         if (!description_ind?.trim()) errors.description_ind = "Deskripsi Indonesia wajib diisi";
@@ -118,6 +111,7 @@ export async function POST(request: NextRequest) {
         if (!hosted_by?.trim()) errors.hosted_by = "Hosted by wajib diisi";
         if (!date_event?.trim()) errors.date_event = "Tanggal wajib diisi";
         if (!time_event?.trim()) errors.time_event = "Waktu wajib diisi";
+        if (!location?.trim()) errors.location = "Lokasi wajib diisi";
 
         if (Object.keys(errors).length > 0) {
             return NextResponse.json(
@@ -126,78 +120,37 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // ✅ Check description size
         const descIndSize = new Blob([description_ind]).size;
         const descEngSize = new Blob([description_eng]).size;
 
-        console.log("📊 [SIZE CHECK]:");
-        console.log("- Description IND size:", (descIndSize / 1024).toFixed(2), "KB");
-        console.log("- Description ENG size:", (descEngSize / 1024).toFixed(2), "KB");
-        console.log("- Total size:", ((descIndSize + descEngSize) / 1024).toFixed(2), "KB");
+        if (descIndSize > 5 * 1024 * 1024) console.warn("⚠️ Description IND sangat besar!");
+        if (descEngSize > 5 * 1024 * 1024) console.warn("⚠️ Description ENG sangat besar!");
 
-        // Warning jika terlalu besar
-        if (descIndSize > 5 * 1024 * 1024) { // 5MB
-            console.warn("⚠️  Description IND sangat besar! Pertimbangkan untuk optimasi image.");
-        }
-        if (descEngSize > 5 * 1024 * 1024) { // 5MB
-            console.warn("⚠️  Description ENG sangat besar! Pertimbangkan untuk optimasi image.");
-        }
-
-        // ✅ Process thumbnail
-        const bytes = await thumbnailFile!.arrayBuffer();
+        const bytes = await thumbnailFile.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        const filename = `event-${Date.now()}-${Math.random()
-            .toString(36)
-            .substring(2, 8)}.webp`;
-
+        const filename = `event-${Date.now()}-${Math.random().toString(36).substring(2, 8)}.webp`;
         const uploadDir = path.join(process.cwd(), "public/images/upload/event");
-
         await mkdir(uploadDir, { recursive: true });
+        await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, filename));
 
-        const filePath = path.join(uploadDir, filename);
 
-        await sharp(buffer)
-            .webp({ quality: 80 })
-            .toFile(filePath);
+        await connection.beginTransaction();
 
-        console.log("✅ [THUMBNAIL] Uploaded:", filename);
-
-        // ✅ Insert event with base64 images in description
-        const [result] = await dbWeb.query(
-            `
-            INSERT INTO event (
-                title_ind, 
-                title_eng, 
-                description_ind, 
-                description_eng, 
-                thumbnail, 
-                slug, 
-                created_by, 
-                created_at, 
-                hosted_by, 
-                date_event, 
-                time_event
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)
-            `,
-            [
-                title_ind,
-                title_eng,
-                description_ind, // ✅ Contains HTML with base64 images
-                description_eng, // ✅ Contains HTML with base64 images
-                `/images/upload/event/${filename}`,
-                slug,
-                createdBy,
-                hosted_by,
-                date_event,
-                time_event
-            ]
+        const [result] = await connection.query(
+            `INSERT INTO event (
+                title_ind, title_eng,
+                description_ind, description_eng,
+                thumbnail, slug, created_by, created_at,
+                hosted_by, date_event, time_event, location
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?,?)`,
+            [title_ind, title_eng, description_ind, description_eng, `/images/upload/event/${filename}`, slug, createdBy, hosted_by, date_event, time_event, location]
         );
+
+        await connection.commit();
 
         const eventId = (result as unknown as { insertId: number }).insertId;
 
-        console.log("✅ [SUCCESS] Event created with ID:", eventId);
-        console.log("✅ [SUCCESS] Images in description saved to database");
+        console.log("[SUCCESS] Event created with ID:", eventId);
 
         return NextResponse.json(
             {
@@ -205,31 +158,25 @@ export async function POST(request: NextRequest) {
                 message: "Event berhasil ditambahkan",
                 data: {
                     id: eventId,
-                    hasImagesInDescription: description_ind?.includes("data:image") || description_eng?.includes("data:image")
+                    hasImagesInDescription: description_ind?.includes("data:image") || description_eng?.includes("data:image"),
                 },
             },
             { status: 201 }
         );
     } catch (error) {
-        console.error("❌ [CREATE_EVENT_ERROR]", error);
+        await connection.rollback();
+        console.error("[CREATE_EVENT_ERROR]", error);
 
-        // ✅ Check specific errors
         if (error instanceof Error) {
             if (error.message.includes("Packet too large")) {
                 return NextResponse.json(
-                    {
-                        success: false,
-                        message: "Data terlalu besar. Kurangi jumlah atau ukuran gambar."
-                    },
+                    { success: false, message: "Data terlalu besar. Kurangi jumlah atau ukuran gambar." },
                     { status: 413 }
                 );
             }
             if (error.message.includes("Data too long")) {
                 return NextResponse.json(
-                    {
-                        success: false,
-                        message: "Deskripsi terlalu panjang. Gunakan LONGTEXT untuk kolom database."
-                    },
+                    { success: false, message: "Deskripsi terlalu panjang. Gunakan LONGTEXT untuk kolom database." },
                     { status: 413 }
                 );
             }
@@ -239,5 +186,7 @@ export async function POST(request: NextRequest) {
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

@@ -79,7 +79,7 @@ export default function EditRoomPage() {
     }
 
     return (
-        <FormPage title="Edit Room" description="Perbarui data Room">
+        <FormPage title="Edit Room" description="Update data kamar">
             <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 
                 {/* ── INFORMASI UTAMA ──────────────────────────────────── */}
@@ -125,22 +125,22 @@ export default function EditRoomPage() {
                 {/* ── DETAIL KAMAR ─────────────────────────────────────── */}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4">
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Harga (Rp)</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Price (Rp)</label>
                         <input type="text" value={room_price ? new Intl.NumberFormat('id-ID').format(room_price) : ""} onChange={(e) => { const value = e.target.value.replace(/\D/g, ""); setRoomPrice(value ? Number(value) : null); }} className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" />
                         {errors.room_price && <p className="mt-1 text-sm text-red-600">{errors.room_price}</p>}
                     </div>
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Jumlah Tamu</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Number of Guest</label>
                         <input type="number" value={number_guest ?? ""} onChange={(e) => setNumberGuest(Number(e.target.value))} className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" />
                         {errors.number_guest && <p className="mt-1 text-sm text-red-600">{errors.number_guest}</p>}
                     </div>
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Luas Kamar (m²)</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Room Size (m²)</label>
                         <input type="number" step="any" value={spacious_room ?? ""} onChange={(e) => setSpaciousRoom(Number(e.target.value))} className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" />
                         {errors.spacious_room && <p className="mt-1 text-sm text-red-600">{errors.spacious_room}</p>}
                     </div>
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Jenis Kasur</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Matterss Type</label>
                         <select value={mattress_id} onChange={(e) => setMattressId(e.target.value)} className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="">Pilih kasur...</option>
                             {mattresses.map((m) => (<option key={m.value} value={m.value}>{m.label}</option>))}
@@ -152,15 +152,15 @@ export default function EditRoomPage() {
                 {/* ── RELASI MULTI-SELECT ───────────────────────────────── */}
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Fasilitas</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Facility</label>
                         <MultiSelect options={facilities} value={selected_facilities} onChange={setSelectedFacilities} placeholder="Pilih fasilitas..." error={errors.selected_facilities} />
                     </div>
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Kebijakan</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Policy</label>
                         <MultiSelect options={policies} value={selected_policies} onChange={setSelectedPolicies} placeholder="Pilih kebijakan..." error={errors.selected_policies} />
                     </div>
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Peraturan Kamar</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Room Rules</label>
                         <MultiSelect options={rules} value={selected_rules} onChange={setSelectedRules} placeholder="Pilih peraturan..." error={errors.selected_rules} />
                     </div>
                 </div>
@@ -168,7 +168,7 @@ export default function EditRoomPage() {
                 {/* ── REKOMENDASI & TIER */}
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Rekomendasi</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Recommendation</label>
                         <select value={is_recomendation ? "1" : "0"} onChange={(e) => setIsRecommendation(e.target.value === "1")} className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="0">Bukan Rekomendasi</option>
                             <option value="1">Rekomendasi</option>
@@ -176,7 +176,7 @@ export default function EditRoomPage() {
                         {errors.is_recomendation && <p className="mt-1 text-sm text-red-600">{errors.is_recomendation}</p>}
                     </div>
                     <div>
-                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Tier</label>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Room Tier</label>
                         <select value={tiers_id} onChange={(e) => setTiersId(e.target.value)} className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="">Pilih Tier</option>
                             {tiers.map((t) => (<option key={t.value} value={t.value}>{t.label}</option>))}
@@ -187,8 +187,8 @@ export default function EditRoomPage() {
 
                 {/* ── GALERI ───────────────────────────────────────────── */}
                 <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Galeri Foto</label>
-                    <p className="mb-2 text-xs text-gray-400 dark:text-gray-500">Upload foto kamar. Klik Set Banner untuk menandai foto utama. Maksimal 5 foto @ 5 MB per foto.</p>
+                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Photo Gallery</label>
+                    <p className="mb-2 text-xs text-gray-400 dark:text-gray-500">Upload a photo of your room. Click Set Banner to highlight the main photo. Maximum 5 photos, 5 MB each.</p>
                     <ImageUpload value={images}
                         onChange={setImages}  // ← Untuk add/edit
                         onDelete={handleDeleteImage}  // ← NEW: Untuk delete dengan tracking

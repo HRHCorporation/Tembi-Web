@@ -67,6 +67,7 @@ export async function GET(
     request: NextRequest,
     context: { params: Promise<{ slug: string }> }
 ) {
+    const connection = await dbWeb.getConnection();
     try {
         const { slug } = await context.params;
 
@@ -153,7 +154,7 @@ export async function GET(
 
         const queryParams: (number | string)[] = [slug];
 
-        const [rows] = await dbWeb.query<FoodPackageDetailRow[]>(query, queryParams);
+        const [rows] = await connection.query<FoodPackageDetailRow[]>(query, queryParams);
 
         if (rows.length === 0) {
             return NextResponse.json(
@@ -247,5 +248,7 @@ export async function GET(
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

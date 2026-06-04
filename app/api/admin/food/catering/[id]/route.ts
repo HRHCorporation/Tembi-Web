@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import dbWeb from "@/lib/db-web";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import { join } from "path";
+import path from "path";
+import fs from "fs";
 import sharp from "sharp";
 
 interface SessionUser {
@@ -18,6 +20,9 @@ interface FoodPackagePrimary {
 
 interface ErrorResponse {
     [key: string]: string;
+}
+interface RouteContext {
+    params: Promise<{ id: string }>;
 }
 
 export async function GET(
@@ -122,7 +127,7 @@ export async function PUT(
         if (!description_eng?.trim()) errors.description_eng = "Deskripsi English wajib diisi";
         if (!subtitle_menu_ind?.trim()) errors.subtitle_menu_ind = "Subtitle menu Indonesia wajib diisi";
         if (!subtitle_menu_eng?.trim()) errors.subtitle_menu_eng = "Subtitle menu English wajib diisi";
-    
+
 
         if (Object.keys(errors).length > 0) {
             connection.release();
@@ -136,19 +141,33 @@ export async function PUT(
         let dbPath: string | null = null;
 
         if (imageFile) {
-            const buffer = await imageFile.arrayBuffer();
+            // Ambil image lama dari DB lalu hapus
+            const [existingRows] = await connection.query(
+                `SELECT image FROM food_packages WHERE id = ?`,
+                [packageId]
+            );
+            const existing = existingRows as any[];
+            if (existing.length > 0 && existing[0].image) {
+                const oldImagePath = join(process.cwd(), "public", existing[0].image);
+                try {
+                    await unlink(oldImagePath);
+                } catch {
+                    // File tidak ada, skip saja
+                }
+            }
 
-            // ✅ Convert ke WebP pakai sharp
+            const buffer = await imageFile.arrayBuffer();
             const webpBuffer = await sharp(Buffer.from(buffer))
                 .webp({ quality: 80 })
                 .toBuffer();
 
-            // ✅ Filename dengan slug
-            const filename = `${slug}-${Date.now()}.webp`;
-            const filepath = join(process.cwd(), `public/images/upload/food/${filename}`);
-            dbPath = `/images/upload/food/${filename}`;
+            const filename = `catering-${Date.now()}-${Math.random()
+                .toString(36)
+                .substring(2, 8)}.webp`;
+            const filepath = join(process.cwd(), `public/images/upload/catering/${filename}`);
+            dbPath = `/images/upload/catering/${filename}`;
 
-            await mkdir(join(process.cwd(), "public/images/upload/food"), { recursive: true });
+            await mkdir(join(process.cwd(), "public/images/upload/catering"), { recursive: true });
             await writeFile(filepath, webpBuffer);
         }
 
@@ -236,6 +255,96 @@ export async function PUT(
         }
     } catch (error) {
         console.error("[UPDATE_FOOD_PACKAGE_ERROR]", error);
+        return NextResponse.json(
+            { success: false, message: "Terjadi kesalahan server" },
+            { status: 500 }
+        );
+    }
+}
+
+export async function DELETE(request: NextRequest, context: RouteContext) {
+    const connection = await dbWeb.getConnection();
+
+    try {
+        const cookieStore = await cookies();
+        const session = cookieStore.get(
+            process.env.COOKIE_NAME || "admin_session_tembi"
+        );
+
+        if (!session?.value) {
+            connection.release();
+            return NextResponse.json(
+                { success: false, message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const { id } = await context.params;
+
+        if (!id) {
+            connection.release();
+            return NextResponse.json(
+                { success: false, message: "ID wajib diisi" },
+                { status: 400 }
+            );
+        }
+
+        // Ambil data image sebelum delete
+        const [rows] = await connection.query(
+            `SELECT image FROM food_packages WHERE id = ?`,
+            [id]
+        );
+
+        const data = rows as any[];
+
+        if (data.length === 0) {
+            connection.release();
+            return NextResponse.json(
+                { success: false, message: "Data tidak ditemukan" },
+                { status: 404 }
+            );
+        }
+
+        const imagePath = data[0].image; // contoh: /images/upload/catering/catering-xxx.webp
+
+        await connection.beginTransaction();
+
+        try {
+            // Delete food_packages_primary dulu (foreign key)
+            await connection.query(
+                `DELETE FROM food_packages_primary WHERE food_packages_id = ?`,
+                [id]
+            );
+
+            // Delete food_packages
+            await connection.query(
+                `DELETE FROM food_packages WHERE id = ?`,
+                [id]
+            );
+
+            await connection.commit();
+            connection.release();
+
+            // Hapus file image setelah transaksi berhasil
+            if (imagePath) {
+                const fullPath = path.join(process.cwd(), "public", imagePath);
+                if (fs.existsSync(fullPath)) {
+                    fs.unlinkSync(fullPath);
+                }
+            }
+
+            return NextResponse.json({
+                success: true,
+                message: "Food package berhasil dihapus",
+            });
+        } catch (transactionError) {
+            await connection.rollback();
+            connection.release();
+            throw transactionError;
+        }
+    } catch (error) {
+        console.log(error);
+        console.error("[DELETE_FOOD_PACKAGE_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }

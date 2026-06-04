@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useMusic } from "@/app/context/MusicContext";
 
 const BackgroundMusic = () => {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
+	const { isMuted } = useMusic();
 
 	useEffect(() => {
 		const audio = audioRef.current;
@@ -13,9 +15,8 @@ const BackgroundMusic = () => {
 
 		const playAudio = () => {
 			const playPromise = audio.play();
-
 			if (playPromise !== undefined) {
-				playPromise.catch((error) => {
+				playPromise.catch(() => {
 					console.log("Menunggu interaksi user untuk memutar musik...");
 				});
 			}
@@ -25,7 +26,6 @@ const BackgroundMusic = () => {
 
 		const handleInteraction = () => {
 			playAudio();
-
 			["click", "scroll", "keydown", "touchstart"].forEach((event) =>
 				document.removeEventListener(event, handleInteraction),
 			);
@@ -41,8 +41,21 @@ const BackgroundMusic = () => {
 			);
 		};
 	}, []);
+
+	useEffect(() => {
+		const audio = audioRef.current;
+		if (!audio) return;
+		audio.muted = isMuted;
+	}, [isMuted]);
+
 	return (
-		<audio src="/audio/background-music.mp3" loop autoPlay className="hidden" />
+		<audio
+			ref={audioRef}
+			src="/audio/backsound.mp3"
+			loop
+			autoPlay
+			className="hidden"
+		/>
 	);
 };
 

@@ -14,6 +14,19 @@ interface BlogDetailRow extends RowDataPacket {
     updated_at: string;
 }
 
+const stripHtml = (html: string): string => {
+    if (!html) return '';
+    return html
+        .replace(/<[^>]*>/g, '') // Strip HTML tags
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\s+/g, ' ')
+        .trim();
+};
+
 const getFirstSentence = (text: string): string => {
     if (!text) return "";
     const match = text.match(/^[^.!?]+[.!?]/);
@@ -26,59 +39,32 @@ export async function GET(
     request: NextRequest,
     context: { params: Promise<{ slug: string }> }
 ) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const { slug } = await context.params;
 
-        // Query 1: detail blog by slug
         const detailQuery = `
-            SELECT 
-                id,
-                title_ind,
-                title_eng,
-                description_ind,
-                description_eng,
-                thumbnail,
-                slug,
-                created_at,
-                updated_at
-            FROM blogs
-            WHERE slug = ?
-            LIMIT 1
+            SELECT id, title_ind, title_eng, description_ind, description_eng,
+                thumbnail, slug, created_at, updated_at
+            FROM blogs WHERE slug = ? LIMIT 1
         `;
 
-        // Query 2: blog terbaru (exclude yang sedang dibuka)
         const latestQuery = `
-            SELECT 
-                id,
-                title_ind,
-                title_eng,
-                description_ind,
-                description_eng,
-                thumbnail,
-                slug,
-                created_at,
-                updated_at
-            FROM blogs
-            WHERE slug != ?
-            ORDER BY created_at DESC
-            LIMIT 4
+            SELECT id, title_ind, title_eng, description_ind, description_eng,
+                thumbnail, slug, created_at, updated_at
+            FROM blogs WHERE slug != ?
+            ORDER BY created_at DESC LIMIT 4
         `;
 
-        // Jalankan paralel
-        const [
-            [detailRows],
-            [latestRows]
-        ] = await Promise.all([
-            dbWeb.query<BlogDetailRow[]>(detailQuery, [slug]),
-            dbWeb.query<BlogDetailRow[]>(latestQuery, [slug]),
+        const [[detailRows], [latestRows]] = await Promise.all([
+            connection.query<BlogDetailRow[]>(detailQuery, [slug]),
+            connection.query<BlogDetailRow[]>(latestQuery, [slug]),
         ]);
 
         if (detailRows.length === 0) {
             return NextResponse.json(
-                {
-                    success: false,
-                    message: "Blog not found",
-                },
+                { success: false, message: "Blog not found" },
                 { status: 404 }
             );
         }
@@ -101,8 +87,8 @@ export async function GET(
             id: r.id,
             title_ind: r.title_ind,
             title_eng: r.title_eng,
-            description_ind: getFirstSentence(r.description_ind),
-            description_eng: getFirstSentence(r.description_eng),
+            description_ind: getFirstSentence(stripHtml(r.description_ind)),
+            description_eng: getFirstSentence(stripHtml(r.description_eng)),
             thumbnail: r.thumbnail || "",
             slug: r.slug,
             created_at: r.created_at,
@@ -111,12 +97,8 @@ export async function GET(
 
         return NextResponse.json({
             success: true,
-            data: {
-                detail,
-                latest,
-            },
+            data: { detail, latest },
         });
-
     } catch (error) {
         console.error("Error fetching blog detail:", error);
         return NextResponse.json(
@@ -127,5 +109,7 @@ export async function GET(
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

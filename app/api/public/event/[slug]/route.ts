@@ -15,6 +15,7 @@ interface EventDetailRow extends RowDataPacket {
     time_event: string;
     created_at: string;
     updated_at: string;
+    location: string;
 }
 
 const getFirstSentence = (text: string): string => {
@@ -29,6 +30,7 @@ export async function GET(
     request: NextRequest,
     context: { params: Promise<{ slug: string }> }
 ) {
+    const connection = await dbWeb.getConnection();
     try {
         const { slug } = await context.params;
 
@@ -46,7 +48,8 @@ export async function GET(
                 date_event,
                 time_event,
                 created_at,
-                updated_at
+                updated_at,
+                location
             FROM event
             WHERE slug = ?
             LIMIT 1
@@ -64,7 +67,8 @@ export async function GET(
                 slug,
                 hosted_by,
                 date_event,
-                time_event
+                time_event,
+                location
             FROM event
             WHERE DATE(date_event) >= CURDATE()
               AND slug != ?
@@ -77,8 +81,8 @@ export async function GET(
             [detailRows],
             [upcomingRows]
         ] = await Promise.all([
-            dbWeb.query<EventDetailRow[]>(detailQuery, [slug]),
-            dbWeb.query<EventDetailRow[]>(upcomingQuery, [slug]),
+            connection.query<EventDetailRow[]>(detailQuery, [slug]),
+            connection.query<EventDetailRow[]>(upcomingQuery, [slug]),
         ]);
 
         if (detailRows.length === 0) {
@@ -106,6 +110,7 @@ export async function GET(
             time_event: row.time_event,
             created_at: row.created_at,
             updated_at: row.updated_at,
+            location: row.location
         };
 
         const upcoming = upcomingRows.map((r) => ({
@@ -119,6 +124,7 @@ export async function GET(
             hosted_by: r.hosted_by,
             date_event: r.date_event,
             time_event: r.time_event,
+            location: r.location
         }));
 
         return NextResponse.json({
@@ -139,5 +145,7 @@ export async function GET(
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

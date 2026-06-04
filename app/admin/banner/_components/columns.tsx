@@ -17,7 +17,7 @@ export function getColumns(
 		},
 		{
 			accessorKey: "name_page",
-			header: "Nama Page (Indonesia)",
+			header: "Page Name (Indonesia)",
 		},
 		{
 			accessorKey: "title_ind",

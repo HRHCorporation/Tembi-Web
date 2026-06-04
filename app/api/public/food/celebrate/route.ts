@@ -22,6 +22,7 @@ interface CelebrateMomentRow extends RowDataPacket {
     GET DATA - Fetch all celebrate moments with items
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
     try {
         const query = `
             SELECT 
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
 
         const params: (number | string)[] = [];
 
-        const [rows] = await dbWeb.query<CelebrateMomentRow[]>(query, params);
+        const [rows] = await connection.query<CelebrateMomentRow[]>(query, params);
 
         // Parse JSON items untuk setiap row
         const processedRows = rows.map(row => {
@@ -103,5 +104,7 @@ export async function GET(request: NextRequest) {
             },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

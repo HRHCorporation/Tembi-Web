@@ -61,7 +61,7 @@ export function VenueKeysManager({ value, onChange, onDelete, error }: VenueKeys
                     onClick={handleAddKey}
                     className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
                 >
-                    + Tambah Key
+                    + Add Key
                 </button>
             </div>
 

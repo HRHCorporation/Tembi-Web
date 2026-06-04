@@ -10,11 +10,11 @@ export default function FasilitiesPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Fasilitas
+                        Facilities
                     </h1>
 
                     <p className="text-gray-500">
-                        Data fasilitas room
+                        Room facility data
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function FasilitiesPage() {
                     href="/admin/rooms/master/fasilities/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Fasilitas
+                    + Add Facility
                 </Link>
 
             </div>

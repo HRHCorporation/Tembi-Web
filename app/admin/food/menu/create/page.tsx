@@ -51,7 +51,7 @@ export default function CreateMenuPage() {
                         onChange={(e) => setFoodPackageId(e.target.value)}
                         className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="">Pilih food package...</option>
+                        <option value="">Select food package...</option>
                         {catering.map((m) => (
                             <option key={m.value} value={m.value}>
                                 {m.label}
@@ -63,73 +63,77 @@ export default function CreateMenuPage() {
                     )}
                 </div>
 
-                {/* NAMA (INDONESIA) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Menu (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setNameInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama menu"
-                    />
-                    {errors.name_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                    )}
+                <div className="grid grid-cols-2 gap-5">
+                    {/* NAMA (INDONESIA) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Menu Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setNameInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter menu name"
+                        />
+                        {errors.name_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                        )}
+                    </div>
+
+                    {/* NAMA (ENGLISH) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Menu Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setNameEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter menu name"
+                        />
+                        {errors.name_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                        )}
+                    </div>
+
+                    {/* SUBNAME (INDONESIA) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Subname Menu (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={subname_ind}
+                            onChange={(e) => setSubnameInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter menu subname"
+                        />
+                        {errors.subname_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.subname_ind}</p>
+                        )}
+                    </div>
+
+                    {/* SUBNAME (ENGLISH) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Subname Menu (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={subname_eng}
+                            onChange={(e) => setSubnameEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter menu subname"
+                        />
+                        {errors.subname_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.subname_eng}</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* NAMA (ENGLISH) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Menu (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setNameEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter menu name"
-                    />
-                    {errors.name_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                    )}
-                </div>
 
-                {/* SUBNAME (INDONESIA) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Subname Menu (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={subname_ind}
-                        onChange={(e) => setSubnameInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan subname menu"
-                    />
-                    {errors.subname_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.subname_ind}</p>
-                    )}
-                </div>
-
-                {/* SUBNAME (ENGLISH) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Subname Menu (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={subname_eng}
-                        onChange={(e) => setSubnameEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter menu subname"
-                    />
-                    {errors.subname_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.subname_eng}</p>
-                    )}
-                </div>
 
                 {/* ICON */}
                 <div>
@@ -151,8 +155,8 @@ export default function CreateMenuPage() {
                     <TagInput
                         value={ourMenuFood}
                         onChange={setOurMenuFood}
-                        placeholderInd="Masukkan nama menu food (Indonesia) lalu Enter"
-                        placeholderEng="Enter menu food name (English) then Tab"
+                        placeholderInd="Enter menu food name (Indonesia) then Enter"
+                        placeholderEng="Enter menu food name (English) then Enter"
                         error={errors.our_menu_food}
                     />
                 </div>

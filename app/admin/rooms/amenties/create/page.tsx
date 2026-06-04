@@ -24,37 +24,41 @@ export default function CreateAmentiesPage() {
     } = useCreateAmenties();
 
     return (
-        <FormPage title="Fasilitas Tambahan" description="Tambahkan data Fasilitas baru">
+        <FormPage title="Add Amenities"
+            description="Add new amenities data"
+        >
             <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-                
-                {/* NAMA (INDONESIA) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setNameInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama fasilitas"
-                    />
-                    {errors.name_ind && <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>}
-                </div>
 
-                {/* NAMA (ENGLISH) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setNameEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter facility name"
-                    />
-                    {errors.name_eng && <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>}
+                <div className="grid grid-cols-2 gap-5">
+                    {/* NAMA (INDONESIA) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Amenities Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setNameInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan nama fasilitas"
+                        />
+                        {errors.name_ind && <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>}
+                    </div>
+
+                    {/* NAMA (ENGLISH) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Amenities Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setNameEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter facility name"
+                        />
+                        {errors.name_eng && <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>}
+                    </div>
                 </div>
 
                 {/* IS ADDITIONAL */}
@@ -67,7 +71,7 @@ export default function CreateAmentiesPage() {
                         onChange={(e) => setIsAddition(e.target.value)}
                         className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="">-- Is Additional --</option>
+                        <option value="">-- Choose Additional --</option>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
                     </select>
@@ -89,13 +93,13 @@ export default function CreateAmentiesPage() {
                 {/* ✅ AMENITIES TAGS */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Amenities
+                        Amenities Tags
                     </label>
                     <TagInput
                         value={amenities}
                         onChange={setAmenities}
-                        placeholderInd="Masukkan nama amenities (Indonesia) lalu Enter"
-                        placeholderEng="Enter amenities name (English) then Tab"
+                        placeholderInd="Enter amenities name (Indonesia) then Enter"
+                        placeholderEng="Enter amenities name (English) then Enter"
                         error={errors.amenities}
                     />
                 </div>

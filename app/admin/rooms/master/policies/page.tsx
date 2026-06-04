@@ -10,11 +10,11 @@ export default function PoliciesPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Kebijakan
+                        Policies
                     </h1>
 
                     <p className="text-gray-500">
-                        Data kebijakan room
+                        Data Policies
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function PoliciesPage() {
                     href="/admin/rooms/master/policies/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Kebijakan
+                    + Add Policies
                 </Link>
 
             </div>

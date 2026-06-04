@@ -1,9 +1,19 @@
 import mysql from "mysql2/promise";
 
-const pool = mysql.createPool({
-    uri: process.env.DATABASE_URL_WEB,
-    waitForConnections: true,
-    connectionLimit: 10,
-});
+const globalForMySQL = globalThis as unknown as {
+    poolWeb: mysql.Pool | undefined;
+};
+
+const pool =
+    globalForMySQL.poolWeb ??
+    mysql.createPool({
+        uri: process.env.DATABASE_URL_WEB,
+        waitForConnections: true,
+        connectionLimit: 10,
+    });
+
+if (process.env.NODE_ENV !== "production") {
+    globalForMySQL.poolWeb = pool;
+}
 
 export default pool;

@@ -87,7 +87,7 @@ export function IconPicker({ value, onChange, error }: IconPickerProps) {
                     </>
                 ) : (
                     <span className="text-gray-400 dark:text-gray-500">
-                        Pilih icon...
+                        Choose icon...
                     </span>
                 )}
                 <span className="ml-auto text-gray-400">▾</span>

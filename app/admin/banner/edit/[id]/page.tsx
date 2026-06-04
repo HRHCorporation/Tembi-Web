@@ -129,86 +129,87 @@ export default function EditFasilitiesPage() {
                         <p className="mt-1 text-sm text-red-500">{errors.image}</p>
                     )}
                 </div>
-                {/* TITLE (Indonesia) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Title Banner (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={title_ind}
-                        onChange={(e) => setTitle_ind(e.target.value)}
-                        className="w-full rounded border p-3
+
+                <div className="grid grid-cols-2 gap-5">
+                    {/* TITLE (Indonesia) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Title Banner (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={title_ind}
+                            onChange={(e) => setTitle_ind(e.target.value)}
+                            className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
-                {errors.title_ind && (
-                    <p className="mt-1 text-sm text-red-600">
-                        {errors.title_ind}
-                    </p>
-                )}
-                {/* TITLE (English) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Title Banner (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={title_eng}
-                        onChange={(e) => setTitle_eng(e.target.value)}
-                        className="w-full rounded border p-3
+                        />
+                    </div>
+                    {errors.title_ind && (
+                        <p className="mt-1 text-sm text-red-600">
+                            {errors.title_ind}
+                        </p>
+                    )}
+                    {/* TITLE (English) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Title Banner (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={title_eng}
+                            onChange={(e) => setTitle_eng(e.target.value)}
+                            className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
-                {errors.title_eng && (
-                    <p className="mt-1 text-sm text-red-600">
-                        {errors.title_eng}
-                    </p>
-                )}
+                        />
+                    </div>
+                    {errors.title_eng && (
+                        <p className="mt-1 text-sm text-red-600">
+                            {errors.title_eng}
+                        </p>
+                    )}
 
-                {/* Subtitle (Indonesia) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Subtitle (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={subtitle_ind}
-                        onChange={(e) => setSubtitle_ind(e.target.value)}
-                        className="w-full rounded border p-3
+                    {/* Subtitle (Indonesia) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Subtitle (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={subtitle_ind}
+                            onChange={(e) => setSubtitle_ind(e.target.value)}
+                            className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                        (Optional)
-                    </span>
-                </div>
+                        />
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                            (Optional)
+                        </span>
+                    </div>
 
-                {/* Subtitle (English) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Subtitle (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={subtitle_eng}
-                        onChange={(e) => setSubtitle_eng(e.target.value)}
-                        className="w-full rounded border p-3
+                    {/* Subtitle (English) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Subtitle (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={subtitle_eng}
+                            onChange={(e) => setSubtitle_eng(e.target.value)}
+                            className="w-full rounded border p-3
                                 bg-white text-gray-900
                                 dark:bg-gray-700 dark:text-white dark:border-gray-600
                                 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                        (Optional)
-                    </span>
+                        />
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                            (Optional)
+                        </span>
+                    </div>
                 </div>
-
-
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div>

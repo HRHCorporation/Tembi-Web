@@ -34,11 +34,11 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Fasilitas (Indonesia)",
+            header: "Name Catering (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Fasilitas (English)",
+            header: "Name Catering (English)",
         },
         {
             accessorKey: "minimum_pax",

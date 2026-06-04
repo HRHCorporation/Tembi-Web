@@ -10,7 +10,7 @@ export default function PackagePage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Package
+                        Our Package
                     </h1>
 
                     <p className="text-gray-500">
@@ -23,7 +23,7 @@ export default function PackagePage() {
                     href="/admin/food/package/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Package
+                    + Add Package
                 </Link>
 
             </div>

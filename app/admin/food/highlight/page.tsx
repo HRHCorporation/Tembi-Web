@@ -23,7 +23,7 @@ export default function PackagePage() {
                     href="/admin/food/highlight/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Menu Highlight
+                    + Add Menu Highlight
                 </Link>
 
             </div>

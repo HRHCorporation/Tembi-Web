@@ -6,7 +6,7 @@ import { useCreateFasility } from "../_hooks/use-create-fasilities-room";
 import { IconPicker } from "@/components/admin/global/IconPicker";
 
 export default function CreateFasilityPage() {
- 
+
     const {
         name_ind,
         name_eng,
@@ -18,11 +18,11 @@ export default function CreateFasilityPage() {
         setIcon,
         handleSubmit,
     } = useCreateFasility();
- 
+
     return (
         <FormPage
-            title="Tambah Fasilitas"
-            description="Tambahkan data Fasilitas baru"
+            title="Add Facilities"
+            description="Add new Facility data"
         >
             <form
                 className="space-y-5"
@@ -31,46 +31,49 @@ export default function CreateFasilityPage() {
                     handleSubmit();
                 }}
             >
-                {/* NAMA (INDONESIA) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setNameInd(e.target.value)}
-                        className="w-full rounded border p-3
+                <div className="grid grid-cols-2 gap-5">
+                    {/* NAMA (INDONESIA) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Facility Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setNameInd(e.target.value)}
+                            className="w-full rounded border p-3
                             bg-white text-gray-900
                             dark:bg-gray-700 dark:text-white dark:border-gray-600
                             focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama fasilitas"
-                    />
-                    {errors.name_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                    )}
-                </div>
- 
-                {/* NAMA (ENGLISH) */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setNameEng(e.target.value)}
-                        className="w-full rounded border p-3
+                            placeholder="Enter a facility name"
+                        />
+                        {errors.name_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                        )}
+                    </div>
+
+                    {/* NAMA (ENGLISH) */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Facility Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setNameEng(e.target.value)}
+                            className="w-full rounded border p-3
                             bg-white text-gray-900
                             dark:bg-gray-700 dark:text-white dark:border-gray-600
                             focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter facility name"
-                    />
-                    {errors.name_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                    )}
+                            placeholder="Enter a facility name"
+                        />
+                        {errors.name_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                        )}
+                    </div>
                 </div>
- 
+
+
                 {/* ICON */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
@@ -82,7 +85,7 @@ export default function CreateFasilityPage() {
                         error={errors.icon}
                     />
                 </div>
- 
+
                 {/* ACTIONS */}
                 <FormActions loading={loading} />
             </form>

@@ -14,6 +14,7 @@ interface ErrorState {
     hosted_by?: string;
     date_event?: string;
     time_event?: string;
+    location?: string;
 }
 
 export function useCreateEvent() {
@@ -25,6 +26,7 @@ export function useCreateEvent() {
     const [description_ind, setDescriptionInd] = useState("");
     const [description_eng, setDescriptionEng] = useState("");
     const [slug, setSlug] = useState("");
+    const [location, setLocation] = useState("");
 
     // ✅ Other fields
     const [hosted_by, setHostedBy] = useState("");
@@ -96,6 +98,11 @@ export function useCreateEvent() {
             hasError = true;
         }
 
+        if (!location?.trim()) {
+            newErrors.location = "Location wajib diisi";
+            hasError = true;
+        }
+
         setErrors(newErrors);
         return !hasError;
     }
@@ -113,6 +120,7 @@ export function useCreateEvent() {
         setHostedBy("");
         setDateEvent("");
         setTimeEvent("");
+        setLocation("");
     }
 
     async function handleSubmit() {
@@ -134,6 +142,7 @@ export function useCreateEvent() {
                 hosted_by,
                 date_event,
                 time_event,
+                location,
             });
 
             if (result.success) {
@@ -182,5 +191,7 @@ export function useCreateEvent() {
         setDateEvent,
         time_event,
         setTimeEvent,
+        location,
+        setLocation
     };
 }

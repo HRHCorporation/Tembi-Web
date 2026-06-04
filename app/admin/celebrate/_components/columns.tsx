@@ -28,19 +28,19 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Celebrate (Indonesia)",
+            header: "Celebrate Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Celebrate (English)",
+            header: "Celebrate Name (English)",
         },
         {
             accessorKey: "description_ind",
-            header: "Deskripsi (Indonesia)",
+            header: "Celebrate Description (Indonesia)",
         },
         {
             accessorKey: "description_eng",
-            header: "Description (English)",
+            header: "Celebrate Description (English)",
         },
         {
             id: "actions",

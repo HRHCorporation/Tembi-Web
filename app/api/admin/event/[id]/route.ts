@@ -15,16 +15,16 @@ interface ErrorResponse {
     [key: string]: string;
 }
 
-// ✅ GET - Fetch event by ID
 export async function GET(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
     const eventId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
-        const [event] = await dbWeb.query(
+        const [event] = await connection.query(
             "SELECT * FROM event WHERE id = ?",
             [eventId]
         );
@@ -46,16 +46,18 @@ export async function GET(
             { success: false, message: "Gagal mengambil data" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
 
-// ✅ PUT - Update event
 export async function PUT(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
     const eventId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
         const cookieStore = await cookies();
@@ -70,8 +72,6 @@ export async function PUT(
         }
 
         const formData = await req.formData();
-
-        // Extract form data
         const title_ind = formData.get("title_ind") as string;
         const title_eng = formData.get("title_eng") as string;
         const description_ind = formData.get("description_ind") as string;
@@ -81,10 +81,9 @@ export async function PUT(
         const hosted_by = formData.get("hosted_by") as string;
         const date_event = formData.get("date_event") as string;
         const time_event = formData.get("time_event") as string;
+        const location = formData.get("location") as string;
 
-        // Validation
         const errors: ErrorResponse = {};
-
         if (!title_ind?.trim()) errors.title_ind = "Judul Indonesia wajib diisi";
         if (!title_eng?.trim()) errors.title_eng = "Judul English wajib diisi";
         if (!description_ind?.trim()) errors.description_ind = "Deskripsi Indonesia wajib diisi";
@@ -93,6 +92,7 @@ export async function PUT(
         if (!hosted_by?.trim()) errors.hosted_by = "Penyelenggara wajib diisi";
         if (!date_event?.trim()) errors.date_event = "Tanggal wajib diisi";
         if (!time_event?.trim()) errors.time_event = "Waktu wajib diisi";
+        if (!location?.trim()) errors.location = "Lokasi wajib diisi";
 
         if (Object.keys(errors).length > 0) {
             return NextResponse.json(
@@ -102,95 +102,55 @@ export async function PUT(
         }
 
         let newThumbnailPath: string | null = null;
-
-        // ✅ Process new thumbnail if provided
         if (thumbnailFile) {
             const bytes = await thumbnailFile.arrayBuffer();
             const buffer = Buffer.from(bytes);
-            const filename = `event-${Date.now()}-${Math.random()
-                .toString(36)
-                .substring(2, 8)}.webp`;
-
+            const filename = `event-${Date.now()}-${Math.random().toString(36).substring(2, 8)}.webp`;
             const uploadDir = path.join(process.cwd(), "public/images/upload/event");
-
             await mkdir(uploadDir, { recursive: true });
-
-            const filePath = path.join(uploadDir, filename);
-
-            await sharp(buffer)
-                .webp({ quality: 80 })
-                .toFile(filePath);
-
+            await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, filename));
             newThumbnailPath = `/images/upload/event/${filename}`;
         }
 
-        // Get old thumbnail path before updating
-        const [oldData] = await dbWeb.query(
+        await connection.beginTransaction();
+
+        const [oldData] = await connection.query(
             "SELECT thumbnail FROM event WHERE id = ?",
             [eventId]
         );
 
-        // ✅ Update event
         if (newThumbnailPath) {
-            await dbWeb.query(
-                `
-                UPDATE event SET
+            await connection.query(
+                `UPDATE event SET
                     title_ind = ?, title_eng = ?,
                     description_ind = ?, description_eng = ?,
                     slug = ?, thumbnail = ?,
-                    updated_by = ?, updated_at = NOW(), hosted_by = ?, date_event = ?, time_event = ?
-                WHERE id = ?
-                `,
-                [
-                    title_ind,
-                    title_eng,
-                    description_ind,
-                    description_eng,
-                    slug,
-                    newThumbnailPath,
-                    updatedBy,
-                    hosted_by,
-                    date_event,
-                    time_event,
-                    eventId
-                ]
+                    updated_by = ?, updated_at = NOW(),
+                    hosted_by = ?, date_event = ?, time_event = ?, location = ?
+                WHERE id = ?`,
+                [title_ind, title_eng, description_ind, description_eng, slug, newThumbnailPath, updatedBy, hosted_by, date_event, time_event, location, eventId]
             );
         } else {
-            await dbWeb.query(
-                `
-                UPDATE event SET
+            await connection.query(
+                `UPDATE event SET
                     title_ind = ?, title_eng = ?,
                     description_ind = ?, description_eng = ?,
                     slug = ?,
-                    updated_by = ?, updated_at = NOW(), hosted_by = ?, date_event = ?, time_event = ?
-                WHERE id = ?
-                `,
-                [
-                    title_ind,
-                    title_eng,
-                    description_ind,
-                    description_eng,
-                    slug,
-                    updatedBy,
-                    hosted_by,
-                    date_event,
-                    time_event,
-                    eventId
-                ]
+                    updated_by = ?, updated_at = NOW(),
+                    hosted_by = ?, date_event = ?, time_event = ?, location = ?
+                WHERE id = ?`,
+                [title_ind, title_eng, description_ind, description_eng, slug, updatedBy, hosted_by, date_event, time_event, location, eventId]
             );
         }
 
-        // ✅ Delete old thumbnail if new thumbnail was uploaded
+        await connection.commit();
+
         if (newThumbnailPath && Array.isArray(oldData) && oldData.length > 0) {
             const oldThumbnail = (oldData[0] as Record<string, unknown>).thumbnail as string;
             if (oldThumbnail) {
                 const oldFilePath = path.join(process.cwd(), "public", oldThumbnail);
                 if (fs.existsSync(oldFilePath)) {
-                    try {
-                        await unlink(oldFilePath);
-                    } catch (unlinkError) {
-                        console.warn("Failed to delete old thumbnail:", unlinkError);
-                    }
+                    try { await unlink(oldFilePath); } catch (e) { console.warn("Failed to delete old thumbnail:", e); }
                 }
             }
         }
@@ -201,54 +161,55 @@ export async function PUT(
             data: { id: eventId },
         });
     } catch (error) {
+        await connection.rollback();
         console.error("[UPDATE_EVENT_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }
 
-// ✅ DELETE - Delete event with thumbnail cleanup
 export async function DELETE(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     const { id } = await params;
     const eventId = Number(id);
+    const connection = await dbWeb.getConnection();
 
     try {
-        // Get thumbnail path before deleting
-        const [oldData] = await dbWeb.query(
+        const [oldData] = await connection.query(
             "SELECT thumbnail FROM event WHERE id = ?",
             [eventId]
         );
 
-        // Delete event
-        const [result] = await dbWeb.query(
+        await connection.beginTransaction();
+
+        const [result] = await connection.query(
             "DELETE FROM event WHERE id = ?",
             [eventId]
         );
 
         const deletedResult = result as unknown as { affectedRows: number };
         if (deletedResult.affectedRows === 0) {
+            await connection.rollback();
             return NextResponse.json(
                 { success: false, message: "Data tidak ditemukan" },
                 { status: 404 }
             );
         }
 
-        // ✅ Delete thumbnail file
+        await connection.commit();
+
         if (Array.isArray(oldData) && oldData.length > 0) {
             const oldThumbnail = (oldData[0] as Record<string, unknown>).thumbnail as string;
             if (oldThumbnail) {
                 const oldFilePath = path.join(process.cwd(), "public", oldThumbnail);
                 if (fs.existsSync(oldFilePath)) {
-                    try {
-                        await unlink(oldFilePath);
-                    } catch (unlinkError) {
-                        console.warn("Failed to delete thumbnail:", unlinkError);
-                    }
+                    try { await unlink(oldFilePath); } catch (e) { console.warn("Failed to delete thumbnail:", e); }
                 }
             }
         }
@@ -258,10 +219,13 @@ export async function DELETE(
             message: "Event berhasil dihapus",
         });
     } catch (error) {
+        await connection.rollback();
         console.error("[DELETE_EVENT_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Gagal menghapus event" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

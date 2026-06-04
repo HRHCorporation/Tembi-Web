@@ -99,7 +99,7 @@ export function FacilitySelector({
                     <span className="text-left flex-1 truncate">
                         {value.length > 0
                             ? `${value.length} fasilitas dipilih`
-                            : "Pilih fasilitas..."}
+                            : "Select facilities..."}
                     </span>
                     <ChevronUp
                         className={`ml-2 size-4 transition-transform duration-200 ${
@@ -119,7 +119,7 @@ export function FacilitySelector({
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Cari fasilitas..."
+                                placeholder="Search facilities..."
                                 className="w-full rounded border border-gray-300 dark:border-gray-600 p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                                 onClick={(e) => e.stopPropagation()}
                             />
@@ -158,7 +158,7 @@ export function FacilitySelector({
             {value.length > 0 && (
                 <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Fasilitas Terpilih & Pengaturan Add-ons
+                        Selected Facilities & Add-ons Settings
                     </label>
                     <div className="rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-4 space-y-2">
                         {value.map((selected) => {
@@ -188,7 +188,7 @@ export function FacilitySelector({
                                                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
                                             />
                                             <span className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                                                Fasilitas Tambahan
+                                                Additional Facilities
                                             </span>
                                         </label>
 
@@ -198,7 +198,7 @@ export function FacilitySelector({
                                             onClick={(e) => removeFacility(selected.facility_id, e)}
                                             className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium"
                                         >
-                                            Hapus
+                                            Remove
                                         </button>
                                     </div>
                                 </div>

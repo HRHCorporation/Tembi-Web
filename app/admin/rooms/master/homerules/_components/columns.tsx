@@ -41,11 +41,11 @@ export function getColumns(
         },
         {
             accessorKey: "name_ind",
-            header: "Nama Fasilitas (Indonesia)",
+            header: "Rules Name (Indonesia)",
         },
         {
             accessorKey: "name_eng",
-            header: "Nama Fasilitas (English)",
+            header: "Rules Name (English)",
         },
         {
             id: "actions",

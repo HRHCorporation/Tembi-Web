@@ -53,7 +53,7 @@ export default function EditPackagePage() {
     }
 
     return (
-        <FormPage title="Edit Package" description="Perbarui data Package">
+        <FormPage title="Edit Package" description="Edit data package">
             <form
                 className="space-y-5"
                 onSubmit={(e) => {
@@ -83,73 +83,77 @@ export default function EditPackagePage() {
                     )}
                 </div>
 
-                {/* Nama Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Package (Indonesia)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_ind}
-                        onChange={(e) => setNameInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan nama package"
-                    />
-                    {errors.name_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
-                    )}
+                <div className="grid grid-cols-2 gap-5">
+                    {/* Nama Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Package Name (Indonesia)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_ind}
+                            onChange={(e) => setNameInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan nama package"
+                        />
+                        {errors.name_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Nama English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Package Name (English)
+                        </label>
+                        <input
+                            type="text"
+                            value={name_eng}
+                            onChange={(e) => setNameEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter package name"
+                        />
+                        {errors.name_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
+                        )}
+                    </div>
+
+                    {/* Deskripsi Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Package Description (Indonesia)
+                        </label>
+                        <textarea
+                            value={description_ind}
+                            onChange={(e) => setDescriptionInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan deskripsi package"
+                            rows={4}
+                        />
+                        {errors.description_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Deskripsi English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Package Description (English)
+                        </label>
+                        <textarea
+                            value={description_eng}
+                            onChange={(e) => setDescriptionEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter package description"
+                            rows={4}
+                        />
+                        {errors.description_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* Nama English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Nama Package (English)
-                    </label>
-                    <input
-                        type="text"
-                        value={name_eng}
-                        onChange={(e) => setNameEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter package name"
-                    />
-                    {errors.name_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name_eng}</p>
-                    )}
-                </div>
 
-                {/* Deskripsi Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (Indonesia)
-                    </label>
-                    <textarea
-                        value={description_ind}
-                        onChange={(e) => setDescriptionInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi package"
-                        rows={4}
-                    />
-                    {errors.description_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
-                    )}
-                </div>
-
-                {/* Deskripsi English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (English)
-                    </label>
-                    <textarea
-                        value={description_eng}
-                        onChange={(e) => setDescriptionEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter package description"
-                        rows={4}
-                    />
-                    {errors.description_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
-                    )}
-                </div>
 
                 {/* Icon */}
                 <div>
@@ -235,8 +239,8 @@ export default function EditPackagePage() {
                         value={packageInclude}
                         onChange={setPackageInclude}
                         onDelete={handleDeleteInclude}
-                        placeholderInd="Masukkan nama package include (Indonesia) lalu Enter"
-                        placeholderEng="Enter package include name (English) then Tab"
+                        placeholderInd="Enter package include name (Indonesia) then Enter"
+                        placeholderEng="Enter package include name (English) then Enter"
                         error={errors.package_include}
                     />
                 </div>

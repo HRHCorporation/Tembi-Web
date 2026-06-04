@@ -10,11 +10,11 @@ export default function CollectionPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Collection
+                        Collection Management
                     </h1>
 
                     <p className="text-gray-500">
-                        Data Collection
+                        Data Collection Management
                     </p>
                 </div>
 
@@ -23,7 +23,7 @@ export default function CollectionPage() {
                     href="/admin/collections/main/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Collections
+                    + Add Collections Management
                 </Link>
 
             </div>

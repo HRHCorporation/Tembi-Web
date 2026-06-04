@@ -10,11 +10,11 @@ export default function BannerPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Setting Banner Page
+                        Setting Page Banner
                     </h1>
 
                     <p className="text-gray-500">
-                        Data Banner Page
+                        Data Banner
                     </p>
                 </div>
 

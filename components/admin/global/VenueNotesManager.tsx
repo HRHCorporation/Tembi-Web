@@ -53,7 +53,7 @@ export function VenueNotesManager({ value, onChange, onDelete, error }: VenueNot
                     onClick={handleAddNote}
                     className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
                 >
-                    + Tambah Note
+                    + Add Note
                 </button>
             </div>
 
@@ -81,7 +81,7 @@ export function VenueNotesManager({ value, onChange, onDelete, error }: VenueNot
                             {/* Description Indonesia */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Deskripsi (Indonesia)
+                                    Description Note (Indonesia)
                                 </label>
                                 <textarea
                                     value={note.description_ind}
@@ -89,7 +89,7 @@ export function VenueNotesManager({ value, onChange, onDelete, error }: VenueNot
                                         handleUpdateNote(index, "description_ind", e.target.value)
                                     }
                                     className="w-full rounded border p-2 text-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                                    placeholder="Masukkan catatan dalam bahasa Indonesia"
+                                    placeholder="Enter note in Indonesia"
                                     rows={3}
                                 />
                             </div>
@@ -97,7 +97,7 @@ export function VenueNotesManager({ value, onChange, onDelete, error }: VenueNot
                             {/* Description English */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Deskripsi (English)
+                                    Description Note (English)
                                 </label>
                                 <textarea
                                     value={note.description_eng}

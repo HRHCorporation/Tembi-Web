@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import sharp from "sharp";
-import { RowDataPacket } from "mysql2";  // ← import tipe dari mysql2
+import { RowDataPacket } from "mysql2";
 import dbWeb from "@/lib/db-web";
 
-// ← tipe untuk data carousel dari DB
 interface CarouselRow extends RowDataPacket {
     id: number;
     title_ind: string;
@@ -16,21 +15,21 @@ interface CarouselRow extends RowDataPacket {
     updated_at: Date;
 }
 
-// ← tipe untuk context params Next.js 15
 interface RouteContext {
     params: Promise<{ id: string }>;
 }
 
-
 export async function GET(
     request: NextRequest,
-    context: RouteContext  // ← ganti any
+    context: RouteContext
 ) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const { id } = await context.params;
         const numericId = Number(id);
 
-        const [rows] = await dbWeb.query<CarouselRow[]>(  // ← ganti any
+        const [rows] = await connection.query<CarouselRow[]>(
             `SELECT * FROM carousels WHERE id = ? LIMIT 1`,
             [numericId]
         );
@@ -46,18 +45,20 @@ export async function GET(
             success: true,
             data: rows[0],
         });
-
     } catch (error) {
         console.error("GET ERROR:", error);
         return NextResponse.json({ success: false }, { status: 500 });
+    } finally {
+        connection.release();
     }
 }
 
-
 export async function PUT(
     request: NextRequest,
-    context: RouteContext  // ← ganti any
+    context: RouteContext
 ) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const { id } = await context.params;
 
@@ -67,7 +68,7 @@ export async function PUT(
         const isActive = formData.get("is_active") as string;
         const image = formData.get("image") as File | null;
 
-        const [rows] = await dbWeb.query<CarouselRow[]>(  // ← ganti any
+        const [rows] = await connection.query<CarouselRow[]>(
             `SELECT * FROM carousels WHERE id = ? LIMIT 1`,
             [id]
         );
@@ -89,45 +90,52 @@ export async function PUT(
                 fs.mkdirSync(uploadDir, { recursive: true });
             }
 
-            const filePath = path.join(uploadDir, filename);
-
             await sharp(buffer)
                 .resize(1920, 1080)
                 .webp({ quality: 80 })
-                .toFile(filePath);
-
-            const oldImagePath = path.join(process.cwd(), "public", oldData.image);
-            if (fs.existsSync(oldImagePath)) {
-                fs.unlinkSync(oldImagePath);
-            }
+                .toFile(path.join(uploadDir, filename));
 
             imagePath = `/images/upload/carousel/${filename}`;
         }
 
-        await dbWeb.query(
+        await connection.beginTransaction();
+
+        await connection.query(
             `UPDATE carousels
              SET image = ?, title_ind = ?, title_eng = ?, is_active = ?, updated_at = NOW()
              WHERE id = ?`,
             [imagePath, titleInd, titleEng, isActive, id]
         );
 
-        return NextResponse.json({ success: true });
+        await connection.commit();
 
+        if (image && image.size > 0) {
+            const oldImagePath = path.join(process.cwd(), "public", oldData.image);
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath);
+            }
+        }
+
+        return NextResponse.json({ success: true });
     } catch (error) {
+        await connection.rollback();
         console.error("PUT ERROR:", error);
         return NextResponse.json({ success: false }, { status: 500 });
+    } finally {
+        connection.release();
     }
 }
 
-
 export async function DELETE(
     request: NextRequest,
-    context: RouteContext  // ← ganti any
+    context: RouteContext
 ) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const { id } = await context.params;
 
-        const [rows] = await dbWeb.query<CarouselRow[]>(  // ← ganti any
+        const [rows] = await connection.query<CarouselRow[]>(
             `SELECT * FROM carousels WHERE id = ? LIMIT 1`,
             [id]
         );
@@ -139,25 +147,26 @@ export async function DELETE(
             );
         }
 
-        const oldImagePath = path.join(
-            process.cwd(),
-            "public",
-            rows[0].image
-        );
+        await connection.beginTransaction();
 
-        if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-        }
-
-        await dbWeb.query(
+        await connection.query(
             `DELETE FROM carousels WHERE id = ?`,
             [id]
         );
 
-        return NextResponse.json({ success: true });
+        await connection.commit();
 
+        const oldImagePath = path.join(process.cwd(), "public", rows[0].image);
+        if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+        }
+
+        return NextResponse.json({ success: true });
     } catch (error) {
+        await connection.rollback();
         console.error("DELETE ERROR:", error);
         return NextResponse.json({ success: false }, { status: 500 });
+    } finally {
+        connection.release();
     }
 }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbWeb from "@/lib/db-web";
 import { cookies } from "next/headers";
 import { RowDataPacket } from "mysql2";
-import path from "path/win32";
+import path from "path";
 import fs from "fs";
 import sharp from "sharp";
 
@@ -204,12 +204,12 @@ export async function POST(request: NextRequest) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
 
-        const filePath = path.join(uploadDir, filename);
+        // const filePath = path.join(uploadDir, filename);
 
         await sharp(buffer)
             .resize(1920, 1080)
             .webp({ quality: 80 })
-            .toFile(filePath);
+            .toFile(path.join(uploadDir, filename));
 
 
         // Start transaction

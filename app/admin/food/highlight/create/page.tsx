@@ -58,8 +58,8 @@ export default function CreateHighlightPage() {
 
     return (
         <FormPage
-            title="Tambah Highlight"
-            description="Tambahkan data Highlight baru"
+            title="Add Highlight"
+            description="Add new Highlight data"
         >
             <form
                 className="space-y-5"
@@ -79,7 +79,7 @@ export default function CreateHighlightPage() {
                         disabled={loadingPackages}
                         className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                     >
-                        <option value="">Pilih food package...</option>
+                        <option value="">Select food package...</option>
                         {foodPackages.map((fp) => (
                             <option key={fp.value} value={fp.value}>
                                 {fp.label}
@@ -143,39 +143,43 @@ export default function CreateHighlightPage() {
                     </div>
                 )}
 
-                {/* Description Indonesia */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (Indonesia)
-                    </label>
-                    <textarea
-                        value={description_ind}
-                        onChange={(e) => setDescriptionInd(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Masukkan deskripsi highlight"
-                        rows={4}
-                    />
-                    {errors.description_ind && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
-                    )}
+                <div className="grid grid-cols-2 gap-5">
+                    {/* Description Indonesia */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Description Highlights (Indonesia)
+                        </label>
+                        <textarea
+                            value={description_ind}
+                            onChange={(e) => setDescriptionInd(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter highlight description"
+                            rows={4}
+                        />
+                        {errors.description_ind && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_ind}</p>
+                        )}
+                    </div>
+
+                    {/* Description English */}
+                    <div>
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
+                            Description Highlights (English)
+                        </label>
+                        <textarea
+                            value={description_eng}
+                            onChange={(e) => setDescriptionEng(e.target.value)}
+                            className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter highlight description"
+                            rows={4}
+                        />
+                        {errors.description_eng && (
+                            <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* Description English */}
-                <div>
-                    <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
-                        Deskripsi (English)
-                    </label>
-                    <textarea
-                        value={description_eng}
-                        onChange={(e) => setDescriptionEng(e.target.value)}
-                        className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter highlight description"
-                        rows={4}
-                    />
-                    {errors.description_eng && (
-                        <p className="mt-1 text-sm text-red-600">{errors.description_eng}</p>
-                    )}
-                </div>
+
 
                 {/* ACTIONS */}
                 <FormActions loading={loading} />

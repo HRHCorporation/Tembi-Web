@@ -9,6 +9,7 @@ import { MainProvider } from "./MainContext";
 import { CollectionProvider } from "./CollectionContext";
 import { HouseProvider } from "./HouseContext";
 import { HistoryProvider } from "./HistoryContext";
+import { MusicProvider } from "./MusicContext";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
 	// return (
@@ -23,22 +24,24 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 	// 	</LanguageProvider>
 	// );
 	return (
-		<LanguageProvider>
-			<MainProvider>
-				<BlogProvider>
-					<CollectionProvider>
-						<EventProvider>
-							<FoodProvider>
-								<HouseProvider>
-									<VenueProvider>
-										<HistoryProvider>{children}</HistoryProvider>
-									</VenueProvider>
-								</HouseProvider>
-							</FoodProvider>
-						</EventProvider>
-					</CollectionProvider>
-				</BlogProvider>
-			</MainProvider>
-		</LanguageProvider>
+		<MusicProvider>
+			<LanguageProvider>
+				<MainProvider>
+					<BlogProvider>
+						<CollectionProvider>
+							<EventProvider>
+								<FoodProvider>
+									<HouseProvider>
+										<VenueProvider>
+											<HistoryProvider>{children}</HistoryProvider>
+										</VenueProvider>
+									</HouseProvider>
+								</FoodProvider>
+							</EventProvider>
+						</CollectionProvider>
+					</BlogProvider>
+				</MainProvider>
+			</LanguageProvider>
+		</MusicProvider>
 	);
 }

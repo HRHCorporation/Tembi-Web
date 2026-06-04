@@ -37,6 +37,8 @@ interface SessionUser {
     GET DATA
 ====================================================== */
 export async function GET(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const searchParams = request.nextUrl.searchParams;
         const page = Number(searchParams.get("page") || 1);
@@ -45,46 +47,45 @@ export async function GET(request: NextRequest) {
         const offset = (page - 1) * limit;
         const sortBy = searchParams.get("sortBy") || "id";
         const sortOrder = searchParams.get("sortOrder") || "DESC";
-        const [rows] = await dbWeb.query<CollectionRow[]>(  // ← ganti any
-            `
-            SELECT collection.id, collection.name_ind, collection.name_eng, mstr_collection.name_ind as mstr_collection_name
+
+        const [rows] = await connection.query<CollectionRow[]>(
+            `SELECT collection.id, collection.name_ind, collection.name_eng, mstr_collection.name_ind as mstr_collection_name
             FROM collection
-            left join mstr_collection ON mstr_collection.id = collection.mstr_collection_id
+            LEFT JOIN mstr_collection ON mstr_collection.id = collection.mstr_collection_id
             WHERE collection.name_ind LIKE ? OR collection.name_eng LIKE ?
             ORDER BY ${sortBy} ${sortOrder}
-            LIMIT ? OFFSET ?
-            `,
+            LIMIT ? OFFSET ?`,
             [`%${search}%`, `%${search}%`, limit, offset]
         );
-        const [totalRows] = await dbWeb.query<CountRow[]>(  // ← ganti any
-            `
-            SELECT COUNT(*) as total
+
+        const [totalRows] = await connection.query<CountRow[]>(
+            `SELECT COUNT(*) as total
             FROM collection
-            WHERE collection.name_ind LIKE ? OR collection.name_eng LIKE ?
-            `,
+            WHERE collection.name_ind LIKE ? OR collection.name_eng LIKE ?`,
             [`%${search}%`, `%${search}%`]
         );
+
         const total = totalRows[0].total;
-        const totalPages = Math.ceil(total / limit);
+
         return NextResponse.json({
             success: true,
             data: rows,
-            pagination: {
-                total,
-                totalPages,
-            },
+            pagination: { total, totalPages: Math.ceil(total / limit) },
         });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ success: false, message: "Failed to fetch data" }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: "Failed to fetch data" },
+            { status: 500 }
+        );
+    } finally {
+        connection.release();
     }
 }
 
-/* ======================================================
-    CREATE DATA
-====================================================== */
-
 export async function POST(request: NextRequest) {
+    const connection = await dbWeb.getConnection();
+
     try {
         const cookieStore = await cookies();
         const session = cookieStore.get(
@@ -98,8 +99,6 @@ export async function POST(request: NextRequest) {
         }
 
         const formData = await request.formData();
-
-        // Extract form data
         const mstr_collection_id = formData.get("mstr_collection_id") as string;
         const name_ind = formData.get("name_ind") as string;
         const name_eng = formData.get("name_eng") as string;
@@ -107,27 +106,13 @@ export async function POST(request: NextRequest) {
         const description_eng = formData.get("description_eng") as string;
         const imageFile = formData.get("image") as File;
 
-        // Validation
         const errors: ErrorResponse = {};
-
-        if (!mstr_collection_id) {
-            errors.mstr_collection_id = "Collection wajib dipilih";
-        }
-        if (!name_ind?.trim()) {
-            errors.name_ind = "Nama Indonesia wajib diisi";
-        }
-        if (!name_eng?.trim()) {
-            errors.name_eng = "Nama English wajib diisi";
-        }
-        if (!description_ind?.trim()) {
-            errors.description_ind = "Deskripsi Indonesia wajib diisi";
-        }
-        if (!description_eng?.trim()) {
-            errors.description_eng = "Deskripsi English wajib diisi";
-        }
-        if (!imageFile) {
-            errors.image = "Image wajib diupload";
-        }
+        if (!mstr_collection_id) errors.mstr_collection_id = "Collection wajib dipilih";
+        if (!name_ind?.trim()) errors.name_ind = "Nama Indonesia wajib diisi";
+        if (!name_eng?.trim()) errors.name_eng = "Nama English wajib diisi";
+        if (!description_ind?.trim()) errors.description_ind = "Deskripsi Indonesia wajib diisi";
+        if (!description_eng?.trim()) errors.description_eng = "Deskripsi English wajib diisi";
+        if (!imageFile) errors.image = "Image wajib diupload";
 
         if (Object.keys(errors).length > 0) {
             return NextResponse.json(
@@ -136,39 +121,22 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // ✅ Process image
-        const bytes = await imageFile!.arrayBuffer();
+        const bytes = await imageFile.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        const filename = `collection-${Date.now()}-${Math.random()
-            .toString(36)
-            .substring(2, 8)}.webp`;
-
+        const filename = `collection-${Date.now()}-${Math.random().toString(36).substring(2, 8)}.webp`;
         const uploadDir = path.join(process.cwd(), "public/images/upload/collection");
-
         await mkdir(uploadDir, { recursive: true });
+        await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, filename));
 
-        const filePath = path.join(uploadDir, filename);
+        await connection.beginTransaction();
 
-        await sharp(buffer)
-            .webp({ quality: 80 })
-            .toFile(filePath);
-
-        // ✅ Insert collection
-        const [result] = await dbWeb.query(
-            `
-            INSERT INTO collection (mstr_collection_id, name_ind, name_eng, description_ind, description_eng, image, created_by, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-            `,
-            [
-                parseInt(mstr_collection_id),
-                name_ind,
-                name_eng,
-                description_ind,
-                description_eng,
-                `/images/upload/collection/${filename}`,
-                createdBy,
-            ]
+        const [result] = await connection.query(
+            `INSERT INTO collection (mstr_collection_id, name_ind, name_eng, description_ind, description_eng, image, created_by, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
+            [parseInt(mstr_collection_id), name_ind, name_eng, description_ind, description_eng, `/images/upload/collection/${filename}`, createdBy]
         );
+
+        await connection.commit();
 
         const collectionId = (result as unknown as { insertId: number }).insertId;
 
@@ -181,10 +149,13 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error) {
+        await connection.rollback();
         console.error("[CREATE_COLLECTION_ERROR]", error);
         return NextResponse.json(
             { success: false, message: "Terjadi kesalahan server" },
             { status: 500 }
         );
+    } finally {
+        connection.release();
     }
 }

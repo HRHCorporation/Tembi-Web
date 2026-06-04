@@ -13,11 +13,11 @@ export default function CarouselPage() {
 
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Carousel
+                        Home Carousel
                     </h1>
 
                     <p className="text-gray-500">
-                        Data carousel website
+                        Carousel Settings on Home Page
                     </p>
                 </div>
 
@@ -26,7 +26,7 @@ export default function CarouselPage() {
                     href="/admin/carousel/create"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 >
-                    + Tambah Carousel
+                    + Add Carousel
                 </Link>
 
             </div>
