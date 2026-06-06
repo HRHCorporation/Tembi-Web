@@ -212,7 +212,7 @@ export default function HouseCard({ house }: HouseCardProps) {
           href={`/rooms/${house.slug}`}
           className="w-28 bg-tembi hover:bg-darktembi text-white text-sm font-medium py-3 px-6 rounded-sm transition-colors mx-auto flex items-center justify-center"
         >
-          Book Now
+          Detail
         </Link>
       </div>
     </div>

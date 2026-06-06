@@ -86,28 +86,6 @@ export default function HomePage() {
       ],
     },
   ];
-  const collections = [
-    {
-      title: t.homepage.collection.cardTitle.item1,
-      desc: t.homepage.collection.cardDesc.item1,
-      image: "/images/collection/cundrik/GPT0541.png",
-    },
-    {
-      title: t.homepage.collection.cardTitle.item2,
-      desc: t.homepage.collection.cardDesc.item2,
-      image: "/images/collection/cundrik/GPT0540.png",
-    },
-    {
-      title: t.homepage.collection.cardTitle.item3,
-      desc: t.homepage.collection.cardDesc.item3,
-      image: "/images/collection/keris/K.A 001.png",
-    },
-    {
-      title: t.homepage.collection.cardTitle.item4,
-      desc: t.homepage.collection.cardDesc.item4,
-      image: "/images/collection/keris/K.A 002.png",
-    },
-  ];
 
   return (
     <div className="bg-white text-gray-800 overflow-x-hidden">

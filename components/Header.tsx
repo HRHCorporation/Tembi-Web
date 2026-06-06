@@ -25,7 +25,6 @@ export default function Header() {
 		{ name: t.nav.collections, href: "/collections" },
 		{ name: t.nav.event, href: "/event" },
 		{ name: t.nav.blog, href: "/blog" },
-		{ name: t.nav.checkBooking, href: "/check-booking" },
 	];
 
 	const toggleLanguage = () => {
