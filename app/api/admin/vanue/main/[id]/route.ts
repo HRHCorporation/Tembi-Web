@@ -358,8 +358,15 @@ export async function PUT(
             for (const key of venueKeys) {
                 if (!key.id) {
                     await connection.query(
-                        `INSERT INTO venue_keys (vanue_id, icon, label_ind, label_eng, value_ind, value_eng, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
+                        `INSERT INTO venue_keys (vanue_id, icon, label_ind, label_eng, value_ind, value_eng, created_by, created_at) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
                         [venueId, key.icon, key.label_ind, key.label_eng, key.value_ind, key.value_eng, updatedBy]
+                    );
+                } else {
+                    await connection.query(
+                        `UPDATE venue_keys SET icon = ?, label_ind = ?, label_eng = ?, value_ind = ?, value_eng = ?, 
+                        updated_by = ?, updated_at = NOW() WHERE id = ? AND vanue_id = ?`,
+                        [key.icon, key.label_ind, key.label_eng, key.value_ind, key.value_eng, updatedBy, key.id, venueId]
                     );
                 }
             }
@@ -375,15 +382,15 @@ export async function PUT(
             for (const service of venueServices) {
                 if (!service.id) {
                     await connection.query(
-                        `INSERT INTO vanue_services (vanue_id, name_service_ind, name_service_eng, description_ind, description_eng, created_by, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())`,
-                        [
-                            venueId,
-                            service.name_service_ind,
-                            service.name_service_eng,
-                            service.description_ind,
-                            service.description_eng,
-                            updatedBy,
-                        ]
+                        `INSERT INTO vanue_services (vanue_id, name_service_ind, name_service_eng, description_ind, description_eng, created_by, created_at) 
+                        VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+                        [venueId, service.name_service_ind, service.name_service_eng, service.description_ind, service.description_eng, updatedBy]
+                    );
+                } else {
+                    await connection.query(
+                        `UPDATE vanue_services SET name_service_ind = ?, name_service_eng = ?, description_ind = ?, description_eng = ?, 
+                        updated_by = ?, updated_at = NOW() WHERE id = ? AND vanue_id = ?`,
+                        [service.name_service_ind, service.name_service_eng, service.description_ind, service.description_eng, updatedBy, service.id, venueId]
                     );
                 }
             }
@@ -399,8 +406,15 @@ export async function PUT(
             for (const note of venueNotes) {
                 if (!note.id) {
                     await connection.query(
-                        `INSERT INTO vanue_notes (vanue_id, description_ind, description_eng, created_by, created_at) VALUES (?, ?, ?, ?, NOW())`,
+                        `INSERT INTO vanue_notes (vanue_id, description_ind, description_eng, created_by, created_at) 
+                        VALUES (?, ?, ?, ?, NOW())`,
                         [venueId, note.description_ind, note.description_eng, updatedBy]
+                    );
+                } else {
+                    await connection.query(
+                        `UPDATE vanue_notes SET description_ind = ?, description_eng = ?, 
+                        updated_by = ?, updated_at = NOW() WHERE id = ? AND vanue_id = ?`,
+                        [note.description_ind, note.description_eng, updatedBy, note.id, venueId]
                     );
                 }
             }

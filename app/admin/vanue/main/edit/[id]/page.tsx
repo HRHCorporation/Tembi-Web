@@ -112,7 +112,7 @@ export default function EditVenuePage() {
                             </div>
 
                             {/* Slug (Auto-generated) */}
-                            <div>
+                            <div className="hidden">
                                 <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
                                     Slug (Auto-generated)
                                 </label>

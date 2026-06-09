@@ -74,6 +74,14 @@ export async function updateFasility(
         "icon",
         payload.icon
     );
+    formData.append(
+        "description_ind",
+        payload.description_ind
+    );
+    formData.append(
+        "description_eng",
+        payload.description_eng
+    );
 
     const res = await fetch(
         `/api/admin/vanue/facilities/${id}`,

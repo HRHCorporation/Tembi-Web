@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { FACILITY_ICONS } from "@/components/admin/constants/facility-icons";
 
 export type Policy = {
     id: number;
@@ -30,12 +31,20 @@ export function getColumns(
             accessorKey: "icon",
             header: "Icon",
             cell: ({ row }) => {
-                const iconUrl = row.original.icon;
+                const iconValue = row.original.icon;
+                const facilityIcon = FACILITY_ICONS.find((f) => f.value === iconValue);
+
+                if (!facilityIcon) {
+                    return <span className="text-gray-400 text-xs">No icon</span>;
+                }
+
+                const IconComponent = facilityIcon.icon;
+
                 return (
-                    <img
-                        src={`/images/icons/${iconUrl}`}
-                        alt="Fasilitas Icon"
-                        className="w-10 h-10 object-contain rounded"
+                    <IconComponent
+                        size={28}
+                        color={facilityIcon.color}
+                        weight={facilityIcon.weight}
                     />
                 );
             },

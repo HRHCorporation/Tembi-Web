@@ -19,6 +19,9 @@ export function IconPicker({ value, onChange, error }: IconPickerProps) {
 
     const selected = FACILITY_ICONS.find((icon) => icon.value === value);
 
+    const SelectedIcon = selected?.icon;
+
+
     // Hitung posisi dropdown mengikuti posisi trigger
     function updatePosition() {
         if (!triggerRef.current) return;
@@ -78,11 +81,7 @@ export function IconPicker({ value, onChange, error }: IconPickerProps) {
             >
                 {selected ? (
                     <>
-                        <img
-                            src={`/images/icons/${selected.value}`}
-                            alt={selected.label}
-                            className="h-6 w-6 object-contain"
-                        />
+                        {SelectedIcon && <SelectedIcon size={24} color={selected.color} weight={selected.weight}/>}
                         <span>{selected.label}</span>
                     </>
                 ) : (
@@ -102,29 +101,28 @@ export function IconPicker({ value, onChange, error }: IconPickerProps) {
                         bg-white dark:bg-gray-800 dark:border-gray-700
                         max-h-64 overflow-y-auto"
                 >
-                    {FACILITY_ICONS.map((icon) => (
-                        <button
-                            key={icon.value}
-                            type="button"
-                            onClick={() => {
-                                onChange(icon.value);
-                                setOpen(false);
-                            }}
-                            className={`flex w-full items-center gap-3 px-4 py-2 text-left
-                                hover:bg-gray-100 dark:hover:bg-gray-700
-                                ${value === icon.value
-                                    ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                                    : "text-gray-900 dark:text-white"
-                                }`}
-                        >
-                            <img
-                                src={`/images/icons/${icon.value}`}
-                                alt={icon.label}
-                                className="h-6 w-6 object-contain"
-                            />
-                            <span className="text-sm">{icon.label}</span>
-                        </button>
-                    ))}
+                    {FACILITY_ICONS.map((icon) => {
+                        const IconComponent = icon.icon;
+
+                        return (
+                            <button
+                                key={icon.value}
+                                type="button"
+                                onClick={() => {
+                                    onChange(icon.value);
+                                    setOpen(false);
+                                }}
+                                className={`flex w-full items-center gap-3 px-4 py-2 text-left
+                hover:bg-gray-100 dark:hover:bg-gray-700`}
+                            >
+                                <IconComponent size={24} color={icon.color} weight={icon.weight} />
+
+                                <span className="text-sm">
+                                    {icon.label}
+                                </span>
+                            </button>
+                        );
+                    })}
                 </div>,
                 document.body
             )}

@@ -127,12 +127,12 @@ export const NAV_DATA = [
         icon: Icons.SettingsIcon,
         items: [],
       },
-      {
-        title: "Invoice",
-        url: "/admin/invoice",
-        icon: Icons.BoxIcon,
-        items: [],
-      },
+      // {
+      //   title: "Invoice",
+      //   url: "/admin/invoice",
+      //   icon: Icons.BoxIcon,
+      //   items: [],
+      // },
     ],
   },
 
