@@ -392,13 +392,8 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
                 <div className="w-12 h-12 bg-[#8da077] rounded-full flex items-center justify-center text-white font-bold text-xl uppercase">
                   {event.hosted_by?.[0] || 'T'}
                 </div>
-                <div>
+                <div className="flex flex-col justify-center">
                   <h3 className="font-bold text-[#2d3436]">{event.hosted_by || 'Tembi Cultural House'}</h3>
-                  <p className="text-sm text-gray-600">
-                    {event.hosted_by && event.hosted_by !== 'Tembi Cultural House'
-                      ? (language === 'id' ? 'Penyelenggara' : 'Organizer')
-                      : (language === 'id' ? 'Rumah Budaya' : 'Cultural House')}
-                  </p>
                 </div>
               </div>
 

@@ -25,7 +25,6 @@ export default function Header() {
 		{ name: t.nav.collections, href: "/collections" },
 		{ name: t.nav.event, href: "/event" },
 		{ name: t.nav.blog, href: "/blog" },
-		{ name: t.nav.checkBooking, href: "/check-booking" },
 	];
 
 	const toggleLanguage = () => {
@@ -56,12 +55,12 @@ export default function Header() {
 					</Link>
 
 					<div className="justify-self-end flex items-center gap-4">
-						<Link
+						{/* <Link
 							href="/booking"
 							className="hidden md:inline-block bg-tembi hover:bg-primary-dark text-white font-semibold py-2 px-5 rounded-md transition-colors"
 						>
 							{t.nav.book}
-						</Link>
+						</Link> */}
 
 						<button
 							onClick={toggleLanguage}
