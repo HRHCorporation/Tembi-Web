@@ -188,7 +188,7 @@ export default function EditRoomPage() {
                 {/* ── GALERI ───────────────────────────────────────────── */}
                 <div>
                     <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">Photo Gallery</label>
-                    <p className="mb-2 text-xs text-gray-400 dark:text-gray-500">Upload a photo of your room. Click Set Banner to highlight the main photo. Maximum 5 photos, 5 MB each.</p>
+                    <p className="mb-2 text-xs text-gray-400 dark:text-gray-500">Upload a photo of your room. Click Set Banner to highlight the main photo. Maximum 10 photos, 5 MB each.</p>
                     <ImageUpload value={images}
                         onChange={setImages}  // ← Untuk add/edit
                         onDelete={handleDeleteImage}  // ← NEW: Untuk delete dengan tracking
