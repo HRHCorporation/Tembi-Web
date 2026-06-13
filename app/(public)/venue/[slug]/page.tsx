@@ -234,9 +234,7 @@ export default function VenueDetailPage() {
 									<p key={index}>{paragraph}</p>
 								))} */}
 								{venueSlug?.getDescription(language) ? (
-									<p className="text-gray-200 text-lg md:text-xl leading-relaxed mb-2 last:mb-0">
-										{venueSlug.getDescription(language)}
-									</p>
+									<p>{venueSlug.getDescription(language)}</p>
 								) : null}
 							</div>
 						</div>
