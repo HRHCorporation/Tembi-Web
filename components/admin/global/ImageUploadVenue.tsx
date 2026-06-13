@@ -16,7 +16,7 @@ interface ImageUploadProps {
     error?: string;
 }
 
-const MAX_IMAGES = 6;
+const MAX_IMAGES = 10;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export function ImageUploadVenue({ value, onChange, onDelete, error }: ImageUploadProps) {
@@ -29,7 +29,7 @@ export function ImageUploadVenue({ value, onChange, onDelete, error }: ImageUplo
         const remainingSlots = MAX_IMAGES - currentCount;
 
         if (remainingSlots <= 0) {
-            alert("Maksimal 6 foto saja");
+            alert("Maksimal 10 foto saja");
             return;
         }
 

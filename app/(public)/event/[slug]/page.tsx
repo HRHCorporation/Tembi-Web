@@ -1,8 +1,8 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { use, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Calendar, MapPin, Share2, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calendar, MapPin, Share2, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/app/context/LanguageContext';
 import { toast } from 'sonner';
 
@@ -261,6 +261,38 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
   const [relatedEvents, setRelatedEvents] = useState<EventDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const galleries = event?.thumbnail ? [event.thumbnail] : [];
+
+  const openLightbox = useCallback((index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  }, []);
+
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+
+  const goPrev = useCallback(
+    () => setLightboxIndex((i) => (i - 1 + galleries.length) % galleries.length),
+    [galleries.length]
+  );
+
+  const goNext = useCallback(
+    () => setLightboxIndex((i) => (i + 1) % galleries.length),
+    [galleries.length]
+  );
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') goPrev();
+      else if (e.key === 'ArrowRight') goNext();
+      else if (e.key === 'Escape') closeLightbox();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxOpen, goPrev, goNext, closeLightbox]);
 
   useEffect(() => {
     async function fetchEventDetail() {
@@ -521,6 +553,42 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
+            {/* Gallery Section */}
+            <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10" style={{ marginBottom: '20px' }}>
+              <div className="flex justify-between items-end mb-8">
+                <h3 className="text-2xl font-bold text-[#2d3436] font-serif">
+                  {language === 'id' ? 'Galeri' : 'Gallery'}
+                </h3>
+                <button
+                  onClick={() => openLightbox(0)}
+                  className="text-[#8da077] font-semibold hover:underline cursor-pointer text-sm"
+                >
+                  {language === 'id' ? 'Lihat semua' : 'View all'}
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                {galleries.map((imageSrc, index) => {
+                  const isFirst = index === 0;
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => openLightbox(index)}
+                      className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer
+                        ${isFirst ? 'sm:col-span-2 sm:row-span-2' : ''}
+                      `}
+                    >
+                      <img
+                        src={imageSrc || '/images/homepage/content3.webp'}
+                        alt={`${eventName} ${index + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
             {/* Related Events */}
             {relatedEvents.length > 0 && (
               <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg mb-8">
@@ -565,6 +633,93 @@ export default function EventDetail({ params }: { params: Promise<{ slug: string
           </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxOpen && galleries.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
+          onClick={closeLightbox}
+        >
+          {/* Top bar */}
+          <div
+            className="flex items-center justify-between px-6 py-3 shrink-0 border-b border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="text-white font-medium text-sm">
+              {eventName || 'Event Gallery'}
+            </span>
+            <button
+              onClick={closeLightbox}
+              className="text-white hover:text-gray-300 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          {/* Area tengah: gambar + arrows */}
+          <div className="relative flex-1 flex items-center justify-center min-h-0 py-4">
+            <button
+              onClick={(e) => { e.stopPropagation(); goPrev(); }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
+            >
+              <ChevronLeft size={30} />
+            </button>
+
+            <div
+              className="relative h-full w-full max-w-2xl mx-16"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                key={lightboxIndex}
+                src={galleries[lightboxIndex] || '/images/homepage/content3.webp'}
+                alt={`${eventName} ${lightboxIndex + 1}`}
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <button
+              onClick={(e) => { e.stopPropagation(); goNext(); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
+            >
+              <ChevronRight size={30} />
+            </button>
+          </div>
+
+          {/* Counter */}
+          <div
+            className="flex items-center justify-end px-6 py-2 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="text-gray-400 text-sm">
+              {lightboxIndex + 1}/{galleries.length}
+            </span>
+          </div>
+
+          {/* Thumbnail strip */}
+          <div
+            className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {galleries.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(i)}
+                className={`relative shrink-0 w-24 h-16 rounded overflow-hidden border-2 transition-all ${
+                  i === lightboxIndex
+                    ? 'border-white opacity-100'
+                    : 'border-transparent opacity-50 hover:opacity-80'
+                }`}
+              >
+                <img
+                  src={img || '/images/homepage/content3.webp'}
+                  alt={`thumb ${i + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -45,10 +45,10 @@ export async function GET(request: NextRequest) {
             `,
             [`%${search}%`, `%${search}%`, limit, offset]
         );
-        const [totalRows] = await dbWeb.query<CountRow[]>(  // ← ganti any
+        const [totalRows] = await dbWeb.query<CountRow[]>(
             `
             SELECT COUNT(*) as total
-            FROM mstr_vanue_facilities
+            FROM vanue
             WHERE name_ind LIKE ? OR name_eng LIKE ?
             `,
             [`%${search}%`, `%${search}%`]

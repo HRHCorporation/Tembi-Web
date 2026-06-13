@@ -1,9 +1,9 @@
 "use client";
 
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
-import { Info } from "lucide-react";
+import { Info, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -22,6 +22,48 @@ export default function VenueDetailPage() {
 			refreshVenueSlug(slug);
 		}
 	}, [slug, refreshVenueSlug]);
+
+	const [lightboxOpen, setLightboxOpen] = useState(false);
+	const [lightboxIndex, setLightboxIndex] = useState(0);
+
+	const resolvedGalleries = (venueSlug?.all_galleries || []).map((imageSrc) =>
+		typeof imageSrc === "string"
+			? imageSrc
+			: (imageSrc as { getImage?: () => string; image?: string; image_url?: string; url?: string })
+					.getImage?.() ||
+				(imageSrc as { image?: string }).image ||
+				(imageSrc as { image_url?: string }).image_url ||
+				(imageSrc as { url?: string }).url ||
+				""
+	);
+
+	const openLightbox = useCallback((index: number) => {
+		setLightboxIndex(index);
+		setLightboxOpen(true);
+	}, []);
+
+	const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+
+	const goPrev = useCallback(
+		() => setLightboxIndex((i) => (i - 1 + resolvedGalleries.length) % resolvedGalleries.length),
+		[resolvedGalleries.length]
+	);
+
+	const goNext = useCallback(
+		() => setLightboxIndex((i) => (i + 1) % resolvedGalleries.length),
+		[resolvedGalleries.length]
+	);
+
+	useEffect(() => {
+		if (!lightboxOpen) return;
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "ArrowLeft") goPrev();
+			else if (e.key === "ArrowRight") goNext();
+			else if (e.key === "Escape") closeLightbox();
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, [lightboxOpen, goPrev, goNext, closeLightbox]);
 
 	const facilityIcons = [
 		"/images/icons/build-green.png",
@@ -332,7 +374,7 @@ export default function VenueDetailPage() {
 								{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
 							</p>
 						</div>
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<div className="flex flex-wrap justify-center gap-6">
 							{venueSlug?.all_galleries?.map((imageSrc, index) => {
 								const gallerySrc =
 									typeof imageSrc === "string"
@@ -352,7 +394,8 @@ export default function VenueDetailPage() {
 								return (
 									<div
 										key={index}
-										className="relative h-64 md:h-72 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300"
+										onClick={() => openLightbox(index)}
+										className="relative h-64 md:h-72 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
 									>
 										<Image
 											src={gallerySrc}
@@ -699,6 +742,94 @@ export default function VenueDetailPage() {
 					</div>
 				</div>
 			</section>
+		{/* Lightbox */}
+		{lightboxOpen && resolvedGalleries.length > 0 && (
+			<div
+				className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
+				onClick={closeLightbox}
+			>
+				{/* Top bar */}
+				<div
+					className="flex items-center justify-between px-6 py-3 shrink-0 border-b border-white/10"
+					onClick={(e) => e.stopPropagation()}
+				>
+					<span className="text-white font-medium text-sm">
+						{venueSlug?.getName(language) || "Event Gallery"}
+					</span>
+					<button
+						onClick={closeLightbox}
+						className="text-white hover:text-gray-300 transition-colors"
+					>
+						<X size={24} />
+					</button>
+				</div>
+
+				{/* Area tengah: gambar + arrows */}
+				<div className="relative flex-1 flex items-center justify-center min-h-0 py-4">
+					<button
+						onClick={(e) => { e.stopPropagation(); goPrev(); }}
+						className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
+					>
+						<ChevronLeft size={30} />
+					</button>
+
+					<div
+						className="relative h-full w-full max-w-2xl mx-16"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<Image
+							key={lightboxIndex}
+							src={resolvedGalleries[lightboxIndex] || "/images/homepage/content3.webp"}
+							alt={`${venueSlug?.getName(language)} ${lightboxIndex + 1}`}
+							fill
+							className="object-contain"
+						/>
+					</div>
+
+					<button
+						onClick={(e) => { e.stopPropagation(); goNext(); }}
+						className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
+					>
+						<ChevronRight size={30} />
+					</button>
+				</div>
+
+				{/* Counter */}
+				<div
+					className="flex items-center justify-end px-6 py-2 shrink-0"
+					onClick={(e) => e.stopPropagation()}
+				>
+					<span className="text-gray-400 text-sm">
+						{lightboxIndex + 1}/{resolvedGalleries.length}
+					</span>
+				</div>
+
+				{/* Thumbnail strip */}
+				<div
+					className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
+					onClick={(e) => e.stopPropagation()}
+				>
+					{resolvedGalleries.map((img, i) => (
+						<button
+							key={i}
+							onClick={() => setLightboxIndex(i)}
+							className={`relative shrink-0 w-24 h-16 rounded overflow-hidden border-2 transition-all ${
+								i === lightboxIndex
+									? "border-white opacity-100"
+									: "border-transparent opacity-50 hover:opacity-80"
+							}`}
+						>
+							<Image
+								src={img || "/images/homepage/content3.webp"}
+								alt={`thumb ${i + 1}`}
+								fill
+								className="object-cover"
+							/>
+						</button>
+					))}
+				</div>
+			</div>
+		)}
 		</main>
 	);
 }

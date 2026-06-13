@@ -175,7 +175,7 @@ export default function CreateVenuePage() {
                     </h2>
 
                     <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-                        Upload a photo of the venue. Click Set Banner to highlight the main photo. Maximum of 6 photos, 5 MB each.
+                        Upload a photo of the venue. Click Set Banner to highlight the main photo. Maximum of 10 photos, 5 MB each.
                     </p>
                     <ImageUploadVenue
                         value={images}
