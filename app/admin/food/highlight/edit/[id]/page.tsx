@@ -24,6 +24,7 @@ export default function EditHighlightPage() {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setFoodPackageId,
         setOurMenuFoodId,
         setImageFile,
@@ -52,17 +53,42 @@ export default function EditHighlightPage() {
     };
 
     // ✅ Handle image file selection
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            setExistingImage(""); // Clear existing image when new image is selected
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setImagePreview(event.target?.result as string);
-            };
-            reader.readAsDataURL(file);
+
+        if (!file) return;
+
+        const maxSize = 15 * 1024 * 1024; // 15 MB
+
+        if (file.size > maxSize) {
+            setErrors((prev) => ({
+                ...prev,
+                image: "Maximum file size is 15 MB",
+            }));
+
+            e.target.value = "";
+            setImageFile(null);
+            setImagePreview("");
+
+            return;
         }
+
+        setErrors((prev) => ({
+            ...prev,
+            image: "",
+        }));
+
+        setImageFile(file);
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setImagePreview(event.target?.result as string);
+        };
+
+        reader.readAsDataURL(file);
     };
 
     // ✅ Fetch menu foods when food_package_id is loaded from detail
@@ -167,6 +193,10 @@ export default function EditHighlightPage() {
                     />
                 </div>
 
+                <small className="mt-1 block text-gray-500 dark:text-gray-400">
+                    Maximum file size: 15 MB. Supported formats: JPG, JPEG, PNG.
+                </small>
+
                 {/* Image Cropper */}
                 {imagePreview && (
                     <div>
@@ -181,6 +211,12 @@ export default function EditHighlightPage() {
                             <p className="mt-1 text-sm text-red-600">{errors.image}</p>
                         )}
                     </div>
+                )}
+
+                {errors.image && (
+                    <p className="mt-1 text-sm text-red-500">
+                        {errors.image}
+                    </p>
                 )}
 
                 <div className="grid grid-cols-2 gap-5">

@@ -18,6 +18,7 @@ export default function CreateCollectionPage() {
         croppedBlob,
         loading,
         errors,
+        setErrors,
         setMstrCollectionId,
         setNameInd,
         setNameEng,
@@ -29,16 +30,43 @@ export default function CreateCollectionPage() {
         handleSubmit,
     } = useCreateCollection();
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // ✅ Handle image file selection
+    const handleImageChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setImagePreview(event.target?.result as string);
-            };
-            reader.readAsDataURL(file);
+
+        if (!file) return;
+
+        const maxSize = 15 * 1024 * 1024; // 15 MB
+
+        if (file.size > maxSize) {
+            setErrors((prev) => ({
+                ...prev,
+                image: "Maximum file size is 15 MB",
+            }));
+
+            e.target.value = "";
+            setImageFile(null);
+            setImagePreview("");
+
+            return;
         }
+
+        setErrors((prev) => ({
+            ...prev,
+            image: "",
+        }));
+
+        setImageFile(file);
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setImagePreview(event.target?.result as string);
+        };
+
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -178,10 +206,15 @@ export default function CreateCollectionPage() {
                                 onChange={handleImageChange}
                                 className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                             />
+                            <small className="mt-1 block text-gray-500 dark:text-gray-400">
+                                Maximum file size: 15 MB. Supported formats: JPG, JPEG, PNG.
+                            </small>
                             {errors.image && (
                                 <p className="mt-1 text-sm text-red-600">{errors.image}</p>
                             )}
                         </div>
+
+
 
                         {/* Image Cropper */}
                         {imagePreview && (

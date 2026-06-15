@@ -23,6 +23,7 @@ export default function EditEventPage() {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setTitleInd,
         handleTitleEngChange,
         setDescriptionInd,
@@ -42,17 +43,42 @@ export default function EditEventPage() {
         setLocation
     } = useEditEvent(id);
 
-    const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleThumbnailChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setThumbnailFile(file);
-            setExistingThumbnail("");
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setThumbnailPreview(event.target?.result as string);
-            };
-            reader.readAsDataURL(file);
+
+        if (!file) return;
+
+        const maxSize = 15 * 1024 * 1024; // 15 MB
+
+        if (file.size > maxSize) {
+            setErrors((prev) => ({
+                ...prev,
+                thumbnail: "Maximum file size is 15 MB",
+            }));
+
+            e.target.value = "";
+            setThumbnailFile(null);
+            setThumbnailPreview("");
+
+            return;
         }
+
+        setErrors((prev) => ({
+            ...prev,
+            thumbnail: "",
+        }));
+
+        setThumbnailFile(file);
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setThumbnailPreview(event.target?.result as string);
+        };
+
+        reader.readAsDataURL(file);
     };
 
     if (fetchLoading) {
@@ -278,6 +304,9 @@ export default function EditEventPage() {
                                 onChange={handleThumbnailChange}
                                 className="w-full rounded border p-3 bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                             />
+                            <small className="mt-1 block text-gray-500 dark:text-gray-400">
+                                Maximum file size: 15 MB. Supported formats: JPG, JPEG, PNG.
+                            </small>
                             {errors.thumbnail && (
                                 <p className="mt-1 text-sm text-red-600">{errors.thumbnail}</p>
                             )}

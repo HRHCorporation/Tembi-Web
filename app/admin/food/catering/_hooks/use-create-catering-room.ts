@@ -285,6 +285,7 @@ export function useCreateCatering() {
         foodPackagesPrimary,
         loading,
         errors,
+        setErrors,
         setTypeCateringServiceId,
         setNameInd,
         setNameEng,

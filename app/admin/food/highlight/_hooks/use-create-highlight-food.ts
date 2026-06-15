@@ -120,6 +120,7 @@ export function useCreateHighlight() {
         description_eng,
         loading,
         errors,
+        setErrors,
         setFoodPackageId,
         setOurMenuFoodId,
         setImageFile,

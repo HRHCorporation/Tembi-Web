@@ -158,6 +158,10 @@ export async function PUT(
 
             const buffer = await imageFile.arrayBuffer();
             const webpBuffer = await sharp(Buffer.from(buffer))
+                .resize({
+                    width: 1920,
+                    withoutEnlargement: true,
+                })
                 .webp({ quality: 80 })
                 .toBuffer();
 

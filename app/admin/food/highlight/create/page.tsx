@@ -17,6 +17,7 @@ export default function CreateHighlightPage() {
         description_eng,
         loading,
         errors,
+        setErrors,
         setFoodPackageId,
         setOurMenuFoodId,
         setImageFile,
@@ -44,16 +45,42 @@ export default function CreateHighlightPage() {
     };
 
     // ✅ Handle image file selection
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setImagePreview(event.target?.result as string);
-            };
-            reader.readAsDataURL(file);
+
+        if (!file) return;
+
+        const maxSize = 15 * 1024 * 1024; // 15 MB
+
+        if (file.size > maxSize) {
+            setErrors((prev) => ({
+                ...prev,
+                image: "Maximum file size is 15 MB",
+            }));
+
+            e.target.value = "";
+            setImageFile(null);
+            setImagePreview("");
+
+            return;
         }
+
+        setErrors((prev) => ({
+            ...prev,
+            image: "",
+        }));
+
+        setImageFile(file);
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setImagePreview(event.target?.result as string);
+        };
+
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -127,6 +154,10 @@ export default function CreateHighlightPage() {
                     />
                 </div>
 
+                <small className="mt-1 block text-gray-500 dark:text-gray-400">
+                    Maximum file size: 15 MB. Supported formats: JPG, JPEG, PNG.
+                </small>
+
                 {/* Image Cropper */}
                 {imagePreview && (
                     <div>
@@ -141,6 +172,12 @@ export default function CreateHighlightPage() {
                             <p className="mt-1 text-sm text-red-600">{errors.image}</p>
                         )}
                     </div>
+                )}
+
+                {errors.image && (
+                    <p className="mt-1 text-sm text-red-500">
+                        {errors.image}
+                    </p>
                 )}
 
                 <div className="grid grid-cols-2 gap-5">

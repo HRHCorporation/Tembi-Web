@@ -334,6 +334,7 @@ export function useEditCateringRoom(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setTypeCateringServiceId,
         setNameInd,
         setNameEng,

@@ -236,6 +236,10 @@ export async function PUT(
 
             // ✅ Convert ke WebP pakai sharp (sama seperti create)
             const webpBuffer = await sharp(Buffer.from(buffer))
+                .resize({
+                    width: 1920,
+                    withoutEnlargement: true,
+                })
                 .webp({ quality: 80 })
                 .toBuffer();
 

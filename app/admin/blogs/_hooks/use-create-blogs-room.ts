@@ -139,6 +139,7 @@ export function useCreateBlog() {
         croppedBlob,
         loading,
         errors,
+        setErrors,
         setTitleInd,
         handleTitleEngChange,
         setDescriptionInd,

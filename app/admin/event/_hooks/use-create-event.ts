@@ -177,6 +177,7 @@ export function useCreateEvent() {
         croppedBlob,
         loading,
         errors,
+        setErrors,
         setTitleInd,
         handleTitleEngChange,
         setDescriptionInd,

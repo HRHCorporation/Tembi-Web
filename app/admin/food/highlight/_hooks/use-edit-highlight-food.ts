@@ -149,6 +149,7 @@ export function useEditHighlight(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setFoodPackageId,
         setOurMenuFoodId,
         setImageFile,

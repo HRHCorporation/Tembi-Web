@@ -108,7 +108,13 @@ export async function PUT(
             const filename = `event-${Date.now()}-${Math.random().toString(36).substring(2, 8)}.webp`;
             const uploadDir = path.join(process.cwd(), "public/images/upload/event");
             await mkdir(uploadDir, { recursive: true });
-            await sharp(buffer).webp({ quality: 80 }).toFile(path.join(uploadDir, filename));
+            await sharp(buffer)
+                .resize({
+                    width: 1920,
+                    withoutEnlargement: true,
+                })
+                .webp({ quality: 80 })
+                .toFile(path.join(uploadDir, filename));
             newThumbnailPath = `/images/upload/event/${filename}`;
         }
 

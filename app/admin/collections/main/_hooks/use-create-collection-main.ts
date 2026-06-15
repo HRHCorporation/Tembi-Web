@@ -130,6 +130,7 @@ export function useCreateCollection() {
         croppedBlob,
         loading,
         errors,
+        setErrors,
         setMstrCollectionId,
         setNameInd,
         setNameEng,

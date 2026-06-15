@@ -20,6 +20,7 @@ export function useEditCarousel(id: string) {
     const [errors, setErrors] = useState({
         title_ind: "",
         title_eng: "",
+        image: "",
     });
 
 
@@ -59,10 +60,10 @@ export function useEditCarousel(id: string) {
        SUBMIT
     ===================================== */
     async function handleSubmit() {
-        setErrors({ title_ind: "", title_eng: "" });
+        setErrors({ title_ind: "", title_eng: "", image: "" });
 
         let hasError = false;
-        const newErrors = { title_ind: "", title_eng: "" };
+        const newErrors = { title_ind: "", title_eng: "", image: "" };
 
         if (!titleInd) {
             newErrors.title_ind = "Title Indonesia wajib diisi";
@@ -113,6 +114,7 @@ export function useEditCarousel(id: string) {
         titleEng,
         isActive,
         errors,
+        setErrors,
         // setter
         setImage,
         setCroppedBlob,

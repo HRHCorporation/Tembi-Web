@@ -15,6 +15,7 @@ export default function CreateCarouselPage() {
         isActive,
         loading,
         errors,
+        setErrors,
         setImage,
         setCroppedBlob,
         setTitleInd,
@@ -99,7 +100,7 @@ export default function CreateCarouselPage() {
                     </div>
                     {/* IMAGE */}
                     <div>
-                        <label className="mb-2 block font-medium  text-gray-700 dark:text-gray-300">
+                        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-300">
                             Image
                         </label>
 
@@ -108,13 +109,38 @@ export default function CreateCarouselPage() {
                             accept="image/*"
                             onChange={(e) => {
                                 const file = e.target.files?.[0];
+
                                 if (!file) return;
+
+                                const maxSize = 15 * 1024 * 1024;
+
+                                if (file.size > maxSize) {
+                                    setErrors((prev) => ({
+                                        ...prev,
+                                        image: "Maximum file size is 15 MB",
+                                    }));
+
+                                    e.target.value = "";
+                                    setImage(null);
+
+                                    return;
+                                }
+
+                                setErrors((prev) => ({
+                                    ...prev,
+                                    image: "",
+                                }));
+
                                 setImage(URL.createObjectURL(file));
                             }}
                             className="w-full rounded border p-3
-                                bg-white text-gray-900
-                                dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                            bg-white text-gray-900
+                            dark:bg-gray-700 dark:text-white dark:border-gray-600"
                         />
+
+                        <small className="mt-1 block text-gray-500 dark:text-gray-400">
+                            Maximum file size: 15 MB. Supported formats: JPG, JPEG, PNG.
+                        </small>
 
                         {image && (
                             <ImageCropper

@@ -139,6 +139,7 @@ export function useCreateCarousel() {
         isActive,
         loading,
         errors,
+        setErrors,
         // setter
         setImage,
         setCroppedBlob,

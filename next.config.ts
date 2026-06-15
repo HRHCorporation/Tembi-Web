@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 
+  experimental: {
+    middlewareClientMaxBodySize: 300 * 1024 * 1024,
+  },
+
   typescript: {
     ignoreBuildErrors: true,
   },

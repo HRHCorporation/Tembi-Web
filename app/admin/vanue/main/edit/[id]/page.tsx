@@ -29,6 +29,7 @@ export default function EditVenuePage() {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setNameInd,
         handleNameEngChange,
         setDescriptionInd,
@@ -191,7 +192,7 @@ export default function EditVenuePage() {
                     </h2>
 
                     <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-                        Upload foto venue. Klik Set Banner untuk menandai foto utama. Maksimal 10 foto @ 5 MB per foto.
+                        Upload foto venue. Klik Set Banner untuk menandai foto utama. Maksimal 10 foto @ 30 MB per foto.
                     </p>
                     <ImageUploadVenue
                         value={images}

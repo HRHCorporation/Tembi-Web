@@ -220,6 +220,7 @@ export function useCreateVenue() {
         venueNotes,
         loading,
         errors,
+        setErrors,
         setNameInd,
         handleNameEngChange,
         setDescriptionInd,

@@ -24,6 +24,7 @@ export default function EditCelebratePage() {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setNameInd,
         setNameEng,
         setDescriptionInd,
@@ -38,17 +39,42 @@ export default function EditCelebratePage() {
     } = useEditCelebrate(id);
 
     // ✅ Handle image file selection
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            setExistingImage(""); // Clear existing image when new image is selected
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setImagePreview(event.target?.result as string);
-            };
-            reader.readAsDataURL(file);
+
+        if (!file) return;
+
+        const maxSize = 15 * 1024 * 1024; // 15 MB
+
+        if (file.size > maxSize) {
+            setErrors((prev) => ({
+                ...prev,
+                image: "Maximum file size is 15 MB",
+            }));
+
+            e.target.value = "";
+            setImageFile(null);
+            setImagePreview("");
+
+            return;
         }
+
+        setErrors((prev) => ({
+            ...prev,
+            image: "",
+        }));
+
+        setImageFile(file);
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setImagePreview(event.target?.result as string);
+        };
+
+        reader.readAsDataURL(file);
     };
 
     if (fetchLoading) {
@@ -191,6 +217,12 @@ export default function EditCelebratePage() {
                             <p className="mt-1 text-sm text-red-600">{errors.image}</p>
                         )}
                     </div>
+                )}
+
+                {errors.image && (
+                    <p className="mt-1 text-sm text-red-500">
+                        {errors.image}
+                    </p>
                 )}
 
                 {/* Celebrate Moment List Tags */}

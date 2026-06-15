@@ -137,6 +137,7 @@ export function useCreateCelebrate() {
         celebrateMomentList,
         loading,
         errors,
+        setErrors,
         setNameInd,
         setNameEng,
         setDescriptionInd,

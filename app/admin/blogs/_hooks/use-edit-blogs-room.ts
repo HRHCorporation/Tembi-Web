@@ -170,6 +170,7 @@ export function useEditBlog(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setTitleInd,
         handleTitleEngChange,
         setDescriptionInd,

@@ -157,7 +157,8 @@ export function useEditBannerRoom(id: string) {
         setCroppedBlob,
         loading,
         errors,
+        setErrors,
         handleSubmit,
-        fetchLoading, 
+        fetchLoading,
     };
 }

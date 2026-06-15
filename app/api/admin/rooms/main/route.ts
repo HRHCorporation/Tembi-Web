@@ -249,6 +249,10 @@ export async function POST(req: NextRequest) {
 
             // Konversi ke webp pakai sharp
             const webpBuffer = await sharp(Buffer.from(buffer))
+                .resize({
+                    width: 1920,
+                    withoutEnlargement: true,
+                })
                 .webp({ quality: 80 })
                 .toBuffer();
 

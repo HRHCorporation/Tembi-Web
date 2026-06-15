@@ -17,7 +17,7 @@ interface ImageUploadProps {
 }
 
 const MAX_IMAGES = 10;
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 30 * 1024 * 1024;
 
 export function ImageUploadVenue({ value, onChange, onDelete, error }: ImageUploadProps) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +38,7 @@ export function ImageUploadVenue({ value, onChange, onDelete, error }: ImageUplo
         const newImages: ImageFile[] = filesToAdd
             .filter((file) => {
                 if (file.size > MAX_FILE_SIZE) {
-                    alert(`File ${file.name} terlalu besar. Maksimal 5 MB per foto.`);
+                    alert(`File ${file.name} terlalu besar. Maksimal 30 MB per foto.`);
                     return false;
                 }
                 return true;
@@ -90,7 +90,7 @@ export function ImageUploadVenue({ value, onChange, onDelete, error }: ImageUplo
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 16v-8m0 0l-3 3m3-3l3 3M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1" />
                 </svg>
                 <p className="text-sm font-medium">Klik atau drag & drop gambar</p>
-                <p className="text-xs mt-1">PNG, JPG, WEBP — maksimal 5 MB per foto</p>
+                <p className="text-xs mt-1">PNG, JPG, WEBP — maksimal 30 MB per foto</p>
                 <p className="text-xs mt-2 text-gray-500">
                     {value.length}/{MAX_IMAGES} foto ({MAX_IMAGES - value.length} tersisa)
                 </p>

@@ -264,6 +264,10 @@ export async function PUT(
             const filePath = path.join(uploadDir, filename);
 
             await sharp(buffer)
+                .resize({
+                    width: 1920,
+                    withoutEnlargement: true,
+                })
                 .webp({ quality: 80 })
                 .toFile(filePath);
 

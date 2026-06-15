@@ -208,6 +208,7 @@ export function useEditEvent(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setTitleInd,
         handleTitleEngChange,
         setDescriptionInd,

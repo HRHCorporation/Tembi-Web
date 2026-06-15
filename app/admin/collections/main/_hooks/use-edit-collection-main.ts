@@ -159,6 +159,7 @@ export function useEditCollection(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setMstrCollectionId,
         setNameInd,
         setNameEng,

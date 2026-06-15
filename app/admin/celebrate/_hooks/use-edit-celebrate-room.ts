@@ -187,6 +187,7 @@ export function useEditCelebrate(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setNameInd,
         setNameEng,
         setDescriptionInd,

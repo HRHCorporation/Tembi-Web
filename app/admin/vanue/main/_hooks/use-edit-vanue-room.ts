@@ -333,6 +333,7 @@ export function useEditVenue(id: string) {
         loading,
         fetchLoading,
         errors,
+        setErrors,
         setNameInd,
         handleNameEngChange,
         setDescriptionInd,

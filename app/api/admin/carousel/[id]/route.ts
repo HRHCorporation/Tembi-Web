@@ -91,7 +91,10 @@ export async function PUT(
             }
 
             await sharp(buffer)
-                .resize(1920, 1080)
+                .resize({
+                    width: 1920,
+                    withoutEnlargement: true,
+                })
                 .webp({ quality: 80 })
                 .toFile(path.join(uploadDir, filename));
 
