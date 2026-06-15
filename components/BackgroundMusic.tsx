@@ -13,30 +13,27 @@ const BackgroundMusic = () => {
 
 		audio.volume = 0.3;
 
-		const playAudio = () => {
-			const playPromise = audio.play();
-			if (playPromise !== undefined) {
-				playPromise.catch(() => {
-					console.log("Menunggu interaksi user untuk memutar musik...");
-				});
-			}
-		};
-
-		playAudio();
+		const triggerEvents = ["click", "keydown", "touchstart"];
 
 		const handleInteraction = () => {
-			playAudio();
-			["click", "scroll", "keydown", "touchstart"].forEach((event) =>
-				document.removeEventListener(event, handleInteraction),
-			);
+			audio.play().then(() => {
+				triggerEvents.forEach((event) =>
+					document.removeEventListener(event, handleInteraction),
+				);
+			}).catch(() => {
+				// gagal, biarkan listener tetap aktif untuk percobaan berikutnya
+			});
 		};
 
-		["click", "scroll", "keydown", "touchstart"].forEach((event) =>
-			document.addEventListener(event, handleInteraction),
-		);
+		// Coba langsung tanpa interaksi (beberapa browser mengizinkan)
+		audio.play().catch(() => {
+			triggerEvents.forEach((event) =>
+				document.addEventListener(event, handleInteraction),
+			);
+		});
 
 		return () => {
-			["click", "scroll", "keydown", "touchstart"].forEach((event) =>
+			triggerEvents.forEach((event) =>
 				document.removeEventListener(event, handleInteraction),
 			);
 		};

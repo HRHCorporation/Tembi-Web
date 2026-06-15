@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useHouseContext } from "@/app/context/HouseContext";
@@ -13,6 +13,39 @@ export default function RoomDetail() {
   const slug = params.slug as string;
   const { houseSlug, refreshHouseSlug } = useHouseContext();
   const { t, language } = useLanguage();
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const galleries = houseSlug?.galleries ?? [];
+
+  const openLightbox = useCallback((index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  }, []);
+
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+
+  const goPrev = useCallback(
+    () => setLightboxIndex((i) => (i - 1 + galleries.length) % galleries.length),
+    [galleries.length]
+  );
+
+  const goNext = useCallback(
+    () => setLightboxIndex((i) => (i + 1) % galleries.length),
+    [galleries.length]
+  );
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") goPrev();
+      else if (e.key === "ArrowRight") goNext();
+      else if (e.key === "Escape") closeLightbox();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxOpen, goPrev, goNext, closeLightbox]);
 
   useEffect(() => {
     if (slug) {
@@ -104,7 +137,7 @@ export default function RoomDetail() {
                       className="object-contain"
                     />
                   </div>
-                  <span>{houseSlug?.spacious_room}</span>
+                  <span>{houseSlug?.spacious_room} m²</span>
                 </div>
               </div>
             </div>
@@ -161,20 +194,23 @@ export default function RoomDetail() {
             <h3 className="text-2xl font-bold text-gray-800 font-serif">
               {t.houseDetail.gallery}
             </h3>
-            <button className="text-[#8B9D68] font-semibold hover:underline cursor-pointer text-sm">
+            <button
+              onClick={() => openLightbox(0)}
+              className="text-[#8B9D68] font-semibold hover:underline cursor-pointer text-sm"
+            >
               {t.houseDetail.viewall}
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-            {houseSlug?.galleries?.map((imageSrc, index) => {
+            {galleries.map((imageSrc, index) => {
               const isFirst = index === 0;
-
               return (
                 <div
                   key={index}
-                  className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300
-										${isFirst ? "sm:col-span-2 sm:row-span-2" : ""} 
+                  onClick={() => openLightbox(index)}
+                  className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer
+										${isFirst ? "sm:col-span-2 sm:row-span-2" : ""}
 									`}
                 >
                   <Image
@@ -183,8 +219,7 @@ export default function RoomDetail() {
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                 </div>
               );
             })}
@@ -314,6 +349,98 @@ export default function RoomDetail() {
 					*/}
         </section>
       </div>
+
+      {/* --- LIGHTBOX --- */}
+      {lightboxOpen && galleries.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
+          onClick={closeLightbox}
+        >
+          {/* Top bar: judul kiri + X kanan */}
+          <div
+            className="flex items-center justify-between px-6 py-3 shrink-0 border-b border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="text-white font-medium text-sm">
+              {houseSlug?.getTitle(language) || "Room Gallery"}
+            </span>
+            <button
+              onClick={closeLightbox}
+              className="text-white hover:text-gray-300 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          {/* Area tengah: gambar + arrows absolute */}
+          <div className="relative flex-1 flex items-center justify-center min-h-0 py-4">
+            {/* Arrow kiri */}
+            <button
+              onClick={(e) => { e.stopPropagation(); goPrev(); }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
+            >
+              <ChevronLeft size={30} />
+            </button>
+
+            {/* Gambar utama */}
+            <div
+              className="relative h-full w-full max-w-2xl mx-16"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                key={lightboxIndex}
+                src={galleries[lightboxIndex]?.image || "/images/homepage/content3.webp"}
+                alt={`${houseSlug?.getTitle(language)} ${lightboxIndex + 1}`}
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* Arrow kanan */}
+            <button
+              onClick={(e) => { e.stopPropagation(); goNext(); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
+            >
+              <ChevronRight size={30} />
+            </button>
+          </div>
+
+          {/* Bawah gambar: counter kanan */}
+          <div
+            className="flex items-center justify-end px-6 py-2 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="text-gray-400 text-sm">
+              {lightboxIndex + 1}/{galleries.length}
+            </span>
+          </div>
+
+          {/* Thumbnail strip */}
+          <div
+            className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {galleries.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(i)}
+                className={`relative shrink-0 w-24 h-16 rounded overflow-hidden border-2 transition-all ${
+                  i === lightboxIndex
+                    ? "border-white opacity-100"
+                    : "border-transparent opacity-50 hover:opacity-80"
+                }`}
+              >
+                <Image
+                  src={img.image || "/images/homepage/content3.webp"}
+                  alt={`thumb ${i + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
