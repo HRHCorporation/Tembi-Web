@@ -25,6 +25,8 @@ export default class Amenities {
     }
   }
 
+  
+
   static fromResponse(response: AmenitiesResponse): Amenities {
     return new Amenities({
       id: response.id,

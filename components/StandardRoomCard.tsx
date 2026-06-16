@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { FACILITY_ICONS } from "./admin/constants/facility-icons";
 
 export interface StandardRoomCardProps {
   slug: string;
@@ -98,7 +99,7 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
                 {guests} {t.house.standardCard.features.guest}
               </span>
             </div>
-            {facilities.slice(0, 2).map((facility, idx) => (
+            {/* {facilities.slice(0, 2).map((facility, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <div className="relative w-4 h-4 opacity-80">
                   <Image
@@ -110,7 +111,42 @@ const StandardRoomCard: React.FC<StandardRoomCardProps> = ({
                 </div>
                 <span>{facility.name}</span>
               </div>
-            ))}
+            ))} */}
+            {facilities.slice(0, 2).map((facility, idx) => {
+              const iconConfig = FACILITY_ICONS.find(
+                (item) => item.value === facility.icon,
+              );
+              const IconComponent = iconConfig?.icon;
+
+              return (
+                <div key={idx} className="flex items-center gap-2">
+                  <div className="w-4 h-4 flex items-center justify-center shrink-0">
+                    {IconComponent ? (
+                      <IconComponent
+                        size={18}
+                        color="#a2ab80"
+                        weight={iconConfig.weight}
+                      />
+                    ) : (
+                      <div className="relative w-4 h-4 opacity-80">
+                        <Image
+                          src={
+                            facility.icon.startsWith("/images") ||
+                            facility.icon.startsWith("http")
+                              ? facility.icon
+                              : `/images/icons/${facility.icon.replace("Icon", "").toLowerCase()}.png`
+                          }
+                          alt={facility.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <span>{facility.name}</span>
+                </div>
+              );
+            })}
           </div>
           <div className="mt-auto pt-6 border-t border-gray-100">
             <button className="w-full bg-[#8B9D68] hover:bg-[#738354] text-white font-semibold py-2.5 px-4 rounded transition-colors duration-300 text-sm tracking-wide shadow-sm hover:shadow-md">

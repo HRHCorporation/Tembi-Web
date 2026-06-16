@@ -9,151 +9,151 @@ import { useLanguage } from "@/app/context/LanguageContext";
 import { useHouseContext } from "@/app/context/HouseContext";
 
 interface RoomItem {
-	id: number;
-	badge: string;
-	slug: string;
-	name: string;
-	description: string;
-	imageUrl: string;
-	details: {
-		guests: number;
-		size: string;
-		view: string;
-	};
-	detailsIcons: string;
-	layoutType: string;
+  id: number;
+  badge: string;
+  slug: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  details: {
+    guests: number;
+    size: string;
+    view: string;
+  };
+  detailsIcons: string;
+  layoutType: string;
 }
 
 export default function Catalog() {
-	const { t, language } = useLanguage();
+  const { t, language } = useLanguage();
 
-	const {
-		houseBanner,
-		bannerLoading,
-		bannerError,
-		houseList,
-		houseListLoading,
-		houseListError,
-		houseRecommendation,
-		houseRecommendationLoading,
-		houseRecommendationError,
-	} = useHouseContext();
+  const {
+    houseBanner,
+    bannerLoading,
+    bannerError,
+    houseList,
+    houseListLoading,
+    houseListError,
+    houseRecommendation,
+    houseRecommendationLoading,
+    houseRecommendationError,
+  } = useHouseContext();
 
-	const getGridClass = () => {
-		const count = houseList.length;
-		if (count === 1) return "grid grid-cols-1 max-w-md mx-auto";
-		if (count === 2) return "grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto";
-		return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
-	};
+  const getGridClass = () => {
+    const count = houseList.length;
+    if (count === 1) return "grid grid-cols-1 max-w-md mx-auto";
+    if (count === 2) return "grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto";
+    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+  };
 
-	const rooms = t.house.item as unknown as RoomItem[];
-	const featuredRooms = rooms.filter((room) => room.layoutType === "featured");
-	const standardRooms = rooms.filter((room) => room.layoutType === "standard");
+  const rooms = t.house.item as unknown as RoomItem[];
+  const featuredRooms = rooms.filter((room) => room.layoutType === "featured");
+  const standardRooms = rooms.filter((room) => room.layoutType === "standard");
 
-	return (
-		<main className="bg-white">
-			<div className="relative w-full">
-				<div className="relative h-175 w-full">
-					{bannerLoading ? (
-						<div className="w-full h-full bg-linear-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse">
-							<div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent" />
-						</div>
-					) : (
-						<>
-							<Image
-								src={houseBanner?.image || "/images/homepage/content3.webp"}
-								alt={houseBanner?.getTitle(language) || "House Banner"}
-								fill
-								className="object-cover"
-								priority
-							/>
-							<div className="absolute inset-0 bg-black/40 z-10"></div>
-						</>
-					)}
-					<div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-center pb-20">
-						<div className="text-sm text-gray-200 mb-4 font-medium">
-							{t.house.hero.address[0]} &gt; {t.house.hero.address[1]}
-						</div>
-						<h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight">
-							{houseBanner?.getTitle(language) || t.house.hero.title}
-						</h1>
-						{houseBanner?.getDescription(language) ? (
-							<p
-								className="max-w-2xl text-lg text-gray-100 mb-8 leading-relaxed"
-								dangerouslySetInnerHTML={{
-									__html: houseBanner.getDescription(language),
-								}}
-							/>
-						) : (
-							<p className="max-w-2xl text-lg text-gray-100 mb-8 leading-relaxed">
-								{t.house.hero.desc}
-							</p>
-						)}
-						<div>
-							<button className="bg-tembi hover:bg-darktembi text-white px-8 py-3 rounded transition-colors duration-300 flex items-center gap-3 font-medium">
-								<div className="relative w-3 h-3">
-									<Image
-										src="/images/icons/search-white.png"
-										alt="Search Icon"
-										fill
-										className="object-contain"
-									/>
-								</div>
-								{t.house.hero.buttonText}
-							</button>
-						</div>
-					</div>
+  return (
+    <main className="bg-white">
+      <div className="relative w-full">
+        <div className="relative h-175 w-full">
+          {bannerLoading ? (
+            <div className="w-full h-full bg-linear-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse">
+              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent" />
+            </div>
+          ) : (
+            <>
+              <Image
+                src={houseBanner?.image || "/images/homepage/content3.webp"}
+                alt={houseBanner?.getTitle(language) || "House Banner"}
+                fill
+                className="object-cover"
+                priority
+              />
+              <div className="absolute inset-0 bg-black/40 z-10"></div>
+            </>
+          )}
+          <div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-center pb-20">
+            <div className="text-sm text-gray-200 mb-4 font-medium">
+              {t.house.hero.address[0]} &gt; {t.house.hero.address[1]}
+            </div>
+            <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight">
+              {houseBanner?.getTitle(language) || t.house.hero.title}
+            </h1>
+            {houseBanner?.getDescription(language) ? (
+              <p
+                className="max-w-2xl text-lg text-gray-100 mb-8 leading-relaxed"
+                dangerouslySetInnerHTML={{
+                  __html: houseBanner.getDescription(language),
+                }}
+              />
+            ) : (
+              <p className="max-w-2xl text-lg text-gray-100 mb-8 leading-relaxed">
+                {t.house.hero.desc}
+              </p>
+            )}
+            <div>
+              <button className="bg-tembi hover:bg-darktembi text-white px-8 py-3 rounded transition-colors duration-300 flex items-center gap-3 font-medium">
+                <div className="relative w-3 h-3">
+                  <Image
+                    src="/images/icons/search-white.png"
+                    alt="Search Icon"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                {t.house.hero.buttonText}
+              </button>
+            </div>
+          </div>
 
-					<div className="absolute bottom-0 left-0 right-0 z-30 transform -translate-y-1/3">
-						<div className="container mx-auto px-6">
-							<div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
-								<div className="grid grid-cols-3 gap-8 text-center divide-x divide-gray-200">
-									<div className="flex flex-col items-center justify-center space-y-0">
-										<span className="text-2xl font-bold text-[#8B9D68]">
-											{t.house.hero.stats[0].num}
-										</span>
-										<span className="text-gray-500 text-xs uppercase tracking-wide">
-											{t.house.hero.stats[0].desc}
-										</span>
-									</div>
+          <div className="absolute bottom-0 left-0 right-0 z-30 transform -translate-y-1/3">
+            <div className="container mx-auto px-6">
+              <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
+                <div className="grid grid-cols-3 gap-8 text-center divide-x divide-gray-200">
+                  <div className="flex flex-col items-center justify-center space-y-0">
+                    <span className="text-2xl font-bold text-[#8B9D68]">
+                      {t.house.hero.stats[0].num}
+                    </span>
+                    <span className="text-gray-500 text-xs uppercase tracking-wide">
+                      {t.house.hero.stats[0].desc}
+                    </span>
+                  </div>
 
-									<div className="flex flex-col items-center justify-center space-y-0">
-										<span className="text-2xl font-bold text-[#8B9D68]">
-											{t.house.hero.stats[1].num}
-										</span>
-										<span className="text-gray-500 text-xs uppercase tracking-wide">
-											{t.house.hero.stats[1].desc}
-										</span>
-									</div>
+                  <div className="flex flex-col items-center justify-center space-y-0">
+                    <span className="text-2xl font-bold text-[#8B9D68]">
+                      {t.house.hero.stats[1].num}
+                    </span>
+                    <span className="text-gray-500 text-xs uppercase tracking-wide">
+                      {t.house.hero.stats[1].desc}
+                    </span>
+                  </div>
 
-									<div className="flex flex-col items-center justify-center space-y-0">
-										<span className="text-2xl font-bold text-[#8B9D68]">
-											{t.house.hero.stats[2].num}
-										</span>
-										<span className="text-gray-500 text-xs uppercase tracking-wide">
-											{t.house.hero.stats[2].desc}
-										</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+                  <div className="flex flex-col items-center justify-center space-y-0">
+                    <span className="text-2xl font-bold text-[#8B9D68]">
+                      {t.house.hero.stats[2].num}
+                    </span>
+                    <span className="text-gray-500 text-xs uppercase tracking-wide">
+                      {t.house.hero.stats[2].desc}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-				<div className="h-16 bg-white"></div>
+        <div className="h-16 bg-white"></div>
 
-				<div className="container mx-auto px-16 pb-20">
-					<ScrollReveal animation="fadeUp" duration={800}>
-						<div className="text-center max-w-3xl mx-auto mb-16">
-							<h2 className="text-4xl font-serif font-bold text-gray-800 mb-4">
-								{t.house.room.title}
-							</h2>
-							<p className="text-gray-600">{t.house.room.desc}</p>
-						</div>
-					</ScrollReveal>
+        <div className="container mx-auto px-16 pb-20">
+          <ScrollReveal animation="fadeUp" duration={800}>
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-4xl font-serif font-bold text-gray-800 mb-4">
+                {t.house.room.title}
+              </h2>
+              <p className="text-gray-600">{t.house.room.desc}</p>
+            </div>
+          </ScrollReveal>
 
-					<div className="space-y-12 mb-20">
-						{/* {featuredRooms.map((room, idx) => (
+          <div className="space-y-12 mb-20">
+            {/* {featuredRooms.map((room, idx) => (
               <ScrollReveal
                 key={room.id}
                 animation="fadeUp"
@@ -173,60 +173,60 @@ export default function Catalog() {
                 />
               </ScrollReveal>
             ))} */}
-						{houseRecommendation.map((house, idx) => (
-							<ScrollReveal
-								key={house.id}
-								animation="fadeUp"
-								delay={idx * 150}
-								duration={800}
-							>
-								<FeaturedRoomCard
-									slug={house.slug || ""}
-									name={house.getTitle(language) || ""}
-									description={house.getDescription(language) || ""}
-									imageUrl={
-										house.imagebanner || "/images/homepage/content3.webp"
-									}
-									size={house.spacious_room || "-"}
-									guests={house.number_guest || 0}
-									recommendationText={t.homepage.accommodation.rec}
-									facilities={house.getFacilities().map((facility) => ({
-										name: facility.getName(language) || "",
-										icon: facility.getIcon() || "",
-									}))}
-								/>
-							</ScrollReveal>
-						))}
-					</div>
+            {houseRecommendation.map((house, idx) => (
+              <ScrollReveal
+                key={house.id}
+                animation="fadeUp"
+                delay={idx * 150}
+                duration={800}
+              >
+                <FeaturedRoomCard
+                  slug={house.slug || ""}
+                  name={house.getTitle(language) || ""}
+                  description={house.getDescription(language) || ""}
+                  imageUrl={
+                    house.imagebanner || "/images/homepage/content3.webp"
+                  }
+                  size={house.spacious_room || "-"}
+                  guests={house.number_guest || 0}
+                  recommendationText={t.homepage.accommodation.rec}
+                  facilities={house.getFacilities().map((facility) => ({
+                    name: facility.getName(language) || "",
+                    icon: facility.icon || "",
+                  }))}
+                />
+              </ScrollReveal>
+            ))}
+          </div>
 
-					<div className={`${getGridClass()} gap-8`}>
-						{houseList.map((house, idx) => (
-							<ScrollReveal
-								key={house.id}
-								animation="fadeUp"
-								delay={idx * 150}
-								duration={800}
-							>
-								<StandardRoomCard
-									slug={house.slug || ""}
-									imageUrl={house.imagebanner || ""}
-									badge={house.tiers_name || t.house.standardCard.buttonText}
-									name={house.getTitle(language) || ""}
-									description={house.getDescription(language) || ""}
-									size={house.spacious_room || ""}
-									facilities={house.getFacilities().map((facility) => ({
-										name: facility.getName(language) || "",
-										icon: facility.getIcon() || "",
-									}))}
-									guests={house.number_guest || 0}
-									galleryCount={house.gallery_count || 0}
-								/>
-							</ScrollReveal>
-						))}
-					</div>
-				</div>
-			</div>
-			<AmenitiesSection />
-		</main>
-	);
+          <div className={`${getGridClass()} gap-8`}>
+            {houseList.map((house, idx) => (
+              <ScrollReveal
+                key={house.id}
+                animation="fadeUp"
+                delay={idx * 150}
+                duration={800}
+              >
+                <StandardRoomCard
+                  slug={house.slug || ""}
+                  imageUrl={house.imagebanner || ""}
+                  badge={house.tiers_name || t.house.standardCard.buttonText}
+                  name={house.getTitle(language) || ""}
+                  description={house.getDescription(language) || ""}
+                  size={house.spacious_room || ""}
+                  facilities={house.getFacilities().map((facility) => ({
+                    name: facility.getName(language) || "",
+                    icon: facility.icon || "",
+                  }))}
+                  guests={house.number_guest || 0}
+                  galleryCount={house.gallery_count || 0}
+                />
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </div>
+      <AmenitiesSection />
+    </main>
+  );
 }

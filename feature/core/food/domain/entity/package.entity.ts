@@ -1,3 +1,7 @@
+import {
+  FACILITY_ICONS,
+  FacilityIcon,
+} from "@/components/admin/constants/facility-icons";
 import { PackageResponse } from "../response/package.response";
 import PackageInclude from "./package-include.entity";
 
@@ -15,7 +19,15 @@ export default class Package {
   description_ind: string;
 
   constructor(
-    data: Omit<Package, "getName" | "getDescription" | "getPackageIncludes" | "getMinimumGuest">
+    data: Omit<
+      Package,
+      | "getName"
+      | "getDescription"
+      | "getPackageIncludes"
+      | "getMinimumGuest"
+      | "getIcon"
+      | "getIconConfig"
+    >,
   ) {
     this.id = data.id;
     this.icon = data.icon;
@@ -30,7 +42,6 @@ export default class Package {
     this.description_ind = data.description_ind;
   }
 
-
   getName(language: "id" | "en"): string {
     return language === "id" ? this.name_ind : this.name_eng;
   }
@@ -44,9 +55,34 @@ export default class Package {
   }
 
   getMinimumGuest(language: "id" | "en"): string {
-    return language === "id" ? `Minimum ${this.minimum_guest} tamu` : `Minimum guests ${this.minimum_guest} Pax`;
+    return language === "id"
+      ? `Minimum ${this.minimum_guest} tamu`
+      : `Minimum guests ${this.minimum_guest} Pax`;
   }
 
+  getIcon(): string {
+    if (!this.icon || this.icon.trim() === "") {
+      return "/images/icons/default-amenity.png";
+    }
+
+    if (this.icon.startsWith("/images") || this.icon.startsWith("http")) {
+      return this.icon;
+    }
+
+    const foundIcon = FACILITY_ICONS.find((item) => item.value === this.icon);
+
+    if (foundIcon) {
+      const fileName = this.icon.replace("Icon", "").toLowerCase();
+      return `/images/icons/${fileName}.png`;
+    }
+
+    return `/images/icons/${this.icon.toLowerCase()}.png`;
+  }
+
+  getIconConfig(): FacilityIcon | undefined {
+    if (!this.icon) return undefined;
+    return FACILITY_ICONS.find((item) => item.value === this.icon);
+  }
 
   static fromResponse(response: PackageResponse): Package {
     return new Package({
@@ -54,7 +90,9 @@ export default class Package {
       icon: response.icon,
       theme: response.is_popular === 1 ? "premium" : "standard",
       color: response.color,
-      includes: response.includes.map((inc) => PackageInclude.fromResponse(inc)),
+      includes: response.includes.map((inc) =>
+        PackageInclude.fromResponse(inc),
+      ),
       name_eng: response.name_eng,
       name_ind: response.name_ind,
       is_popular: response.is_popular === 1,

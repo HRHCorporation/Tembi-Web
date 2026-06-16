@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { FACILITY_ICONS } from "./admin/constants/facility-icons";
 
 export interface FeaturedRoomCardProps {
   slug: string;
@@ -87,19 +88,41 @@ const FeaturedRoomCard: React.FC<FeaturedRoomCardProps> = ({
               </span>
             </div>
 
-            {facilities.slice(0, 2).map((facility, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <div className="relative w-4 h-4 opacity-80">
-                  <Image
-                    src={`/images/icons/${facility.icon}`}
-                    alt={facility.name}
-                    fill
-                    className="object-contain"
-                  />
+            {facilities.slice(0, 2).map((facility, idx) => {
+              const iconConfig = FACILITY_ICONS.find(
+                (item) => item.value === facility.icon,
+              );
+              const IconComponent = iconConfig?.icon;
+
+              return (
+                <div key={idx} className="flex items-center gap-2">
+                  <div className="w-4 h-4 flex items-center justify-center shrink-0">
+                    {IconComponent ? (
+                      <IconComponent
+                        size={18}
+                        color="#c1c8a0"
+                        weight={iconConfig.weight}
+                      />
+                    ) : (
+                      <div className="relative w-4 h-4 opacity-80">
+                        <Image
+                          src={
+                            facility.icon.startsWith("/images") ||
+                            facility.icon.startsWith("http")
+                              ? facility.icon
+                              : `/images/icons/${facility.icon.replace("Icon", "").toLowerCase()}.png`
+                          }
+                          alt={facility.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <span>{facility.name}</span>
                 </div>
-                <span>{facility.name}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="bg-white text-tembi font-bold py-3 px-8 rounded hover:bg-gray-100 transition-colors w-fit text-sm tracking-wide">
             {t.house.featuredCard.buttonText}

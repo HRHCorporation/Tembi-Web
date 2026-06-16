@@ -1,3 +1,4 @@
+import { FACILITY_ICONS, FacilityIcon } from "@/components/admin/constants/facility-icons";
 import { CancellationPolicyResponse } from "../response/cancellation.response";
 
 type CancellationData = {
@@ -28,8 +29,28 @@ export default class CancellationPolicy {
     }
   }
 
-  getIcon(): string | undefined {
-    return this.icon && this.icon.trim() !== "" ? this.icon : undefined;
+getIcon(): string {
+    if (!this.icon || this.icon.trim() === "") {
+      return "/images/icons/default-amenity.png";
+    }
+
+    if (this.icon.startsWith("/images") || this.icon.startsWith("http")) {
+      return this.icon;
+    }
+
+    const foundIcon = FACILITY_ICONS.find((item) => item.value === this.icon);
+
+    if (foundIcon) {
+      const fileName = this.icon.replace("Icon", "").toLowerCase();
+      return `/images/icons/${fileName}.png`;
+    }
+
+    return `/images/icons/${this.icon.toLowerCase()}.png`;
+  }
+
+  getIconConfig(): FacilityIcon | undefined {
+    if (!this.icon) return undefined;
+    return FACILITY_ICONS.find((item) => item.value === this.icon);
   }
 
   static fromResponse(response: CancellationPolicyResponse): CancellationPolicy {
