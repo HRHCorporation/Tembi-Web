@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
             FROM mstr_services
             LEFT JOIN amenities_services 
                 ON amenities_services.services_id = mstr_services.id
+            WHERE mstr_services.is_addition = 0
             GROUP BY 
                 mstr_services.id,
                 mstr_services.icon,
