@@ -14,6 +14,17 @@ import {
     SpeakerHighIcon,
     PawPrintIcon,
     ArmchairIcon,
+    ForkKnifeIcon,
+    PintGlassIcon,
+    BowlFoodIcon,
+    CoffeeIcon,
+    BrandyIcon,
+    IceCreamIcon,
+    CookieIcon,
+    BowlSteamIcon,
+    FishIcon,
+    CookingPotIcon,
+    OnigiriIcon,
 } from "@phosphor-icons/react";
 import type { IconWeight } from "@phosphor-icons/react";
 
@@ -41,4 +52,11 @@ export const FACILITY_ICONS: FacilityIcon[] = [
     { value: "SpeakerHighIcon",       label: "Sound",         icon: SpeakerHighIcon,       color: "#F97316", weight: "fill" },
     { value: "PawPrintIcon",          label: "Pet",           icon: PawPrintIcon,          color: "#A855F7", weight: "fill" },
     { value: "ArmchairIcon",          label: "Terrace",       icon: ArmchairIcon,          color: "#84CC16", weight: "fill" },
+    { value: "ForkKnifeIcon",         label: "Dapur",         icon: ForkKnifeIcon,         color: "#2d4d20", weight: "fill" },
+    { value: "PintGlassIcon",         label: "Minuman",       icon: PintGlassIcon,         color: "#2d4d20", weight: "fill" },
+    { value: "BowlFoodIcon",          label: "Makanan",       icon: BowlFoodIcon,          color: "#2d4d20", weight: "fill" },
+    { value: "CoffeeIcon",            label: "Kopi",          icon: CoffeeIcon,            color: "#2d4d20", weight: "fill" },
+    { value: "BrandyIcon",            label: "Brandy",        icon: BrandyIcon,            color: "#2d4d20", weight: "fill" },
+    { value: "IceCreamIcon",          label: "Ice Cream",     icon: IceCreamIcon,          color: "#2d4d20", weight: "fill" },
+    { value: "CookieIcon",            label: "Kue",           icon: CookieIcon,            color: "#2d4d20", weight: "fill" },
 ];
