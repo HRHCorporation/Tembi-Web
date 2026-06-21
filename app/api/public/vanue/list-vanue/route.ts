@@ -31,39 +31,35 @@ export async function GET(request: NextRequest) {
     try {
         const query = `
             SELECT 
-    vanue.id,
-    vanue.name_ind,
-    vanue.name_eng,
-    vanue.description_ind,
-    vanue.description_eng,
-    vanue.slug,
-    vanue_gallery.image as imagebanner,
-    venue_keys.value_ind as capacity_ind,
-    venue_keys.value_eng as capacity_eng,
-    (
-        SELECT JSON_ARRAYAGG(
-            JSON_OBJECT(
-                'id', f.id,
-                'name_ind', f.name_ind,
-                'name_eng', f.name_eng
-            )
-        )
-        FROM (
-            SELECT mf.id, mf.name_ind, mf.name_eng
-            FROM vanue_facilities vf
-            JOIN mstr_vanue_facilities mf ON mf.id = vf.mstr_vanue_facilities
-            WHERE vf.vanue_id = vanue.id
-            LIMIT 5
-        ) f
-    ) as facilities
-FROM vanue
-LEFT JOIN vanue_gallery 
-    ON vanue_gallery.vanue_id = vanue.id 
-    AND vanue_gallery.is_banner = 1
-LEFT JOIN venue_keys 
-    ON venue_keys.vanue_id = vanue.id 
-    AND (venue_keys.label_ind LIKE '%capacity%' OR venue_keys.label_ind LIKE '%Capacity%')
-ORDER BY vanue.created_at DESC
+                vanue.id,
+                vanue.name_ind,
+                vanue.name_eng,
+                vanue.description_ind,
+                vanue.description_eng,
+                vanue.slug,
+                vanue_gallery.image as imagebanner,
+                venue_keys.value_ind as capacity_ind,
+                venue_keys.value_eng as capacity_eng,
+                (
+                    SELECT JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'id', mf.id,
+                            'name_ind', mf.name_ind,
+                            'name_eng', mf.name_eng
+                        )
+                    )
+                    FROM vanue_facilities vf
+                    JOIN mstr_vanue_facilities mf ON mf.id = vf.mstr_vanue_facilities
+                    WHERE vf.vanue_id = vanue.id
+                ) as facilities
+            FROM vanue
+            LEFT JOIN vanue_gallery 
+                ON vanue_gallery.vanue_id = vanue.id 
+                AND vanue_gallery.is_banner = 1
+            LEFT JOIN venue_keys 
+                ON venue_keys.vanue_id = vanue.id 
+                AND (venue_keys.label_ind LIKE '%capacity%' OR venue_keys.label_ind LIKE '%Capacity%')
+            ORDER BY vanue.created_at DESC
         `;
 
         const params: (number | string)[] = [];
