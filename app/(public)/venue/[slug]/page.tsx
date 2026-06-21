@@ -278,155 +278,107 @@ export default function VenueDetailPage() {
 										<p className="text-[#5C5C5C] text-sm">{venue.bestFor}</p>
 									</div>
 								</div> */}
-								{venueSlug?.keys?.map((key, index) => (
-									<div key={index} className="flex gap-4">
-										<div className="mt-1 relative w-6 h-6 shrink-0">
-											<Image
-												src={`/images/icons/${key.icon}`}
-												alt={key.label_eng}
-												fill
-												className="object-contain"
-											/>
-										</div>
-										{/* <span>
-                      {language === "id" ? key.value_ind : key.value_eng}
-                    </span> */}
-										<div>
-											<p className="font-bold text-[#2C2420] text-sm">
-												{venueSlug?.keys
-													? language === "id"
-														? key.label_ind
-														: key.label_eng
-													: key.label_eng}
-											</p>
-											<p className="text-[#5C5C5C] text-sm">
-												{venueSlug?.keys
-													? language === "id"
-														? key.value_ind
-														: key.value_eng
-													: key.value_eng}
-											</p>
-										</div>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			{venueSlug?.facilities && venueSlug.facilities.length > 0 ? (
-				<section className="py-20 bg-[#F9F9F0]">
-					<div className="container mx-auto px-6">
-						<div className="text-center mb-12">
-							<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
-								{t.detailVenue.features.title}
-							</h2>
-							<p className="text-[#5C5C5C]">
-								{t.detailVenue.features.subtitle}
-							</p>
-						</div>
-						<div className="flex flex-wrap justify-center gap-6 mb-16">
-							{venueSlug?.facilities?.map((facility, idx) => (
-								<div
-									key={idx}
-									className="w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
-								>
-									<FacilityCard
-										iconSrc={
-											facilityIcons[idx] || "/images/icons/check-green.png"
-										}
-										title={facility.getName(language)}
-										description={facility.getDescription(language) || ""}
-									/>
-								</div>
-							))}
-						</div>
-						{venueSlug?.facility_add_ons &&
-						venueSlug.facility_add_ons.length > 0 ? (
-							<div className="bg-white rounded-xl p-8 md:p-10 shadow-sm border border-[#EBEBE0]">
-								<h3 className="text-2xl font-serif text-[#2C2420] mb-8 font-semibold">
-									{t.detailVenue.features.addons.title}
-								</h3>
-								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-									{venueSlug.facility_add_ons.map((addon, idx) => (
-										<AddOnItem
-											key={idx}
-											iconSrc={addon.getIcon()}
-											label={addon.getName(language) || ""}
-										/>
-									))}
-								</div>
-							</div>
-						) : null}
-					</div>
-				</section>
-			) : null}
-			{venueSlug?.all_galleries && venueSlug.all_galleries.length > 0 ? (
-				<section className="py-20 bg-white">
-					<div className="container mx-auto px-6">
-						<div className="flex justify-between items-end mb-8">
-							<div>
-								<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-2">
-									{t.detailVenue.gallery.title}
-								</h2>
-								<p className="text-[#5C5C5C]">
-									{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
-								</p>
-							</div>
-							<button
-								onClick={() => openLightbox(0)}
-								className="text-[#8B9D68] font-semibold hover:underline cursor-pointer text-sm"
-							>
-								{t.houseDetail.viewall}
-							</button>
-						</div>
-						{(() => {
-							const allGalleries = venueSlug?.all_galleries ?? [];
-							const total = Math.min(allGalleries.length, 10);
-							const useLegacyLayout = total <= 5;
-							return (
-								<div className={`grid gap-4 auto-rows-[200px] ${useLegacyLayout ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4" : "grid-cols-3"}`}>
-									{allGalleries.slice(0, 10).map((imageSrc, index) => {
-										const gallerySrc =
-											typeof imageSrc === "string"
-												? imageSrc
-												: (imageSrc as { getImage?: () => string; image?: string; image_url?: string; url?: string }).getImage?.() ||
-												(imageSrc as { image?: string }).image ||
-												(imageSrc as { image_url?: string }).image_url ||
-												(imageSrc as { url?: string }).url ||
-												"";
-										const isFirstLegacy = useLegacyLayout && index === 0;
-										const isLastCentered = !useLegacyLayout && index === total - 1 && total % 3 === 1;
-										return (
-											<div
-												key={index}
-												onClick={() => openLightbox(index)}
-												className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${isFirstLegacy ? "sm:col-span-2 sm:row-span-2" : ""} ${isLastCentered ? "col-start-2" : ""}`}
-											>
-												<Image
-													src={gallerySrc}
-													alt={`Event at ${venueSlug?.getName(language)} ${index + 1}`}
-													fill
-													className="object-cover transition-transform duration-700 group-hover:scale-110"
-												/>
-												<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-											</div>
-										);
-									})}
-								</div>
-							);
-						})()}
-					</div>
-				</section>
-			) : null}
-			<section className="py-20 bg-[#F9F9F0]">
-				<div className="container mx-auto px-6">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
-							{t.detailVenue.service.title}
-						</h2>
-						<p className="text-[#5C5C5C]">{t.detailVenue.service.subtitle}</p>
-					</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-4">
+                  {venueSlug?.keys?.map((key, index) => {
+                    const iconConfig = key.getIconConfig?.() || null;
+                    const IconComponent = iconConfig?.icon;
+
+                    return (
+                      <div key={index} className="flex gap-4">
+                        <div className="mt-1 w-6 h-6 flex items-center justify-center relative shrink-0">
+                          {IconComponent ? (
+                            React.createElement(IconComponent, {
+                              size: 22,
+                              color: "#8FA876",
+                              weight: "fill",
+                            })
+                          ) : (
+                            <div className="relative w-6 h-6">
+                              <Image
+                                src={`/images/icons/${key.icon}`}
+                                alt={key.label_eng}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-bold text-[#2C2420] text-sm">
+                            {language === "id" ? key.label_ind : key.label_eng}
+                          </p>
+                          <p className="text-[#5C5C5C] text-sm">
+                            {language === "id" ? key.value_ind : key.value_eng}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {venueSlug?.facilities && venueSlug.facilities.length > 0 ? (
+          <section className="py-20 bg-[#F9F9F0]">
+            <div className="container mx-auto px-6">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
+                  {t.detailVenue.features.title}
+                </h2>
+                <p className="text-[#5C5C5C]">
+                  {t.detailVenue.features.subtitle}
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-6 mb-16">
+                {venueSlug.facilities.map((facility, idx) => {
+                  const iconConfig = facility.getIconConfig?.() || null;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] flex flex-col"
+                    >
+                      <FacilityCard
+                        icon={iconConfig?.icon}
+                        iconFallbackSrc={
+                          facilityIcons[idx] || "/images/icons/check-green.png"
+                        }
+                        title={facility.getName(language)}
+                        description={facility.getDescription(language) || ""}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+
+              {venueSlug?.facility_add_ons &&
+              venueSlug.facility_add_ons.length > 0 ? (
+                <div className="bg-white rounded-xl p-8 md:p-10 shadow-sm border border-[#EBEBE0]">
+                  <h3 className="text-2xl font-serif text-[#2C2420] mb-8 font-semibold">
+                    {t.detailVenue.features.addons.title}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {venueSlug.facility_add_ons.map((addon, idx) => {
+                      const iconConfig = addon.getIconConfig?.() || null;
+
+                      return (
+                        <AddOnItem
+                          key={idx}
+                          icon={iconConfig?.icon}
+                          iconFallbackSrc={
+                            addon.getIcon() || "/images/icons/check-green.png"
+                          }
+                          label={addon.getName(language) || ""}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
 
 					<div className="bg-white rounded-2xl shadow-sm border border-[#EBEBE0] overflow-hidden max-w-5xl mx-auto">
 						<div className="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-gray-100 bg-white font-serif text-[#2C2420] font-bold">
@@ -843,39 +795,78 @@ export default function VenueDetailPage() {
 }
 
 const FacilityCard = ({
-	iconSrc,
-	title,
-	description,
+  icon: IconComponent,
+  iconFallbackSrc,
+  title,
+  description,
 }: {
-	iconSrc: string;
-	title: string;
-	description: string;
+  icon: React.ElementType | null | undefined;
+  iconFallbackSrc: string;
+  title: string;
+  description: string;
 }) => {
-	return (
-		<div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center text-center border border-[#EBEBE0]">
-			<div className="w-16 h-16 rounded-full bg-[#F4F6E6] flex items-center justify-center mb-6">
-				<div className="relative w-8 h-8">
-					<Image src={iconSrc} alt={title} fill className="object-contain" />
-				</div>
-			</div>
-
-			<h3 className="text-lg font-serif text-[#2C2420] font-bold mb-3">
-				{title}
-			</h3>
-			<p className="text-[#5C5C5C] text-sm leading-relaxed">{description}</p>
-		</div>
-	);
+  return (
+    <div className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-center text-center border border-[#EBEBE0] h-full">
+      <div className="w-16 h-16 rounded-full bg-[#F4F6E6] flex items-center justify-center mb-6 shrink-0">
+        <div className="w-8 h-8 flex items-center justify-center relative">
+          {IconComponent ? (
+            React.createElement(IconComponent, {
+              size: 28,
+              color: "#8FA876",
+              weight: "fill",
+            })
+          ) : (
+            <div className="relative w-8 h-8">
+              <Image
+                src={iconFallbackSrc}
+                alt={title}
+                fill
+                className="object-contain"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+      <h3 className="text-lg font-serif text-[#2C2420] font-bold mb-3">
+        {title}
+      </h3>
+      <p className="text-[#5C5C5C] text-sm leading-relaxed">{description}</p>
+    </div>
+  );
 };
 
-const AddOnItem = ({ iconSrc, label }: { iconSrc: string; label: string }) => {
-	return (
-		<div className="flex items-center gap-4">
-			<div className="relative w-6 h-6 shrink-0">
-				<Image src={iconSrc} alt={label} fill className="object-contain" />
-			</div>
-			<span className="text-[#5C5C5C] font-medium text-sm md:text-base">
-				{label}
-			</span>
-		</div>
-	);
+const AddOnItem = ({
+  icon: IconComponent,
+  iconFallbackSrc,
+  label,
+}: {
+  icon: React.ElementType | null | undefined;
+  iconFallbackSrc: string;
+  label: string;
+}) => {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="w-6 h-6 flex items-center justify-center relative shrink-0">
+        {IconComponent ? (
+          React.createElement(IconComponent, {
+            size: 22,
+            color: "#8FA876",
+            weight: "fill",
+          })
+        ) : (
+          <div className="relative w-6 h-6">
+            <Image
+              src={iconFallbackSrc}
+              alt={label}
+              fill
+              className="object-contain"
+            />
+          </div>
+        )}
+      </div>
+      <span className="text-[#5C5C5C] font-medium text-sm md:text-base">
+        {label}
+      </span>
+    </div>
+  );
 };

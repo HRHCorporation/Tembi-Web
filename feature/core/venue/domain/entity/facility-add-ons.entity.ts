@@ -13,11 +13,18 @@ export default class FacilityAddOns {
   id: number;
   icon?: string;
   name_ind?: string;
-  name_eng?: string
-  description_eng?: string
+  name_eng?: string;
+  description_eng?: string;
   description_ind?: string;
 
-  constructor({ id, icon, name_ind, name_eng, description_eng, description_ind }: FacilityAddOnsData) {
+  constructor({
+    id,
+    icon,
+    name_ind,
+    name_eng,
+    description_eng,
+    description_ind,
+  }: FacilityAddOnsData) {
     this.id = id;
     this.icon = icon;
     this.name_ind = name_ind;
