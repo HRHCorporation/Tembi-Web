@@ -7,6 +7,7 @@ import { ArrowLeft, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useHouseContext } from "@/app/context/HouseContext";
+import { FACILITY_ICONS } from "@/components/admin/constants/facility-icons";
 
 export default function RoomDetail() {
   const params = useParams();
@@ -27,13 +28,14 @@ export default function RoomDetail() {
   const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
   const goPrev = useCallback(
-    () => setLightboxIndex((i) => (i - 1 + galleries.length) % galleries.length),
-    [galleries.length]
+    () =>
+      setLightboxIndex((i) => (i - 1 + galleries.length) % galleries.length),
+    [galleries.length],
   );
 
   const goNext = useCallback(
     () => setLightboxIndex((i) => (i + 1) % galleries.length),
-    [galleries.length]
+    [galleries.length],
   );
 
   useEffect(() => {
@@ -93,7 +95,6 @@ export default function RoomDetail() {
       </section>
 
       <div className="container mx-auto px-4 md:px-10 py-12 space-y-8">
-        {/* --- MAIN INFO SECTION --- */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10">
           <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
             <div>
@@ -166,29 +167,43 @@ export default function RoomDetail() {
               {t.houseDetail.facilities}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {houseSlug?.facilities.map((amenity, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-4 bg-[#F8F9FA] rounded-lg"
-                >
-                  <div className="relative w-5 h-5 text-[#8B9D68] opacity-80">
-                    <Image
-                      src={amenity.getIcon()}
-                      alt={amenity.getName(language)}
-                      fill
-                      className="object-contain"
-                    />
+              {houseSlug?.facilities.map((amenity, index) => {
+                const iconConfig = amenity.getIconConfig();
+                const IconComponent = iconConfig?.icon;
+
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 p-4 bg-[#F8F9FA] rounded-lg"
+                  >
+                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                      {IconComponent ? (
+                        <IconComponent
+                          size={20}
+                          color="#8B9D68"
+                          weight="fill"
+                        />
+                      ) : (
+                        <div className="relative w-5 h-5 opacity-80">
+                          <Image
+                            src={amenity.getIcon()}
+                            alt={amenity.getName(language)}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-gray-600 text-sm font-medium">
+                      {amenity.getName(language)}
+                    </span>
                   </div>
-                  <span className="text-gray-600 text-sm font-medium">
-                    {amenity.getName(language)}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* --- GALLERY SECTION --- */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10">
           <div className="flex justify-between items-end mb-8">
             <h3 className="text-2xl font-bold text-gray-800 font-serif">
@@ -234,32 +249,47 @@ export default function RoomDetail() {
           })()}
         </section>
 
-        {/* --- POLICY & HOUSE RULES SECTION (FIXED RESPONSIVE) --- */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10">
           <h3 className="text-2xl font-bold text-gray-800 mb-8 font-serif">
             {t.houseDetail.policy.title}
           </h3>
 
-          {/* Perbaikan: Menggabungkan nested grid yang merusak layout */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
             <div>
-              <h4 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider text-gray-400">
+              <h4 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider">
                 Check-in & Check-out
               </h4>
               <ul className="space-y-4 text-gray-600 text-sm">
-                {houseSlug?.policies?.CHECKIN_CHECKOUT?.map((policy, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <div className="relative w-4 h-4 opacity-70 shrink-0">
-                      <Image
-                        src={`/images/icons/${policy.icon}`}
-                        alt={policy.getName(language)}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                    <span>{policy.getName(language)}</span>
-                  </li>
-                ))}
+                {houseSlug?.policies?.CHECKIN_CHECKOUT?.map((policy, index) => {
+                  const iconConfig = FACILITY_ICONS.find(
+                    (item) => item.value === policy.icon,
+                  );
+                  const IconComponent = iconConfig?.icon;
+
+                  return (
+                    <li key={index} className="flex items-center gap-3">
+                      <div className="w-4 h-4 flex items-center justify-center shrink-0">
+                        {IconComponent ? (
+                          <IconComponent
+                            size={16}
+                            color="#8B9D68"
+                            weight="fill"
+                          />
+                        ) : (
+                          <div className="relative w-4 h-4 opacity-70">
+                            <Image
+                              src={`/images/icons/${policy.icon}`}
+                              alt={policy.getName(language)}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <span>{policy.getName(language)}</span>
+                    </li>
+                  );
+                })}
                 <li className="flex items-center gap-3">
                   <div className="relative w-4 h-4 opacity-70 shrink-0">
                     <Image
@@ -275,24 +305,41 @@ export default function RoomDetail() {
             </div>
 
             <div>
-              <h4 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider text-gray-400">
+              <h4 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider">
                 {t.houseDetail.policy.cancelPolicy}
               </h4>
               <ul className="space-y-4 text-gray-600 text-sm">
                 {houseSlug?.policies?.CANCELLATION_POLICY?.map(
-                  (policy, index) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <div className="relative w-4 h-4 shrink-0">
-                        <Image
-                          src={`/images/icons/${policy.icon}`}
-                          alt={policy.getName(language)}
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                      <span>{policy.getName(language)}</span>
-                    </li>
-                  ),
+                  (policy, index) => {
+                    const iconConfig = FACILITY_ICONS.find(
+                      (item) => item.value === policy.icon,
+                    );
+                    const IconComponent = iconConfig?.icon;
+
+                    return (
+                      <li key={index} className="flex items-center gap-3">
+                        <div className="w-4 h-4 flex items-center justify-center shrink-0">
+                          {IconComponent ? (
+                            <IconComponent
+                              size={16}
+                              color="#8B9D68"
+                              weight="fill"
+                            />
+                          ) : (
+                            <div className="relative w-4 h-4">
+                              <Image
+                                src={`/images/icons/${policy.icon}`}
+                                alt={policy.getName(language)}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <span>{policy.getName(language)}</span>
+                      </li>
+                    );
+                  },
                 )}
               </ul>
             </div>
@@ -301,29 +348,44 @@ export default function RoomDetail() {
           <hr className="border-gray-100 mb-8" />
 
           <div>
-            <h4 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider text-gray-400">
+            <h4 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider">
               {t.houseDetail.houseRules.title}
             </h4>
-            {/* Perbaikan: Menggunakan grid untuk kerapian susunan rule ikon di mobile */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap gap-4 md:gap-8 text-gray-600 text-sm">
-              {houseSlug?.house_rules?.map((rule, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="relative w-4 h-4 opacity-60 shrink-0">
-                    <Image
-                      src={`/images/icons/${rule.icon}`}
-                      alt={rule.getName(language)}
-                      fill
-                      className="object-contain"
-                    />
+              {houseSlug?.house_rules?.map((rule, index) => {
+                const iconConfig = FACILITY_ICONS.find(
+                  (item) => item.value === rule.icon,
+                );
+                const IconComponent = iconConfig?.icon;
+
+                return (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-4 h-4 flex items-center justify-center shrink-0">
+                      {IconComponent ? (
+                        <IconComponent
+                          size={16}
+                          color="#8B9D68"
+                          weight="fill"
+                        />
+                      ) : (
+                        <div className="relative w-4 h-4 opacity-60">
+                          <Image
+                            src={`/images/icons/${rule.icon}`}
+                            alt={rule.getName(language)}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <span>{rule.getName(language)}</span>
                   </div>
-                  <span>{rule.getName(language)}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* --- BOTTOM ACTION BAR (FIXED RESPONSIVE) --- */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:px-10 md:py-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
@@ -331,7 +393,7 @@ export default function RoomDetail() {
                 {houseSlug?.getTitle(language) || "House Name"}
               </h3>
               <p className="text-gray-400 text-xs mt-1 hidden sm:block">
-                {t.houseDetail.houseRules.title} & {t.houseDetail.policy.title}{" "}
+                {t.houseDetail.houseRules.title} & {t.houseDetail.policy.title}
                 apply.
               </p>
             </div>
@@ -344,27 +406,14 @@ export default function RoomDetail() {
               </p>
             </div>
           </div>
-
-          {/* Uncomment & edit safely jika tombol booking diaktifkan kembali */}
-          {/* <div className="mt-6">
-						<Link
-							href="/booking"
-							className="block w-full bg-[#8B9D68] hover:bg-[#738354] text-white text-lg font-bold py-4 rounded-lg shadow-sm transition-all duration-300 text-center"
-						>
-							{t.houseDetail.booking}
-						</Link>
-					</div>
-					*/}
         </section>
       </div>
 
-      {/* --- LIGHTBOX --- */}
       {lightboxOpen && galleries.length > 0 && (
         <div
           className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
           onClick={closeLightbox}
         >
-          {/* Top bar: judul kiri + X kanan */}
           <div
             className="flex items-center justify-between px-6 py-3 shrink-0 border-b border-white/10"
             onClick={(e) => e.stopPropagation()}
@@ -380,40 +429,44 @@ export default function RoomDetail() {
             </button>
           </div>
 
-          {/* Area tengah: gambar + arrows absolute */}
           <div className="relative flex-1 flex items-center justify-center min-h-0 py-4">
-            {/* Arrow kiri */}
             <button
-              onClick={(e) => { e.stopPropagation(); goPrev(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                goPrev();
+              }}
               className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
             >
               <ChevronLeft size={30} />
             </button>
 
-            {/* Gambar utama */}
             <div
               className="relative h-full w-full max-w-2xl mx-16"
               onClick={(e) => e.stopPropagation()}
             >
               <Image
                 key={lightboxIndex}
-                src={galleries[lightboxIndex]?.image || "/images/homepage/content3.webp"}
+                src={
+                  galleries[lightboxIndex]?.image ||
+                  "/images/homepage/content3.webp"
+                }
                 alt={`${houseSlug?.getTitle(language)} ${lightboxIndex + 1}`}
                 fill
                 className="object-contain"
               />
             </div>
 
-            {/* Arrow kanan */}
             <button
-              onClick={(e) => { e.stopPropagation(); goNext(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                goNext();
+              }}
               className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors z-10"
             >
               <ChevronRight size={30} />
             </button>
           </div>
 
-          {/* Bawah gambar: counter kanan */}
           <div
             className="flex items-center justify-end px-6 py-2 shrink-0"
             onClick={(e) => e.stopPropagation()}
@@ -423,7 +476,6 @@ export default function RoomDetail() {
             </span>
           </div>
 
-          {/* Thumbnail strip */}
           <div
             className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
             onClick={(e) => e.stopPropagation()}

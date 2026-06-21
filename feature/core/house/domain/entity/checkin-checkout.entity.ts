@@ -1,3 +1,4 @@
+import { FACILITY_ICONS, FacilityIcon } from "@/components/admin/constants/facility-icons";
 import { CheckinCheckoutPolicyResponse } from "../response/checkin-checkout.response";
 
 type CheckinCheckoutPolicyData = {
@@ -5,7 +6,7 @@ type CheckinCheckoutPolicyData = {
   icon?: string;
   name_eng?: string;
   name_ind?: string;
-}
+};
 
 export default class CheckinCheckoutPolicy {
   id: number;
@@ -28,16 +29,38 @@ export default class CheckinCheckoutPolicy {
     }
   }
 
-  getIcon(): string | undefined {
-    return this.icon && this.icon.trim() !== "" ? this.icon : undefined;
+  getIcon(): string {
+    if (!this.icon || this.icon.trim() === "") {
+      return "/images/icons/default-amenity.png";
+    }
+
+    if (this.icon.startsWith("/images") || this.icon.startsWith("http")) {
+      return this.icon;
+    }
+
+    const foundIcon = FACILITY_ICONS.find((item) => item.value === this.icon);
+
+    if (foundIcon) {
+      const fileName = this.icon.replace("Icon", "").toLowerCase();
+      return `/images/icons/${fileName}.png`;
+    }
+
+    return `/images/icons/${this.icon.toLowerCase()}.png`;
   }
 
-  static fromResponse(response: CheckinCheckoutPolicyResponse): CheckinCheckoutPolicy {
+  getIconConfig(): FacilityIcon | undefined {
+    if (!this.icon) return undefined;
+    return FACILITY_ICONS.find((item) => item.value === this.icon);
+  }
+
+  static fromResponse(
+    response: CheckinCheckoutPolicyResponse,
+  ): CheckinCheckoutPolicy {
     return new CheckinCheckoutPolicy({
       id: response.id,
       icon: response.icon,
       name_eng: response.name_eng,
-      name_ind: response.name_ind
+      name_ind: response.name_ind,
     });
   }
 }

@@ -1,3 +1,4 @@
+import { FACILITY_ICONS, FacilityIcon } from "@/components/admin/constants/facility-icons";
 import { ServicesResponse } from "../response/services.response";
 import Amenities from "./amenities.entity";
 
@@ -44,11 +45,23 @@ export default class Services {
       return "/images/icons/default-amenity.png";
     }
 
-    if (this.icon.startsWith("/images")) {
+    if (this.icon.startsWith("/images") || this.icon.startsWith("http")) {
       return this.icon;
     }
 
-    return `/images/icons/${this.icon}`;
+    const foundIcon = FACILITY_ICONS.find((item) => item.value === this.icon);
+
+    if (foundIcon) {
+      const fileName = this.icon.replace("Icon", "").toLowerCase();
+      return `/images/icons/${fileName}.png`;
+    }
+
+    return `/images/icons/${this.icon.toLowerCase()}.png`;
+  }
+
+  getIconConfig(): FacilityIcon | undefined {
+    if (!this.icon) return undefined;
+    return FACILITY_ICONS.find((item) => item.value === this.icon);
   }
 
   hasIcon(): boolean {
