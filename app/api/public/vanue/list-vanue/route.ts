@@ -43,14 +43,19 @@ export async function GET(request: NextRequest) {
                 (
                     SELECT JSON_ARRAYAGG(
                         JSON_OBJECT(
-                            'id', mf.id,
-                            'name_ind', mf.name_ind,
-                            'name_eng', mf.name_eng
+                            'id', f.id,
+                            'name_ind', f.name_ind,
+                            'name_eng', f.name_eng
                         )
                     )
-                    FROM vanue_facilities vf
-                    JOIN mstr_vanue_facilities mf ON mf.id = vf.mstr_vanue_facilities
-                    WHERE vf.vanue_id = vanue.id
+                    FROM (
+                        SELECT mf.id, mf.name_ind, mf.name_eng
+                        FROM vanue_facilities vf
+                        JOIN mstr_vanue_facilities mf ON mf.id = vf.mstr_vanue_facilities
+                        WHERE vf.vanue_id = vanue.id
+                        ORDER BY vf.created_at DESC
+                        LIMIT 5
+                    ) f
                 ) as facilities
             FROM vanue
             LEFT JOIN vanue_gallery 
