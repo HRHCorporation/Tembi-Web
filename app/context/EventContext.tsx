@@ -2,9 +2,14 @@
 import React, {
 	createContext,
 	useContext,
+	useCallback,
 	useState,
 	useEffect,
 } from "react";
+import Banner from "@/feature/core/banner/domain/entity/banner.entity";
+import fetchEventBannersUsecase from "@/feature/core/banner/domain/usecase/fetch-event-banners.usecase";
+import { pipe } from "fp-ts/lib/function";
+import { fold } from "fp-ts/lib/Either";
 
 interface Event {
 	id: number;
@@ -25,6 +30,9 @@ interface EventContextType {
 	eventsLoading: boolean;
 	eventsError: string | null;
 	refreshEvents: () => void;
+	eventBanner: Banner | null;
+	eventBannerLoading: boolean;
+	eventBannerError: string | null;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -33,6 +41,10 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
 	const [events, setEvents] = useState<Event[]>([]);
 	const [eventsLoading, setEventsLoading] = useState(true);
 	const [eventsError, setEventsError] = useState<string | null>(null);
+
+	const [eventBanner, setEventBanner] = useState<Banner | null>(null);
+	const [eventBannerLoading, setEventBannerLoading] = useState(true);
+	const [eventBannerError, setEventBannerError] = useState<string | null>(null);
 
 	const loadEvents = async () => {
 		setEventsLoading(true);
@@ -55,9 +67,32 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
 		}
 	};
 
+	const loadBanner = useCallback(async () => {
+		setEventBannerLoading(true);
+		setEventBanner(null);
+		setEventBannerError(null);
+
+		const result = await fetchEventBannersUsecase()();
+
+		pipe(
+			result,
+			fold(
+				(error) => {
+					setEventBannerError(error.message);
+					setEventBannerLoading(false);
+				},
+				(banners) => {
+					setEventBanner(banners.length > 0 ? banners[0] : null);
+					setEventBannerLoading(false);
+				},
+			),
+		);
+	}, []);
+
 	useEffect(() => {
 		loadEvents();
-	}, []);
+		loadBanner();
+	}, [loadBanner]);
 
 	const refreshEvents = () => {
 		loadEvents();
@@ -70,6 +105,9 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
 				eventsLoading,
 				eventsError,
 				refreshEvents,
+				eventBanner,
+				eventBannerLoading,
+				eventBannerError,
 			}}
 		>
 			{children}

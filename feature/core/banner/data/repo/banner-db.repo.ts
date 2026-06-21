@@ -39,6 +39,14 @@ export default class BannerDbRepo implements BannerRepo {
     return this.fetchBanners(this.endpoint.room, "room");
   }
 
+  fetchEventBanners(): ApiTask<Banner[]> {
+    return this.fetchBanners(this.endpoint.event, "event");
+  }
+
+  fetchBlogBanners(): ApiTask<Banner[]> {
+    return this.fetchBanners(this.endpoint.blog, "blog");
+  }
+
   private fetchBanners(endpoint: string, type: string): ApiTask<Banner[]> {
     return pipe(
       this.fetchHandler.fetchWithoutAuthWithRepsonseStatus({

@@ -364,48 +364,58 @@ export default function VenueDetailPage() {
 			{venueSlug?.all_galleries && venueSlug.all_galleries.length > 0 ? (
 				<section className="py-20 bg-white">
 					<div className="container mx-auto px-6">
-						<div className="text-center mb-12">
-							<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
-								{t.detailVenue.gallery.title}
-							</h2>
-							<p className="text-[#5C5C5C]">
-								{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
-							</p>
+						<div className="flex justify-between items-end mb-8">
+							<div>
+								<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-2">
+									{t.detailVenue.gallery.title}
+								</h2>
+								<p className="text-[#5C5C5C]">
+									{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
+								</p>
+							</div>
+							<button
+								onClick={() => openLightbox(0)}
+								className="text-[#8B9D68] font-semibold hover:underline cursor-pointer text-sm"
+							>
+								{t.houseDetail.viewall}
+							</button>
 						</div>
-						<div className="flex flex-wrap justify-center gap-6">
-							{venueSlug?.all_galleries?.map((imageSrc, index) => {
-								const gallerySrc =
-									typeof imageSrc === "string"
-										? imageSrc
-										: (
-												imageSrc as {
-													getImage?: () => string;
-													image?: string;
-													image_url?: string;
-													url?: string;
-												}
-											).getImage?.() ||
-											(imageSrc as { image?: string }).image ||
-											(imageSrc as { image_url?: string }).image_url ||
-											(imageSrc as { url?: string }).url ||
-											"";
-								return (
-									<div
-										key={index}
-										onClick={() => openLightbox(index)}
-										className="relative h-64 md:h-72 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
-									>
-										<Image
-											src={gallerySrc}
-											alt={`Event at ${venueSlug?.getName(language)} ${index + 1}`}
-											fill
-											className="object-cover transition-transform duration-700 group-hover:scale-110"
-										/>
-										<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-									</div>
-								);
-							})}
-						</div>
+						{(() => {
+							const allGalleries = venueSlug?.all_galleries ?? [];
+							const total = Math.min(allGalleries.length, 10);
+							const useLegacyLayout = total <= 5;
+							return (
+								<div className={`grid gap-4 auto-rows-[200px] ${useLegacyLayout ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4" : "grid-cols-3"}`}>
+									{allGalleries.slice(0, 10).map((imageSrc, index) => {
+										const gallerySrc =
+											typeof imageSrc === "string"
+												? imageSrc
+												: (imageSrc as { getImage?: () => string; image?: string; image_url?: string; url?: string }).getImage?.() ||
+												(imageSrc as { image?: string }).image ||
+												(imageSrc as { image_url?: string }).image_url ||
+												(imageSrc as { url?: string }).url ||
+												"";
+										const isFirstLegacy = useLegacyLayout && index === 0;
+										const isLastCentered = !useLegacyLayout && index === total - 1 && total % 3 === 1;
+										return (
+											<div
+												key={index}
+												onClick={() => openLightbox(index)}
+												className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${isFirstLegacy ? "sm:col-span-2 sm:row-span-2" : ""} ${isLastCentered ? "col-start-2" : ""}`}
+											>
+												<Image
+													src={gallerySrc}
+													alt={`Event at ${venueSlug?.getName(language)} ${index + 1}`}
+													fill
+													className="object-cover transition-transform duration-700 group-hover:scale-110"
+												/>
+												<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+											</div>
+										);
+									})}
+								</div>
+							);
+						})()}
 					</div>
 				</section>
 			) : null}
