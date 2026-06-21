@@ -244,7 +244,7 @@ export default function VenueDetailPage() {
 								{t.detailVenue.intro.cardTitle}
 							</h3>
 
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-4">
+							
 								{/* <div className="flex gap-4">
 									<div className="mt-1 relative w-6 h-6 shrink-0">
 										<Image
