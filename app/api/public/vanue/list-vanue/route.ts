@@ -43,20 +43,14 @@ export async function GET(request: NextRequest) {
                 (
                     SELECT JSON_ARRAYAGG(
                         JSON_OBJECT(
-                            'id', ranked.id,
-                            'name_ind', ranked.name_ind,
-                            'name_eng', ranked.name_eng
+                            'id', mf.id,
+                            'name_ind', mf.name_ind,
+                            'name_eng', mf.name_eng
                         )
                     )
-                    FROM (
-                        SELECT 
-                            mf.id, mf.name_ind, mf.name_eng,
-                            ROW_NUMBER() OVER (PARTITION BY vf.vanue_id ORDER BY vf.created_at DESC) as rn
-                        FROM vanue_facilities vf
-                        JOIN mstr_vanue_facilities mf ON mf.id = vf.mstr_vanue_facilities
-                        WHERE vf.vanue_id = vanue.id
-                    ) ranked
-                    WHERE ranked.rn <= 5
+                    FROM vanue_facilities vf
+                    JOIN mstr_vanue_facilities mf ON mf.id = vf.mstr_vanue_facilities
+                    WHERE vf.vanue_id = vanue.id
                 ) as facilities
             FROM vanue
             LEFT JOIN vanue_gallery 
