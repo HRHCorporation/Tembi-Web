@@ -102,7 +102,7 @@ export default class RoomSlug {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
     }).format(this.getRoomPrice());
   }
 

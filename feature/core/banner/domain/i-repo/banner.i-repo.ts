@@ -7,6 +7,8 @@ export default interface BannerRepo {
   fetchFoodBanners(): ApiTask<Banner[]>;
   fetchCollectionBanners(): ApiTask<Banner[]>;
   fetchRoomBanners(): ApiTask<Banner[]>;
+  fetchEventBanners(): ApiTask<Banner[]>;
+  fetchBlogBanners(): ApiTask<Banner[]>;
 }
 
 export const bannerRepoKey = 'bannerRepoKey';

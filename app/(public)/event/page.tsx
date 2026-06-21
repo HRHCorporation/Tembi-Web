@@ -9,7 +9,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 export default function EventPage() {
   const { language } = useLanguage();
-  const { events, eventsLoading, eventsError } = useEventContext();
+  const { events, eventsLoading, eventsError, eventBanner, eventBannerLoading } = useEventContext();
   const [filter, setFilter] = useState<'upcoming' | 'past'>('upcoming');
 
   // Filter events by date
@@ -41,16 +41,20 @@ export default function EventPage() {
     <main className="w-full min-h-screen bg-white">
       {/* HERO SECTION */}
       <section className="relative h-screen w-full overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2400&auto=format&fit=crop"
-            alt="Events & Workshops"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-        </div>
+        {eventBannerLoading ? (
+          <div className="w-full h-full bg-gray-300 animate-pulse" />
+        ) : (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={eventBanner?.image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2400&auto=format&fit=crop"}
+              alt="Events & Workshops"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+          </div>
+        )}
 
         <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-24">
           <div className="max-w-3xl flex flex-col items-start text-left">
@@ -66,16 +70,21 @@ export default function EventPage() {
             </div>
 
             <h1 className="font-serif text-6xl font-bold text-white mb-6 leading-none drop-shadow-lg">
-              Cultural <br /> Journey
+              {eventBanner?.getTitle(language) || (language === 'id' ? 'Event Kami' : 'Our Events')}
             </h1>
 
-            <p className="font-serif italic text-lg text-gray-200 mb-6 tracking-wide">
-              Experience Javanese Heritage & Traditions
-            </p>
+            {eventBanner?.getSubtitle(language) && (
+              <p className="font-serif italic text-lg text-gray-200 mb-6 tracking-wide">
+                {eventBanner.getSubtitle(language)}
+              </p>
+            )}
 
-            <p className="text-base text-gray-300 leading-relaxed max-w-xl">
-              Immerse yourself in Javanese culture through our curated events, workshops, and celebrations
-            </p>
+            {eventBanner?.getDescription(language) && (
+              <div
+                className="text-base text-gray-300 leading-relaxed max-w-xl"
+                dangerouslySetInnerHTML={{ __html: eventBanner.getDescription(language) }}
+              />
+            )}
           </div>
 
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
