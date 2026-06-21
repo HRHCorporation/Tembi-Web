@@ -1,3 +1,4 @@
+import { FACILITY_ICONS, FacilityIcon } from "@/components/admin/constants/facility-icons";
 import { FacilityAddOnsResponse } from "../response/facility-add-ons.response";
 
 
@@ -31,6 +32,11 @@ export default class FacilityAddOns {
     this.name_eng = name_eng;
     this.description_eng = description_eng;
     this.description_ind = description_ind;
+  }
+
+  getIconConfig(): FacilityIcon | undefined {
+    if (!this.icon) return undefined;
+    return FACILITY_ICONS.find((item) => item.value === this.icon);
   }
 
   getName(language: "id" | "en"): string | undefined {
