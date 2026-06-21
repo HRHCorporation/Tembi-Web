@@ -24,6 +24,14 @@ export default class BannerEndpoint extends Endpoint {
     return this.buildEndpoint(`${this.BASE_PATH}/venue`);
   }
 
+  get event() {
+    return this.buildEndpoint(`${this.BASE_PATH}/event`);
+  }
+
+  get blog() {
+    return this.buildEndpoint(`${this.BASE_PATH}/blog`);
+  }
+
   constructor() {
     super({
       baseUrl: publicConfigs.api.baseUrl,
