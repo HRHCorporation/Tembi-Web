@@ -147,7 +147,7 @@ export default function CollectionsPage() {
 															item={{
 																id: item.id,
 																imageUrl: item.hasImage()
-																	? `${process.env.NEXT_PUBLIC_API_URL || ""}${item.image}`
+																	? `${process.env.NEXT_PUBLIC_URL || ""}${item.image}`
 																	: "/images/placeholder.jpg",
 																title: item.getName(language),
 																description: item.getDescription(language),
