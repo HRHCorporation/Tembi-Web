@@ -19,6 +19,7 @@ export default function RoomDetail() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const galleries = houseSlug?.galleries ?? [];
+  const lightboxGalleries = galleries.slice(0, 10);
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -28,14 +29,13 @@ export default function RoomDetail() {
   const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
   const goPrev = useCallback(
-    () =>
-      setLightboxIndex((i) => (i - 1 + galleries.length) % galleries.length),
-    [galleries.length],
+    () => setLightboxIndex((i) => (i - 1 + lightboxGalleries.length) % lightboxGalleries.length),
+    [lightboxGalleries.length]
   );
 
   const goNext = useCallback(
-    () => setLightboxIndex((i) => (i + 1) % galleries.length),
-    [galleries.length],
+    () => setLightboxIndex((i) => (i + 1) % lightboxGalleries.length),
+    [lightboxGalleries.length]
   );
 
   useEffect(() => {
@@ -218,20 +218,18 @@ export default function RoomDetail() {
           </div>
 
           {(() => {
-            const total = Math.min(galleries.length, 10);
+            const total = Math.min(galleries.length, 6);
             const useLegacyLayout = total <= 5;
             return (
               <div className={`grid gap-4 auto-rows-[200px] ${useLegacyLayout ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4" : "grid-cols-3"}`}>
-                {galleries.slice(0, 10).map((imageSrc, index) => {
+                {galleries.slice(0, 6).map((imageSrc, index) => {
                   const isFirstLegacy = useLegacyLayout && index === 0;
-                  const isLastCentered = !useLegacyLayout && index === total - 1 && total % 3 === 1;
                   return (
                     <div
                       key={index}
                       onClick={() => openLightbox(index)}
                       className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer
                         ${isFirstLegacy ? "sm:col-span-2 sm:row-span-2" : ""}
-                        ${isLastCentered ? "col-start-2" : ""}
                       `}
                     >
                       <Image
@@ -409,7 +407,8 @@ export default function RoomDetail() {
         </section>
       </div>
 
-      {lightboxOpen && galleries.length > 0 && (
+      {/* --- LIGHTBOX --- */}
+      {lightboxOpen && lightboxGalleries.length > 0 && (
         <div
           className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
           onClick={closeLightbox}
@@ -446,10 +445,7 @@ export default function RoomDetail() {
             >
               <Image
                 key={lightboxIndex}
-                src={
-                  galleries[lightboxIndex]?.image ||
-                  "/images/homepage/content3.webp"
-                }
+                src={lightboxGalleries[lightboxIndex]?.image || "/images/homepage/content3.webp"}
                 alt={`${houseSlug?.getTitle(language)} ${lightboxIndex + 1}`}
                 fill
                 className="object-contain"
@@ -472,7 +468,7 @@ export default function RoomDetail() {
             onClick={(e) => e.stopPropagation()}
           >
             <span className="text-gray-400 text-sm">
-              {lightboxIndex + 1}/{galleries.length}
+              {lightboxIndex + 1}/{lightboxGalleries.length}
             </span>
           </div>
 
@@ -480,7 +476,7 @@ export default function RoomDetail() {
             className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
             onClick={(e) => e.stopPropagation()}
           >
-            {galleries.map((img, i) => (
+            {lightboxGalleries.map((img, i) => (
               <button
                 key={i}
                 onClick={() => setLightboxIndex(i)}

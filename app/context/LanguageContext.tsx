@@ -1583,7 +1583,7 @@ const translations = {
         }
       },
       gallery: {
-        title: 'Event Gallery',
+        title: 'Venue Gallery',
         subtitle: 'See how beautiful events come to life at'
       },
       service: {
@@ -3559,7 +3559,7 @@ const translations = {
         }
       },
       gallery: {
-        title: 'Galeri Acara',
+        title: 'Galeri Venue',
         subtitle: 'Lihat berbagai momen indah yang berlangsung'
       },
       service: {

@@ -42,6 +42,7 @@ export default function VenueDetailPage() {
 			(imageSrc as { url?: string }).url ||
 			"",
 	);
+	const lightboxGalleries = resolvedGalleries.slice(0, 10);
 
 	const openLightbox = useCallback((index: number) => {
 		setLightboxIndex(index);
@@ -51,16 +52,13 @@ export default function VenueDetailPage() {
 	const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
 	const goPrev = useCallback(
-		() =>
-			setLightboxIndex(
-				(i) => (i - 1 + resolvedGalleries.length) % resolvedGalleries.length,
-			),
-		[resolvedGalleries.length],
+		() => setLightboxIndex((i) => (i - 1 + lightboxGalleries.length) % lightboxGalleries.length),
+		[lightboxGalleries.length]
 	);
 
 	const goNext = useCallback(
-		() => setLightboxIndex((i) => (i + 1) % resolvedGalleries.length),
-		[resolvedGalleries.length],
+		() => setLightboxIndex((i) => (i + 1) % lightboxGalleries.length),
+		[lightboxGalleries.length]
 	);
 
 	useEffect(() => {
@@ -406,48 +404,57 @@ export default function VenueDetailPage() {
 			{venueSlug?.all_galleries && venueSlug.all_galleries.length > 0 ? (
 				<section className="py-20 bg-white">
 					<div className="container mx-auto px-6">
-						<div className="text-center mb-12">
-							<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-3">
-								{t.detailVenue.gallery.title}
-							</h2>
-							<p className="text-[#5C5C5C]">
-								{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
-							</p>
+						<div className="flex justify-between items-end mb-8">
+							<div>
+								<h2 className="text-3xl md:text-4xl font-serif text-[#2C2420] mb-2">
+									{t.detailVenue.gallery.title}
+								</h2>
+								<p className="text-[#5C5C5C]">
+									{t.detailVenue.gallery.subtitle} {venueSlug?.getName(language)}
+								</p>
+							</div>
+							<button
+								onClick={() => openLightbox(0)}
+								className="text-[#8B9D68] font-semibold hover:underline cursor-pointer text-sm"
+							>
+								{t.houseDetail.viewall}
+							</button>
 						</div>
-						<div className="flex flex-wrap justify-center gap-6">
-							{venueSlug?.all_galleries?.map((imageSrc, index) => {
-								const gallerySrc =
-									typeof imageSrc === "string"
-										? imageSrc
-										: (
-											imageSrc as {
-												getImage?: () => string;
-												image?: string;
-												image_url?: string;
-												url?: string;
-											}
-										).getImage?.() ||
-										(imageSrc as { image?: string }).image ||
-										(imageSrc as { image_url?: string }).image_url ||
-										(imageSrc as { url?: string }).url ||
-										"";
-								return (
-									<div
-										key={index}
-										onClick={() => openLightbox(index)}
-										className="relative h-64 md:h-72 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
-									>
-										<Image
-											src={gallerySrc}
-											alt={`Event at ${venueSlug?.getName(language)} ${index + 1}`}
-											fill
-											className="object-cover transition-transform duration-700 group-hover:scale-110"
-										/>
-										<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-									</div>
-								);
-							})}
-						</div>
+						{(() => {
+							const allGalleries = venueSlug?.all_galleries ?? [];
+							const total = Math.min(allGalleries.length, 6);
+							const useLegacyLayout = total <= 5;
+							return (
+								<div className={`grid gap-4 auto-rows-[200px] ${useLegacyLayout ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4" : "grid-cols-3"}`}>
+									{allGalleries.slice(0, 6).map((imageSrc, index) => {
+										const gallerySrc =
+											typeof imageSrc === "string"
+												? imageSrc
+												: (imageSrc as { getImage?: () => string; image?: string; image_url?: string; url?: string }).getImage?.() ||
+												(imageSrc as { image?: string }).image ||
+												(imageSrc as { image_url?: string }).image_url ||
+												(imageSrc as { url?: string }).url ||
+												"";
+										const isFirstLegacy = useLegacyLayout && index === 0;
+										return (
+											<div
+												key={index}
+												onClick={() => openLightbox(index)}
+												className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${isFirstLegacy ? "sm:col-span-2 sm:row-span-2" : ""}`}
+											>
+												<Image
+													src={gallerySrc}
+													alt={`Venue Gallery ${venueSlug?.getName(language)} ${index + 1}`}
+													fill
+													className="object-cover transition-transform duration-700 group-hover:scale-110"
+												/>
+												<div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+											</div>
+										);
+									})}
+								</div>
+							);
+						})()}
 					</div>
 				</section>
 			) : null}
@@ -782,27 +789,27 @@ export default function VenueDetailPage() {
 					</div>
 				</div>
 			</section>
-			{/* Lightbox */}
-			{lightboxOpen && resolvedGalleries.length > 0 && (
+		{/* Lightbox */}
+		{lightboxOpen && lightboxGalleries.length > 0 && (
+			<div
+				className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
+				onClick={closeLightbox}
+			>
+				{/* Top bar */}
 				<div
-					className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
-					onClick={closeLightbox}
+					className="flex items-center justify-between px-6 py-3 shrink-0 border-b border-white/10"
+					onClick={(e) => e.stopPropagation()}
 				>
-					{/* Top bar */}
-					<div
-						className="flex items-center justify-between px-6 py-3 shrink-0 border-b border-white/10"
-						onClick={(e) => e.stopPropagation()}
+					<span className="text-white font-medium text-sm">
+						{venueSlug?.getName(language) || "Venue Gallery"}
+					</span>
+					<button
+						onClick={closeLightbox}
+						className="text-white hover:text-gray-300 transition-colors"
 					>
-						<span className="text-white font-medium text-sm">
-							{venueSlug?.getName(language) || "Event Gallery"}
-						</span>
-						<button
-							onClick={closeLightbox}
-							className="text-white hover:text-gray-300 transition-colors"
-						>
-							<X size={24} />
-						</button>
-					</div>
+						<X size={24} />
+					</button>
+				</div>
 
 					{/* Area tengah: gambar + arrows */}
 					<div className="relative flex-1 flex items-center justify-center min-h-0 py-4">
@@ -816,21 +823,18 @@ export default function VenueDetailPage() {
 							<ChevronLeft size={30} />
 						</button>
 
-						<div
-							className="relative h-full w-full max-w-2xl mx-16"
-							onClick={(e) => e.stopPropagation()}
-						>
-							<Image
-								key={lightboxIndex}
-								src={
-									resolvedGalleries[lightboxIndex] ||
-									"/images/homepage/content3.webp"
-								}
-								alt={`${venueSlug?.getName(language)} ${lightboxIndex + 1}`}
-								fill
-								className="object-contain"
-							/>
-						</div>
+					<div
+						className="relative h-full w-full max-w-2xl mx-16"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<Image
+							key={lightboxIndex}
+							src={lightboxGalleries[lightboxIndex] || "/images/homepage/content3.webp"}
+							alt={`${venueSlug?.getName(language)} ${lightboxIndex + 1}`}
+							fill
+							className="object-contain"
+						/>
+					</div>
 
 						<button
 							onClick={(e) => {
@@ -843,41 +847,42 @@ export default function VenueDetailPage() {
 						</button>
 					</div>
 
-					{/* Counter */}
-					<div
-						className="flex items-center justify-end px-6 py-2 shrink-0"
-						onClick={(e) => e.stopPropagation()}
-					>
-						<span className="text-gray-400 text-sm">
-							{lightboxIndex + 1}/{resolvedGalleries.length}
-						</span>
-					</div>
-
-					{/* Thumbnail strip */}
-					<div
-						className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
-						onClick={(e) => e.stopPropagation()}
-					>
-						{resolvedGalleries.map((img, i) => (
-							<button
-								key={i}
-								onClick={() => setLightboxIndex(i)}
-								className={`relative shrink-0 w-24 h-16 rounded overflow-hidden border-2 transition-all ${i === lightboxIndex
-										? "border-white opacity-100"
-										: "border-transparent opacity-50 hover:opacity-80"
-									}`}
-							>
-								<Image
-									src={img || "/images/homepage/content3.webp"}
-									alt={`thumb ${i + 1}`}
-									fill
-									className="object-cover"
-								/>
-							</button>
-						))}
-					</div>
+				{/* Counter */}
+				<div
+					className="flex items-center justify-end px-6 py-2 shrink-0"
+					onClick={(e) => e.stopPropagation()}
+				>
+					<span className="text-gray-400 text-sm">
+						{lightboxIndex + 1}/{lightboxGalleries.length}
+					</span>
 				</div>
-			)}
+
+				{/* Thumbnail strip */}
+				<div
+					className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
+					onClick={(e) => e.stopPropagation()}
+				>
+					{lightboxGalleries.map((img, i) => (
+						<button
+							key={i}
+							onClick={() => setLightboxIndex(i)}
+							className={`relative shrink-0 w-24 h-16 rounded overflow-hidden border-2 transition-all ${
+								i === lightboxIndex
+									? "border-white opacity-100"
+									: "border-transparent opacity-50 hover:opacity-80"
+							}`}
+						>
+							<Image
+								src={img || "/images/homepage/content3.webp"}
+								alt={`thumb ${i + 1}`}
+								fill
+								className="object-cover"
+							/>
+						</button>
+					))}
+				</div>
+			</div>
+		)}
 		</main>
 	);
 }
