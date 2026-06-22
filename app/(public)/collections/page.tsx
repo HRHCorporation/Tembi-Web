@@ -70,14 +70,19 @@ export default function CollectionsPage() {
 					</h1>
 
 					<div className="max-w-2xl text-gray-200 text-base sm:text-lg leading-relaxed space-y-4 mb-10">
-						<p>
-							{collectionBanner?.getSubtitle(language) ||
-								t.collection.hero.desc[0]}
-						</p>
-						<p className="hidden sm:block text-gray-300/90">
-							{collectionBanner?.getDescription(language) ||
-								t.collection.hero.desc[1]}
-						</p>
+						{collectionBanner?.getSubtitle(language) ? (
+							<p>{collectionBanner.getSubtitle(language)}</p>
+						) : (
+							<p>{t.collection.hero.desc[0]}</p>
+						)}
+						{collectionBanner?.getDescription(language) ? (
+							<div
+								className="hidden sm:block text-gray-300/90"
+								dangerouslySetInnerHTML={{ __html: collectionBanner.getDescription(language) }}
+							/>
+						) : (
+							<p className="hidden sm:block text-gray-300/90">{t.collection.hero.desc[1]}</p>
+						)}
 					</div>
 
 					<div>

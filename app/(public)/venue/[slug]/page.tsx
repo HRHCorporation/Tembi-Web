@@ -36,6 +36,7 @@ export default function VenueDetailPage() {
 				(imageSrc as { url?: string }).url ||
 				""
 	);
+	const lightboxGalleries = resolvedGalleries.slice(0, 10);
 
 	const openLightbox = useCallback((index: number) => {
 		setLightboxIndex(index);
@@ -45,13 +46,13 @@ export default function VenueDetailPage() {
 	const closeLightbox = useCallback(() => setLightboxOpen(false), []);
 
 	const goPrev = useCallback(
-		() => setLightboxIndex((i) => (i - 1 + resolvedGalleries.length) % resolvedGalleries.length),
-		[resolvedGalleries.length]
+		() => setLightboxIndex((i) => (i - 1 + lightboxGalleries.length) % lightboxGalleries.length),
+		[lightboxGalleries.length]
 	);
 
 	const goNext = useCallback(
-		() => setLightboxIndex((i) => (i + 1) % resolvedGalleries.length),
-		[resolvedGalleries.length]
+		() => setLightboxIndex((i) => (i + 1) % lightboxGalleries.length),
+		[lightboxGalleries.length]
 	);
 
 	useEffect(() => {
@@ -382,11 +383,11 @@ export default function VenueDetailPage() {
 						</div>
 						{(() => {
 							const allGalleries = venueSlug?.all_galleries ?? [];
-							const total = Math.min(allGalleries.length, 10);
+							const total = Math.min(allGalleries.length, 6);
 							const useLegacyLayout = total <= 5;
 							return (
 								<div className={`grid gap-4 auto-rows-[200px] ${useLegacyLayout ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4" : "grid-cols-3"}`}>
-									{allGalleries.slice(0, 10).map((imageSrc, index) => {
+									{allGalleries.slice(0, 6).map((imageSrc, index) => {
 										const gallerySrc =
 											typeof imageSrc === "string"
 												? imageSrc
@@ -396,16 +397,15 @@ export default function VenueDetailPage() {
 												(imageSrc as { url?: string }).url ||
 												"";
 										const isFirstLegacy = useLegacyLayout && index === 0;
-										const isLastCentered = !useLegacyLayout && index === total - 1 && total % 3 === 1;
 										return (
 											<div
 												key={index}
 												onClick={() => openLightbox(index)}
-												className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${isFirstLegacy ? "sm:col-span-2 sm:row-span-2" : ""} ${isLastCentered ? "col-start-2" : ""}`}
+												className={`relative rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${isFirstLegacy ? "sm:col-span-2 sm:row-span-2" : ""}`}
 											>
 												<Image
 													src={gallerySrc}
-													alt={`Event at ${venueSlug?.getName(language)} ${index + 1}`}
+													alt={`Venue Gallery ${venueSlug?.getName(language)} ${index + 1}`}
 													fill
 													className="object-cover transition-transform duration-700 group-hover:scale-110"
 												/>
@@ -751,7 +751,7 @@ export default function VenueDetailPage() {
 				</div>
 			</section>
 		{/* Lightbox */}
-		{lightboxOpen && resolvedGalleries.length > 0 && (
+		{lightboxOpen && lightboxGalleries.length > 0 && (
 			<div
 				className="fixed inset-0 z-50 flex flex-col bg-black/65 backdrop-blur-sm"
 				onClick={closeLightbox}
@@ -762,7 +762,7 @@ export default function VenueDetailPage() {
 					onClick={(e) => e.stopPropagation()}
 				>
 					<span className="text-white font-medium text-sm">
-						{venueSlug?.getName(language) || "Event Gallery"}
+						{venueSlug?.getName(language) || "Venue Gallery"}
 					</span>
 					<button
 						onClick={closeLightbox}
@@ -787,7 +787,7 @@ export default function VenueDetailPage() {
 					>
 						<Image
 							key={lightboxIndex}
-							src={resolvedGalleries[lightboxIndex] || "/images/homepage/content3.webp"}
+							src={lightboxGalleries[lightboxIndex] || "/images/homepage/content3.webp"}
 							alt={`${venueSlug?.getName(language)} ${lightboxIndex + 1}`}
 							fill
 							className="object-contain"
@@ -808,7 +808,7 @@ export default function VenueDetailPage() {
 					onClick={(e) => e.stopPropagation()}
 				>
 					<span className="text-gray-400 text-sm">
-						{lightboxIndex + 1}/{resolvedGalleries.length}
+						{lightboxIndex + 1}/{lightboxGalleries.length}
 					</span>
 				</div>
 
@@ -817,7 +817,7 @@ export default function VenueDetailPage() {
 					className="flex justify-center gap-2 px-6 pb-4 overflow-x-auto shrink-0"
 					onClick={(e) => e.stopPropagation()}
 				>
-					{resolvedGalleries.map((img, i) => (
+					{lightboxGalleries.map((img, i) => (
 						<button
 							key={i}
 							onClick={() => setLightboxIndex(i)}
