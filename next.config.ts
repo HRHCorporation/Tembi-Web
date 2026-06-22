@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    unoptimized: false,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -20,8 +20,8 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "staging-compro.tembihistoricalhome.com",
-        port: "3000",
+        hostname: "tembihistoricalhome.com",
+        port: "",
         pathname: "/**",
       },
     ],

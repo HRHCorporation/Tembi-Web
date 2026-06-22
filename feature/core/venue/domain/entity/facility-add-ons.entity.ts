@@ -1,34 +1,34 @@
-import { FACILITY_ICONS, FacilityIcon } from "@/components/admin/constants/facility-icons";
 import { FacilityAddOnsResponse } from "../response/facility-add-ons.response";
+
 
 type FacilityAddOnsData = {
   id: number;
   icon?: string;
-  name_eng?: string;
   name_ind?: string;
+  name_eng?: string;
   description_eng?: string;
   description_ind?: string;
-};
+}
 export default class FacilityAddOns {
   id: number;
   icon?: string;
-  name_eng?: string;
   name_ind?: string;
+  name_eng?: string;
   description_eng?: string;
   description_ind?: string;
 
   constructor({
     id,
     icon,
-    name_eng,
     name_ind,
+    name_eng,
     description_eng,
     description_ind,
   }: FacilityAddOnsData) {
     this.id = id;
     this.icon = icon;
-    this.name_eng = name_eng;
     this.name_ind = name_ind;
+    this.name_eng = name_eng;
     this.description_eng = description_eng;
     this.description_ind = description_ind;
   }
@@ -46,33 +46,21 @@ export default class FacilityAddOns {
       return "/images/icons/default-amenity.png";
     }
 
-    if (this.icon.startsWith("/images") || this.icon.startsWith("http")) {
+    if (this.icon.startsWith("/images")) {
       return this.icon;
     }
 
-    const foundIcon = FACILITY_ICONS.find((item) => item.value === this.icon);
-
-    if (foundIcon) {
-      const fileName = this.icon.replace("Icon", "").toLowerCase();
-      return `/images/icons/${fileName}.png`;
-    }
-
-    return `/images/icons/${this.icon.toLowerCase()}.png`;
-  }
-
-  getIconConfig(): FacilityIcon | undefined {
-    if (!this.icon) return undefined;
-    return FACILITY_ICONS.find((item) => item.value === this.icon);
+    return `/images/icons/${this.icon}`;
   }
 
   static fromResponse(response: FacilityAddOnsResponse): FacilityAddOns {
     return new FacilityAddOns({
       id: response.id,
       icon: response.icon,
-      name_eng: response.name_end,
       name_ind: response.name_ind,
+      name_eng: response.name_eng,
       description_eng: response.description_eng,
-      description_ind: response.description_ind,
+      description_ind: response.description_ind
     });
   }
 }

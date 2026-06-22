@@ -25,7 +25,7 @@ interface BlogPost {
 
 export default function BlogPage() {
   const { t, language } = useLanguage();
-  const { blogs, blogsLoading, blogsError } = useBlogContext();
+  const { blogs, blogsLoading, blogsError, blogBanner, blogBannerLoading } = useBlogContext();
 
   const stripHtml = (html: string): string => {
     if (!html) return '';
@@ -72,16 +72,20 @@ export default function BlogPage() {
     <main className="w-full min-h-screen bg-white">
       {/* HERO SECTION */}
       <section className="relative h-screen w-full overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=2000&auto=format&fit=crop"
-            alt="Blog Background"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-        </div>
+        {blogBannerLoading ? (
+          <div className="w-full h-full bg-gray-300 animate-pulse" />
+        ) : (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={blogBanner?.image || "https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=2000&auto=format&fit=crop"}
+              alt="Blog Background"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+          </div>
+        )}
 
         <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-24">
           <div className="max-w-3xl flex flex-col items-start text-left">
@@ -97,16 +101,21 @@ export default function BlogPage() {
             </div>
 
             <h1 className="font-serif text-6xl font-bold text-white mb-6 leading-none drop-shadow-lg">
-              Tembi <br /> Stories
+              {blogBanner?.getTitle(language) || (language === 'id' ? 'Blog Kami' : 'Our Blog')}
             </h1>
 
-            <p className="font-serif italic text-lg text-gray-200 mb-6 tracking-wide">
-              Discover the Heritage, Culture & Inspiration
-            </p>
+            {blogBanner?.getSubtitle(language) && (
+              <p className="font-serif italic text-lg text-gray-200 mb-6 tracking-wide">
+                {blogBanner.getSubtitle(language)}
+              </p>
+            )}
 
-            <p className="text-base text-gray-300 leading-relaxed max-w-xl">
-              Temukan inspirasi seputar budaya Jawa, keindahan arsitektur, dan tips spesial untuk momen berharga Anda
-            </p>
+            {blogBanner?.getDescription(language) && (
+              <div
+                className="text-base text-gray-300 leading-relaxed max-w-xl"
+                dangerouslySetInnerHTML={{ __html: blogBanner.getDescription(language) }}
+              />
+            )}
           </div>
 
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">

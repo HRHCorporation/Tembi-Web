@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Calendar, Users } from "lucide-react";
+import { truncateHtml } from "@/utils/truncate";
 
 export interface VenueProps {
   imageSrc: string;
@@ -40,7 +41,7 @@ const VenueCard: React.FC<VenueProps> = ({
             {title}
           </h3>
           <p className="text-[#5C5C5C] text-sm leading-relaxed">
-            {description}
+            {truncateHtml(description, 100)}
           </p>
         </div>
 
