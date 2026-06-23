@@ -106,12 +106,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly',
             priority: 0.6,
         },
-        {
-            url: `${BASE_URL}/check-booking`,
-            lastModified: new Date(),
-            changeFrequency: 'yearly',
-            priority: 0.4,
-        },
     ];
 
     const roomPages: MetadataRoute.Sitemap = roomData.map((room) => ({
