@@ -226,7 +226,7 @@ export default function CreateEventPage() {
                         <CustomEditor
                             value={description_ind}
                             onChange={setDescriptionInd}
-                            placeholder="Tulis konten blog..."
+                            placeholder="Tulis konten event..."
                             error={errors.description_ind}
                         />
                     </div>
@@ -245,7 +245,7 @@ export default function CreateEventPage() {
                         <CustomEditor
                             value={description_eng}
                             onChange={setDescriptionEng}
-                            placeholder="Write blog content in English..."
+                            placeholder="Write event content in English..."
                             error={errors.description_eng}
                         />
                     </div>

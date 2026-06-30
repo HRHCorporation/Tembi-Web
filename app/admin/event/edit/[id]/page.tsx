@@ -83,7 +83,7 @@ export default function EditEventPage() {
 
     if (fetchLoading) {
         return (
-            <FormPage title="Edit Blog" description="Memuat data...">
+            <FormPage title="Edit Event" description="Memuat data...">
                 <div className="flex items-center justify-center py-12">
                     <div className="text-gray-600 dark:text-gray-400">Loading...</div>
                 </div>
@@ -93,8 +93,8 @@ export default function EditEventPage() {
 
     return (
         <FormPage
-            title="Edit Blog"
-            description="Perbarui artikel blog"
+            title="Edit Event"
+            description="Perbarui artikel event"
         >
             <form
                 className="space-y-6"
@@ -242,7 +242,7 @@ export default function EditEventPage() {
                         <CustomEditor
                             value={description_ind}
                             onChange={setDescriptionInd}
-                            placeholder="Tulis konten blog dalam bahasa Indonesia..."
+                            placeholder="Tulis konten event dalam bahasa Indonesia..."
                             error={errors.description_ind}
                         />
                     </div>
@@ -261,7 +261,7 @@ export default function EditEventPage() {
                         <CustomEditor
                             value={description_eng}
                             onChange={setDescriptionEng}
-                            placeholder="Write blog content in English..."
+                            placeholder="Write event content in English..."
                             error={errors.description_eng}
                         />
                     </div>
